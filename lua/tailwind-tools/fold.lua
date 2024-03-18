@@ -1,26 +1,54 @@
-local config = require("tailwind-tools.config")
-
 local M = {}
 
-local html_query = [[
-  (attribute
-    (attribute_name) @_attribute_name
-    (#eq? @_attribute_name "class")
-    (quoted_attribute_value
-      (attribute_value) @_attribute_value))
-]]
+local config = require("tailwind-tools.config")
+
+local lang_map = {
+  html = { "html", "php" },
+  jsx = {
+    "astro",
+    "vue",
+    "svete",
+    "javascriptreact",
+    "typescriptreact",
+  },
+}
+
+local query_map = {
+  html = [[
+    (attribute
+      (attribute_name) @_attribute_name
+      (#eq? @_attribute_name "class")
+      (quoted_attribute_value
+        (attribute_value) @_attribute_value))
+  ]],
+}
+
+local concealed_buffers = {}
 
 ---@param bufnr number
-M.set_conceal = function(bufnr)
-  local parser = vim.treesitter.get_parser(bufnr, "html")
+local set_conceal = function(bufnr)
+  local lang = nil
+
+  for key, filetypes in pairs(lang_map) do
+    if vim.tbl_contains(filetypes, vim.bo.ft) then lang = key end
+  end
+
+  if not lang then return end
+
+  local parser = vim.treesitter.get_parser(bufnr, lang)
   local tree = parser:parse()
   local root = tree[1]:root()
-  local query = vim.treesitter.query.parse("html", html_query)
+  local query = vim.treesitter.query.parse(lang, query_map[lang])
   local iter = query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
 
+  table.insert(concealed_buffers, bufnr)
+  vim.wo.conceallevel = 2
+  vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
+
   for _, match in iter do
-    local start_row, start_col, end_row, end_col = match[2][1]:range()
-    vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.namespace, start_row, start_col, {
+    local target = match[2][1] or match[2]
+    local start_row, start_col, end_row, end_col = target:range()
+    vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
       end_line = end_row,
       end_col = end_col,
       conceal = config.options.conceal.symbol,
@@ -29,11 +57,29 @@ M.set_conceal = function(bufnr)
   end
 end
 
-M.attach_autocmd = function()
+M.enable = function()
   vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI", "InsertLeave" }, {
-    group = vim.api.nvim_create_augroup("tailwind_conceal", {}),
-    callback = function(args) M.set_conceal(args.buf) end,
+    group = vim.g.tailwind_tools.conceal_au,
+    callback = function(args) set_conceal(args.buf) end,
   })
+  set_conceal(0)
+end
+
+M.disable = function()
+  vim.wo.conceallevel = 0
+  vim.api.nvim_clear_autocmds({ group = vim.g.tailwind_tools.conceal_au })
+  for _, bufnr in pairs(concealed_buffers) do
+    vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
+  end
+  concealed_buffers = {}
+end
+
+M.toggle = function()
+  if #concealed_buffers > 0 then
+    M.disable()
+  else
+    M.enable()
+  end
 end
 
 return M

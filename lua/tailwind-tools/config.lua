@@ -8,8 +8,15 @@ local defaults = {
   conceal = {
     symbol = "󱏿",
     highlight = {
-      fg = "#38bdf8",
+      fg = "#38BDF8",
     },
+    filetypes = {
+      "html",
+      "astro",
+      "php",
+      "javascriptreact",
+      "typescriptreact",
+    }
   },
 }
 
