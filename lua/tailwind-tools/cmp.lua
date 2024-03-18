@@ -10,7 +10,7 @@ M.lspkind_format = function(entry, vim_item)
 
   if vim_item.kind == "Color" and type(doc) == "string" then
     local _, _, r, g, b = doc:find("rgba?%((%d+), (%d+), (%d+)")
-    if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b) end
+    if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b, "foreground") end
   end
 
   return vim_item

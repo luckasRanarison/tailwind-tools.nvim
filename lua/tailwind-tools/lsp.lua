@@ -9,22 +9,35 @@ local color_events = {
   "TextChanged",
   "TextChangedI",
   "CursorMoved",
+  "CursorMovedI",
 }
 
 ---@param bufnr number
----@param range lsp.Range
----@param hl_group string
-local set_extmark = function(bufnr, range, hl_group)
-  vim.api.nvim_buf_set_extmark(
-    bufnr,
-    vim.g.tailwind_tools.color_ns,
-    range.start.line,
-    range.start.character,
-    {
+---@param color lsp.ColorInformation
+local set_extmark = function(bufnr, color)
+  local opts = nil
+  local r, g, b = utils.lsp_color_to_rgb(color.color)
+  local hl_kind = config.options.document_color.kind
+  local hl_group = utils.set_hl_from(r, g, b, hl_kind)
+  local namespace = vim.g.tailwind_tools.color_ns
+  local start_row = color.range.start.line
+  local start_col = color.range.start.character
+
+  if hl_kind == "inline" then
+    opts = {
       virt_text = { { config.options.document_color.inline_symbol, hl_group } },
       virt_text_pos = "inline",
     }
-  )
+  else
+    opts = {
+      hl_group = hl_group,
+      end_row = color.range["end"].line,
+      end_col = color.range["end"].character,
+      priority = 1000,
+    }
+  end
+
+  vim.api.nvim_buf_set_extmark(bufnr, namespace, start_row, start_col, opts)
 end
 
 ---@param bufnr number
@@ -41,16 +54,11 @@ local color_request = function(bufnr, client)
     vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
 
     for _, color in pairs(colors) do
-      local r = math.floor(color.color.red * 255)
-      local g = math.floor(color.color.green * 255)
-      local b = math.floor(color.color.blue * 255)
-      local hl_group = utils.set_hl_from(r, g, b)
       local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- starts at 1
+      local cursor_aligned = (conceal.is_enabled and cursor_line == color.range.start.line)
 
-      if
-          not conceal.is_enabled or (conceal.is_enabled and cursor_line == color.range.start.line)
-      then
-        pcall(function() set_extmark(bufnr, color.range, hl_group) end)
+      if not conceal.is_enabled or cursor_aligned then
+        pcall(function() set_extmark(bufnr, color) end)
       end
     end
   end, bufnr)
@@ -69,7 +77,10 @@ local debounced_request = function(bufnr, client)
     end
   end
 
-  M.request_timer = vim.defer_fn(function() color_request(bufnr, client) end, 200)
+  M.request_timer = vim.defer_fn(
+    function() color_request(bufnr, client) end,
+    config.options.document_color.debounce
+  )
 end
 
 ---@private
@@ -85,7 +96,7 @@ M.on_attach = function(args)
       callback = function(a)
         if a.event == "TextChangedI" then
           debounced_request(bufnr, client)
-          -- in the case of a cursor event requests are sent only if conceal is enabled
+          -- In the case of a cursor event, requests are sent only if conceal is enabled
         elseif vim.startswith(a.event, "Cursor") == conceal.is_enabled then
           color_request(bufnr, client)
         end

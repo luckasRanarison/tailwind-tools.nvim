@@ -6,6 +6,7 @@ M.options = {
     ---@type "foreground" | "background" | "inline"
     kind = "inline",
     inline_symbol = "󰝤 ",
+    debounce = 200,
   },
   conceal = {
     symbol = "󱏿",
