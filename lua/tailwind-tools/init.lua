@@ -1,5 +1,6 @@
 local M = {}
 
+local log = require("tailwind-tools.log")
 local lsp = require("tailwind-tools.lsp")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
@@ -7,6 +8,11 @@ local conceal = require("tailwind-tools.conceal")
 ---@param options TailwindTools.Option
 M.setup = function(options)
   config.options = vim.tbl_deep_extend("keep", options, config.options)
+
+  if vim.version().minor < 10 and config.options.document_color.kind == "inline" then
+    log.error("Neovim nightly is required for inline color hints, using fallback option")
+    config.options.document_color.kind = "background"
+  end
 
   vim.g.tailwind_tools = {
     color_ns = vim.api.nvim_create_namespace("tailwind_colors"),
