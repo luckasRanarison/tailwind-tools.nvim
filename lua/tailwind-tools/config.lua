@@ -3,9 +3,9 @@ local M = {}
 ---@class TailwindTools.Option
 M.options = {
   document_color = {
-    ---@type "foreground" | "background" | "virtual_text"
-    kind = "virtual_text",
-    virtual_text = "󰝤 ",
+    ---@type "foreground" | "background" | "inline"
+    kind = "inline",
+    inline_symbol = "󰝤 ",
   },
   conceal = {
     symbol = "󱏿",

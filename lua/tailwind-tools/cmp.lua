@@ -1,3 +1,4 @@
+local utils = require("tailwind-tools.utils")
 local M = {}
 
 -- Formatting utility for https://github.com/onsails/lspkind.nvim
@@ -9,12 +10,7 @@ M.lspkind_format = function(entry, vim_item)
 
   if vim_item.kind == "Color" and type(doc) == "string" then
     local _, _, r, g, b = doc:find("rgba?%((%d+), (%d+), (%d+)")
-    if r then
-      local color = string.format("%02x%02x%02x", r, g, b)
-      local group = "TailwindColor" .. color
-      if vim.fn.hlID(group) < 1 then vim.api.nvim_set_hl(0, group, { fg = "#" .. color }) end
-      vim_item.kind_hl_group = group
-    end
+    if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b) end
   end
 
   return vim_item

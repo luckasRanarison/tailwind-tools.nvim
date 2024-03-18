@@ -101,6 +101,7 @@ M.disable = function()
     event = { "TextChanged", "TextChangedI" },
   })
   vim.api.nvim_buf_clear_namespace(0, vim.g.tailwind_tools.conceal_ns, 0, -1)
+  vim.cmd("doautocmd TextChanged") -- A hack for recovering the color highlights
 end
 
 M.toggle = function()

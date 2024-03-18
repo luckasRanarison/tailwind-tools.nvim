@@ -22,19 +22,7 @@ M.setup = function(options)
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.g.tailwind_tools.conceal_au,
-    callback = function(args)
-      local bufnr = args.buf
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-
-      if client and client.name == "tailwindcss" then
-        vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI" }, {
-          group = vim.g.tailwind_tools.conceal_au,
-          buffer = bufnr,
-          callback = function() lsp.color_request(bufnr, client) end,
-        })
-        lsp.color_request(bufnr, client)
-      end
-    end,
+    callback = lsp.on_attach,
   })
 end
 
