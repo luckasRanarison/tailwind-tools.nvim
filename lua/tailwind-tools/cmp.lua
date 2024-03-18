@@ -1,5 +1,6 @@
 local M = {}
 
+-- Formatting utility for https://github.com/onsails/lspkind.nvim
 ---@param entry cmp.Entry
 ---@param vim_item any
 ---@return any
