@@ -1,9 +1,5 @@
 local M = {}
 
-M.nvim_cmp_format = function()
-  -- TODO
-end
-
 ---@param entry cmp.Entry
 ---@param vim_item any
 ---@return any
@@ -11,7 +7,7 @@ M.lspkind_format = function(entry, vim_item)
   local doc = entry.completion_item.documentation
 
   if vim_item.kind == "Color" and type(doc) == "string" then
-    local _, _, r, g, b = doc:find("^rgb%((%d+), (%d+), (%d+)")
+    local _, _, r, g, b = doc:find("rgba?%((%d+), (%d+), (%d+)")
     if r then
       local color = string.format("%02x%02x%02x", r, g, b)
       local group = "TailwindColor" .. color
