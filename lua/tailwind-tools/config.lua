@@ -1,9 +1,11 @@
 local M = {}
 
+---@alias TailwindTools.ColorHint "foreground" | "background" | "inline"
+
 ---@class TailwindTools.Option
 M.options = {
   document_color = {
-    ---@type "foreground" | "background" | "inline"
+    ---@type TailwindTools.ColorHint
     kind = "inline",
     inline_symbol = "󰝤 ",
     debounce = 200,

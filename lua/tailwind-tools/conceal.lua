@@ -35,7 +35,7 @@ local query_map = {
 }
 
 ---@param bufnr number
-local set_conceal = function(bufnr)
+local function set_conceal(bufnr)
   local lang = nil
 
   for key, filetypes in pairs(lang_map) do

@@ -1,5 +1,6 @@
-local utils = require("tailwind-tools.utils")
 local M = {}
+
+local utils = require("tailwind-tools.utils")
 
 -- Formatting utility for https://github.com/onsails/lspkind.nvim
 ---@param entry cmp.Entry

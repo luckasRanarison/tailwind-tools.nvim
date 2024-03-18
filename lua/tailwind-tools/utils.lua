@@ -9,7 +9,7 @@ local name_map = {
 ---@param red number | string
 ---@param green number | string
 ---@param blue number | string
----@param kind "foreground" | "background" | "inline"
+---@param kind TailwindTools.ColorHint
 M.set_hl_from = function(red, green, blue, kind)
   local color = string.format("%02x%02x%02x", red, green, blue)
   local group = "TailwindColor" .. name_map[kind] .. color

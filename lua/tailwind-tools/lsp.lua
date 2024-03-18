@@ -14,18 +14,20 @@ local color_events = {
 
 ---@param bufnr number
 ---@param color lsp.ColorInformation
-local set_extmark = function(bufnr, color)
-  local opts = nil
+local function set_extmark(bufnr, color)
   local r, g, b = utils.lsp_color_to_rgb(color.color)
   local hl_kind = config.options.document_color.kind
   local hl_group = utils.set_hl_from(r, g, b, hl_kind)
   local namespace = vim.g.tailwind_tools.color_ns
   local start_row = color.range.start.line
   local start_col = color.range.start.character
+  local opts = nil
 
   if hl_kind == "inline" then
     opts = {
-      virt_text = { { config.options.document_color.inline_symbol, hl_group } },
+      virt_text = {
+        { config.options.document_color.inline_symbol, hl_group },
+      },
       virt_text_pos = "inline",
     }
   else
@@ -42,7 +44,7 @@ end
 
 ---@param bufnr number
 ---@param client vim.lsp.Client
-local color_request = function(bufnr, client)
+local function color_request(bufnr, client)
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
@@ -66,7 +68,7 @@ end
 
 ---@param bufnr number
 ---@param client vim.lsp.Client
-local debounced_request = function(bufnr, client)
+local function debounced_color_request(bufnr, client)
   local timer = M.request_timer
 
   if timer then
@@ -95,7 +97,7 @@ M.on_attach = function(args)
       group = vim.g.tailwind_tools.color_au,
       callback = function(a)
         if a.event == "TextChangedI" then
-          debounced_request(bufnr, client)
+          debounced_color_request(bufnr, client)
           -- In the case of a cursor event, requests are sent only if conceal is enabled
         elseif vim.startswith(a.event, "Cursor") == conceal.is_enabled then
           color_request(bufnr, client)
