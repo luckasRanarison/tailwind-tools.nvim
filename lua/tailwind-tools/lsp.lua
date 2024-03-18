@@ -1,11 +1,14 @@
 local M = {}
 
 local config = require("tailwind-tools.config")
+local conceal = require("tailwind-tools.conceal")
 
 ---@param bufnr number
 ---@param client vim.lsp.Client
 M.color_request = function(bufnr, client)
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
+
+  if conceal.is_enabled then return end
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then

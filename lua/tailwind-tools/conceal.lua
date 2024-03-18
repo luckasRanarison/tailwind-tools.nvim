@@ -52,6 +52,7 @@ local set_conceal = function(bufnr)
 
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
+  vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
 
   for _, match in iter do
     local target = match[2][1] or match[2]
