@@ -47,7 +47,6 @@ end
 ---@param client vim.lsp.Client
 local function color_request(bufnr, client)
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
-
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then return log.error(err.message) end
     if not vim.api.nvim_buf_is_valid(bufnr) then return end
@@ -110,16 +109,20 @@ M.on_attach = function(args)
 end
 
 M.sort_selection = function()
-  local client = vim.lsp.get_clients({ name = "tailwindcss" })[1]
+  local get_client = vim.lsp.get_clients or vim.lsp.get_active_clients
+  local client = get_client({ name = "tailwindcss" })[1]
+  local bufnr = vim.api.nvim_get_current_buf()
+  local start_col = vim.fn.col("'<") - 1
+  local end_col = vim.fn.col("'>")
+  local row = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local class = vim.api.nvim_buf_get_text(bufnr, row, start_col, row, end_col, {})[1]
 
-  if client then
-    local bufnr = vim.api.nvim_get_current_buf()
+  if client and class then
     local params = vim.lsp.util.make_text_document_params(bufnr)
     params.classLists = { class }
     client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
       if err then return log.error(err.message) end
-
-      print(vim.fn.json_encode(result))
+      vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, result.classLists)
     end, bufnr)
   end
 end
