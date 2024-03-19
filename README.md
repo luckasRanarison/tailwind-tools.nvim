@@ -1,6 +1,6 @@
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim).
+Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client.
 
 ## Contents
 
@@ -15,18 +15,21 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 
 ## Features
 
-- Class color hints
-- Class concealing (using [treesitter](https://neovim.io/doc/user/treesitter.html))
-- Class sorting (using [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server))
-- Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp/))
+The plugin works out of the box with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, ...) and provides the following features:
 
-> [!IMPORTANT]
-> Neovim nightly is required for VSCode like inline color hints
+- Class color hints (uing LSP)
+- Class concealing (using treesitter)
+- Class sorting (using LSP)
+- Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
+
+> [!NOTE]
+> Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server)
 
 ## Prerequisites
 
 - Latest Neovim [stable](https://github.com/neovim/neovim/releases/tag/stable) or [nightly](https://github.com/neovim/neovim/releases/tag/nightly) (recommended)
-- [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
+- [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
+- `html`, `css` and `tsx` treesitter grammars (can be installed using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 
 ## Installation
 
@@ -40,6 +43,9 @@ return {
 ```
 
 ## Configuration
+
+> [!IMPORTANT]
+> Neovim nightly is required for VSCode like inline color hints
 
 Here is the default configuration:
 
