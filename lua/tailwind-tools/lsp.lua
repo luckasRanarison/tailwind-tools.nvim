@@ -126,6 +126,7 @@ M.sort_selection = function()
 
   if client and class then
     local params = vim.lsp.util.make_text_document_params(bufnr)
+
     params.classLists = { class }
     client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
       if err then return log.error(err.message) end

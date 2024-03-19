@@ -11,27 +11,6 @@ local lang_map = {
   },
 }
 
-local query_map = {
-  html = [[
-    (attribute
-      (attribute_name) @_attribute_name
-      (#eq? @_attribute_name "class")
-      (quoted_attribute_value
-        (attribute_value) @_attribute_value))
-  ]],
-  tsx = [[
-    (jsx_attribute
-    (property_identifier) @_attribute_name
-    (#eq? @_attribute_name "className")
-    [
-      (string
-        (string_fragment) @_attribute_value)
-      (jsx_expression
-        (_) @_attribute_value)
-    ])
-  ]],
-}
-
 M.get_class_iter = function(bufnr)
   local lang = nil
 
@@ -43,7 +22,7 @@ M.get_class_iter = function(bufnr)
     local parser = vim.treesitter.get_parser(bufnr, lang)
     local tree = parser:parse()
     local root = tree[1]:root()
-    local query = vim.treesitter.query.parse(lang, query_map[lang])
+    local query = vim.treesitter.query.get(lang, "class")
     return query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
   end
 end
