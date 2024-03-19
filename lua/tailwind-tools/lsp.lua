@@ -148,8 +148,8 @@ M.sort_classes = function()
 
   for _, match in class_nodes do
     local node = match[2][1] or match[2]
-    local start_row, start_col, end_row, end_col = node:range()
-    local text = vim.treesitter.get_node_text(node, bufnr)
+    local start_row, start_col, end_row, end_col = treesitter.get_node_range(node, bufnr)
+    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})[1]
 
     if start_row == end_row then
       class_text[#class_text + 1] = text
