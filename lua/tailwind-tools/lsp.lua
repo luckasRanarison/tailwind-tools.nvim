@@ -67,7 +67,7 @@ local function debounced_color_request(bufnr)
     end
   end
 
-  M.request_timer = vim.defer_fn(
+  state.color.request_timer = vim.defer_fn(
     function() M.color_request(bufnr) end,
     config.options.document_color.debounce
   )
