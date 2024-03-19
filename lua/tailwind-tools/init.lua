@@ -25,6 +25,12 @@ M.setup = function(options)
   vim.api.nvim_create_user_command("TailwindConcealEnable", conceal.enable, { nargs = 0 })
   vim.api.nvim_create_user_command("TailwindConcealDisable", conceal.disable, { nargs = 0 })
   vim.api.nvim_create_user_command("TailwindConcealToggle", conceal.toggle, { nargs = 0 })
+  vim.api.nvim_create_user_command("TailwindSortSelection", function(args)
+    local start_row = vim.fn.col("'<")
+    local end_row = vim.fn.col("'>")
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    print(start_row, end_row)
+  end, { range = "%" })
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.g.tailwind_tools.conceal_au,

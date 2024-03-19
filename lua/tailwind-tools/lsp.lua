@@ -1,5 +1,6 @@
 local M = {}
 
+local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
@@ -48,7 +49,7 @@ local function color_request(bufnr, client)
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
-    if err then return vim.notify(err.message, vim.log.levels.ERROR) end
+    if err then return log.error(err.message) end
     if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     ---@type lsp.ColorInformation[]
@@ -105,6 +106,21 @@ M.on_attach = function(args)
       end,
     })
     color_request(bufnr, client)
+  end
+end
+
+M.sort_selection = function()
+  local client = vim.lsp.get_clients({ name = "tailwindcss" })[1]
+
+  if client then
+    local bufnr = vim.api.nvim_get_current_buf()
+    local params = vim.lsp.util.make_text_document_params(bufnr)
+    params.classLists = { class }
+    client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
+      if err then return log.error(err.message) end
+
+      print(vim.fn.json_encode(result))
+    end, bufnr)
   end
 end
 
