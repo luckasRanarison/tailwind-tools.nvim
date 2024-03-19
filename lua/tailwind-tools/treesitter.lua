@@ -1,6 +1,6 @@
 local M = {}
 
-M.lang = {
+local lang_map = {
   html = { "html", "php" },
   tsx = {
     "astro",
@@ -11,7 +11,7 @@ M.lang = {
   },
 }
 
-M.query = {
+local query_map = {
   html = [[
     (attribute
       (attribute_name) @_attribute_name
@@ -31,5 +31,21 @@ M.query = {
     ])
   ]],
 }
+
+M.get_class_iter = function(bufnr)
+  local lang = nil
+
+  for key, filetypes in pairs(lang_map) do
+    if vim.tbl_contains(filetypes, vim.bo.ft) then lang = key end
+  end
+
+  if lang then
+    local parser = vim.treesitter.get_parser(bufnr, lang)
+    local tree = parser:parse()
+    local root = tree[1]:root()
+    local query = vim.treesitter.query.parse(lang, query_map[lang])
+    return query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
+  end
+end
 
 return M

@@ -4,6 +4,7 @@ local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
+local treesitter = require("tailwind-tools.treesitter")
 
 local color_events = {
   "BufEnter",
@@ -12,6 +13,13 @@ local color_events = {
   "CursorMoved",
   "CursorMovedI",
 }
+
+---@return vim.lsp.Client?
+local function get_tailwindcss()
+  local get_client = vim.lsp.get_clients or vim.lsp.get_active_clients
+  local clients = get_client({ name = "tailwindcss" })
+  return clients[1]
+end
 
 ---@param bufnr number
 ---@param color lsp.ColorInformation
@@ -90,9 +98,9 @@ M.request_timer = nil
 
 M.on_attach = function(args)
   local bufnr = args.buf
-  local client = vim.lsp.get_client_by_id(args.data.client_id)
+  local client = get_tailwindcss()
 
-  if client and client.name == "tailwindcss" then
+  if client then
     vim.api.nvim_create_autocmd(color_events, {
       group = vim.g.tailwind_tools.color_au,
       callback = function(a)
@@ -109,8 +117,7 @@ M.on_attach = function(args)
 end
 
 M.sort_selection = function()
-  local get_client = vim.lsp.get_clients or vim.lsp.get_active_clients
-  local client = get_client({ name = "tailwindcss" })[1]
+  local client = get_tailwindcss()
   local bufnr = vim.api.nvim_get_current_buf()
   local start_col = vim.fn.col("'<") - 1
   local end_col = vim.fn.col("'>")
@@ -125,6 +132,39 @@ M.sort_selection = function()
       vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, result.classLists)
     end, bufnr)
   end
+end
+
+M.sort_classes = function()
+  local client = get_tailwindcss()
+
+  if not client then return end
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  local params = vim.lsp.util.make_text_document_params(bufnr)
+  local class_nodes = treesitter.get_class_iter(bufnr)
+  local class_text = {}
+  local class_ranges = {}
+
+  for _, match in class_nodes do
+    local node = match[2][1] or match[2]
+    local start_row, start_col, end_row, end_col = node:range()
+    local text = vim.treesitter.get_node_text(node, bufnr)
+
+    if start_row == end_row then
+      class_text[#class_text + 1] = text
+      class_ranges[#class_ranges + 1] = { start_row, start_col, end_col }
+    end
+  end
+
+  params.classLists = class_text
+  client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
+    if err then return log.error(err.message) end
+
+    for i, edit in pairs(result.classLists) do
+      local row, start_col, end_col = unpack(class_ranges[i])
+      vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, { edit })
+    end
+  end, bufnr)
 end
 
 return M

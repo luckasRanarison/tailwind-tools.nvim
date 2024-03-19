@@ -5,25 +5,15 @@ local treesitter = require("tailwind-tools.treesitter")
 
 ---@param bufnr number
 local function set_conceal(bufnr)
-  local lang = nil
+  local class_nodes = treesitter.get_class_iter(bufnr)
 
-  for key, filetypes in pairs(treesitter.lang) do
-    if vim.tbl_contains(filetypes, vim.bo.ft) then lang = key end
-  end
-
-  if not lang then return end
-
-  local parser = vim.treesitter.get_parser(bufnr, lang)
-  local tree = parser:parse()
-  local root = tree[1]:root()
-  local query = vim.treesitter.query.parse(lang, treesitter.query[lang])
-  local iter = query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
+  if not class_nodes then return end
 
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
 
-  for _, match in iter do
+  for _, match in class_nodes do
     local target = match[2][1] or match[2]
     local start_row, start_col, end_row, end_col = target:range()
 
