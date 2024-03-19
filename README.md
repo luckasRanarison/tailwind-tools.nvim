@@ -1,4 +1,4 @@
-# tailnwind-tools.nvim
+# tailwind-tools.nvim
 
 Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim).
 
@@ -10,7 +10,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
-- [Credis](#credits)
+- [Credits](#credits)
 - [Contributing](#contributing)
 
 ## Features
@@ -101,7 +101,7 @@ Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7t
 
 - [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) for inspiration.
 - [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) as a reference for the `textDocument/documentColor` support.
-- [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) which also provides sorting but using prettier.
+- [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) which also provides sorting but using external scripts.
 - [u/stringTrimmer](https://www.reddit.com/user/stringTrimmer/) for the nvim-cmp snippet.
 
 ## Contributing
