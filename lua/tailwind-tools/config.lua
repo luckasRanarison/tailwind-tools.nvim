@@ -5,6 +5,7 @@ local M = {}
 ---@class TailwindTools.Option
 M.options = {
   document_color = {
+    enabled = true,
     ---@type TailwindTools.ColorHint
     kind = "inline",
     inline_symbol = "󰝤 ",

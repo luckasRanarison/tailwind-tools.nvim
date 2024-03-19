@@ -2,8 +2,8 @@ local M = {}
 
 local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
+local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
-local conceal = require("tailwind-tools.conceal")
 local treesitter = require("tailwind-tools.treesitter")
 
 local color_events = {
@@ -16,6 +16,7 @@ local color_events = {
 
 ---@return vim.lsp.Client?
 local function get_tailwindcss()
+  ---@diagnostic disable-next-line: deprecated
   local get_client = vim.lsp.get_clients or vim.lsp.get_active_clients
   local clients = get_client({ name = "tailwindcss" })
   return clients[1]
@@ -51,12 +52,55 @@ local function set_extmark(bufnr, color)
   end
 
   vim.api.nvim_buf_set_extmark(bufnr, namespace, start_row, start_col, opts)
+  table.insert(state.color.active_buffers, bufnr)
 end
 
 ---@param bufnr number
----@param client vim.lsp.Client
-local function color_request(bufnr, client)
+local function debounced_color_request(bufnr)
+  local timer = state.color.request_timer
+
+  if timer then
+    state.color.request_timer = nil
+    if not timer:is_closing() then
+      timer:stop()
+      timer:close()
+    end
+  end
+
+  M.request_timer = vim.defer_fn(
+    function() M.color_request(bufnr) end,
+    config.options.document_color.debounce
+  )
+end
+
+M.on_attach = function(args)
+  local bufnr = args.buf
+  local client = get_tailwindcss()
+
+  if not client then return end
+
+  vim.api.nvim_create_autocmd(color_events, {
+    group = vim.g.tailwind_tools.color_au,
+    callback = function(a)
+      if not state.color.enabled then return end
+      if a.event == "TextChangedI" then
+        debounced_color_request(bufnr)
+      elseif vim.startswith(a.event, "Cursor") == state.conceal.enabled then
+        M.color_request(bufnr)
+      end
+    end,
+  })
+
+  M.color_request(bufnr)
+end
+
+---@param bufnr number
+M.color_request = function(bufnr)
+  local client = get_tailwindcss()
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
+
+  if not client then return end
+
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then return log.error(err.message) end
     if not vim.api.nvim_buf_is_valid(bufnr) then return end
@@ -67,54 +111,39 @@ local function color_request(bufnr, client)
 
     for _, color in pairs(colors) do
       local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- starts at 1
-      local cursor_aligned = (conceal.is_enabled and cursor_line == color.range.start.line)
+      local cursor_aligned = (state.conceal.enabled and cursor_line == color.range.start.line)
 
-      if not conceal.is_enabled or cursor_aligned then
+      if not state.conceal.enabled or cursor_aligned then
         pcall(function() set_extmark(bufnr, color) end)
       end
     end
   end, bufnr)
 end
 
----@param bufnr number
----@param client vim.lsp.Client
-local function debounced_color_request(bufnr, client)
-  local timer = M.request_timer
+M.enable_color = function()
+  local client = get_tailwindcss()
+  if client then
+    M.color_request(0)
+    state.color.enabled = true
+  end
+end
 
-  if timer then
-    M.request_timer = nil
-    if not timer:is_closing() then
-      timer:stop()
-      timer:close()
+M.disable_color = function()
+  for _, bufnr in pairs(state.color.active_buffers) do
+    if vim.api.nvim_buf_is_valid(bufnr) then
+      vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
     end
   end
 
-  M.request_timer = vim.defer_fn(
-    function() color_request(bufnr, client) end,
-    config.options.document_color.debounce
-  )
+  state.color.active_buffers = {}
+  state.color.enabled = false
 end
 
----@private
-M.request_timer = nil
-
-M.on_attach = function(args)
-  local bufnr = args.buf
-  local client = get_tailwindcss()
-
-  if client then
-    vim.api.nvim_create_autocmd(color_events, {
-      group = vim.g.tailwind_tools.color_au,
-      callback = function(a)
-        if a.event == "TextChangedI" then
-          debounced_color_request(bufnr, client)
-          -- In the case of a cursor event, requests are sent only if conceal is enabled
-        elseif vim.startswith(a.event, "Cursor") == conceal.is_enabled then
-          color_request(bufnr, client)
-        end
-      end,
-    })
-    color_request(bufnr, client)
+M.toggle_colors = function()
+  if state.color.enabled then
+    M.disable_color()
+  else
+    M.enable_color()
   end
 end
 

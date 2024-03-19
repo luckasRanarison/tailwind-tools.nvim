@@ -24,7 +24,7 @@ M.get_class_iter = function(bufnr)
     local parser = vim.treesitter.get_parser(bufnr, lang)
     local tree = parser:parse()
     local root = tree[1]:root()
-    local query = vim.treesitter.query.get(lang, "class")
+    local query = assert(vim.treesitter.query.get(lang, "class"))
     return query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
   end
 end
