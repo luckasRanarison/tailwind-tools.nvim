@@ -12,6 +12,7 @@ local function set_conceal(bufnr)
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
+  table.insert(M.active_buffers, bufnr)
 
   for _, match in class_nodes do
     local node = match[2][1] or match[2]
@@ -29,37 +30,45 @@ end
 
 M.is_enabled = false
 
+M.active_buffers = {}
+
 M.enable = function()
-  M.is_enabled = true
+  for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) then set_conceal(bufnr) end
+  end
 
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
     group = vim.g.tailwind_tools.conceal_au,
     callback = function(args) set_conceal(args.buf) end,
   })
-  -- Workaround to reset conceallevel and clear other buffers extmarks
+  -- Workaround to reset conceallevel per bufferr
   vim.api.nvim_create_autocmd("BufEnter", {
     group = vim.g.tailwind_tools.conceal_au,
     callback = function(args)
-      if M.is_enabled then
-        set_conceal(args.buf)
-      else
-        vim.wo.conceallevel = vim.opt.conceallevel:get()
-        vim.api.nvim_buf_clear_namespace(0, vim.g.tailwind_tools.conceal_ns, 0, -1)
-      end
+      vim.wo.conceallevel = vim.opt.conceallevel:get()
+      if M.is_enabled then set_conceal(args.buf) end
     end,
   })
-  set_conceal(0)
+
+  M.is_enabled = true
 end
 
 M.disable = function()
-  M.is_enabled = false
-
   vim.wo.conceallevel = 0
   vim.api.nvim_clear_autocmds({
     group = vim.g.tailwind_tools.conceal_au,
     event = { "TextChanged", "TextChangedI" },
   })
-  vim.api.nvim_buf_clear_namespace(0, vim.g.tailwind_tools.conceal_ns, 0, -1)
+
+  for _, bufnr in pairs(M.active_buffers) do
+    if vim.api.nvim_buf_is_valid(bufnr) then
+      vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
+    end
+  end
+
+  M.active_buffers = {}
+  M.is_enabled = false
+
   vim.cmd("doautocmd TextChanged") -- A hack for recovering the color highlights
 end
 
