@@ -24,7 +24,9 @@ end
 ---@param bufnr number
 ---@param color lsp.ColorInformation
 local function set_extmark(bufnr, color)
-  local r, g, b = utils.lsp_color_to_rgb(color.color)
+  local r = math.floor(color.color.red * 255)
+  local g = math.floor(color.color.green * 255)
+  local b = math.floor(color.color.blue * 255)
   local hl_kind = config.options.document_color.kind
   local hl_group = utils.set_hl_from(r, g, b, hl_kind)
   local namespace = vim.g.tailwind_tools.color_ns
@@ -148,7 +150,7 @@ M.sort_classes = function()
 
   for _, match in class_nodes do
     local node = match[2][1] or match[2]
-    local start_row, start_col, end_row, end_col = treesitter.get_node_range(node, bufnr)
+    local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
     local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})[1]
 
     if start_row == end_row then

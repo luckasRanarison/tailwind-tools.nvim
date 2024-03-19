@@ -12,6 +12,7 @@ local lang_map = {
   },
 }
 
+---@param bufnr number
 M.get_class_iter = function(bufnr)
   local lang = nil
 
@@ -30,7 +31,7 @@ end
 
 ---@param node TSNode
 ---@param bufnr number
-M.get_node_range = function(node, bufnr)
+M.get_class_range = function(node, bufnr)
   local start_row, start_col, end_row, end_col = node:range()
   local children = node:named_children()
 

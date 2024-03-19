@@ -15,7 +15,7 @@ local function set_conceal(bufnr)
 
   for _, match in class_nodes do
     local node = match[2][1] or match[2]
-    local start_row, start_col, end_row, end_col = treesitter.get_node_range(node, bufnr)
+    local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
 
     vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
       end_line = end_row,

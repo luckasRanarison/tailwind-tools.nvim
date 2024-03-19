@@ -30,12 +30,4 @@ M.set_hl_from = function(red, green, blue, kind)
   return group
 end
 
----@param color lsp.Color
-M.lsp_color_to_rgb = function(color)
-  local r = math.floor(color.red * 255)
-  local g = math.floor(color.green * 255)
-  local b = math.floor(color.blue * 255)
-  return r, g, b
-end
-
 return M
