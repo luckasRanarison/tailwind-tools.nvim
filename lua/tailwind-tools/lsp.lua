@@ -194,7 +194,8 @@ M.sort_classes = function()
 
     for i, edit in pairs(result.classLists) do
       local row, start_col, end_col = unpack(class_ranges[i])
-      vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, { edit })
+      -- Dismiss useless error messages when undoing in nightly
+      pcall(function() vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, { edit }) end)
     end
   end, bufnr)
 end
