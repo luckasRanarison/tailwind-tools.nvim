@@ -1,11 +1,11 @@
-# tailwind-tools.nvim
-
 > [!IMPORTANT]
 > This plugin is a community project and is **NOT** officialy supported by [Tailwind Labs](https://github.com/tailwindlabs).
 
-![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
+# tailwind-tools.nvim
 
 Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and treesitter.
+
+![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
 ## Contents
 
