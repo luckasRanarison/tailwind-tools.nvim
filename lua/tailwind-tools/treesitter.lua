@@ -1,21 +1,31 @@
 local M = {}
 
+local valid_ft = {
+  "html",
+  "css",
+  "sass",
+  "scss",
+  "php",
+  "vue",
+  "svelte",
+  "astro",
+  "javascriptreact",
+  "typescriptreact",
+}
+
 local lang_map = {
-  css = { "css", "sass", "scss" },
-  html = { "html", "php", "vue", "svelte", "astro" },
-  tsx = { "javascriptreact", "typescriptreact" },
+  sass = "scss",
+  javascriptreact = "tsx",
+  typescriptreact = "tsx",
 }
 
 ---@param bufnr number
 M.get_class_iter = function(bufnr)
-  local lang = nil
+  local ft = vim.bo[bufnr].ft
 
-  for key, filetypes in pairs(lang_map) do
-    if vim.tbl_contains(filetypes, vim.bo.ft) then lang = key end
-  end
-
-  if lang then
-    local parser = vim.treesitter.get_parser(bufnr, lang)
+  if vim.tbl_contains(valid_ft, ft) then
+    local lang = lang_map[ft] or ft
+    local parser = vim.treesitter.get_parser(bufnr)
     local tree = parser:parse()
     local root = tree[1]:root()
     local query = assert(vim.treesitter.query.get(lang, "class"))
