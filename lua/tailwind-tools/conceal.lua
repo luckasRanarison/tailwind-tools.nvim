@@ -25,7 +25,7 @@ local function set_conceal(bufnr)
       end_col = end_col,
       conceal = config.options.conceal.symbol,
       hl_group = "TailwindConceal",
-      priority = 0, -- to ignore conceal hl_group when focused
+      priority = 0, -- To ignore conceal hl_group when focused
     })
   end
 end
@@ -39,7 +39,7 @@ M.enable = function()
     group = vim.g.tailwind_tools.conceal_au,
     callback = function(args) set_conceal(args.buf) end,
   })
-  -- Workaround to reset conceallevel per bufferr
+  -- Workaround to reset conceallevel per buffer
   vim.api.nvim_create_autocmd("BufEnter", {
     group = vim.g.tailwind_tools.conceal_au,
     callback = function(args)

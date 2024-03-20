@@ -110,7 +110,7 @@ M.color_request = function(bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
 
     for _, color in pairs(colors) do
-      local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- starts at 1
+      local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Starts at 1
       local cursor_aligned = (state.conceal.enabled and cursor_line == color.range.start.line)
 
       if not state.conceal.enabled or cursor_aligned then
