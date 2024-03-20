@@ -1,6 +1,9 @@
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client.
+> [!IMPORTANT]
+> This plugin is a community project and is **NOT** officialy supported by [Tailwind Labs](https://github.com/tailwindlabs).
+
+Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and treesitter.
 
 ## Contents
 
@@ -30,6 +33,9 @@ The plugin works out of the box with all languages inheriting from html, css and
 - Latest Neovim [stable](https://github.com/neovim/neovim/releases/tag/stable) or [nightly](https://github.com/neovim/neovim/releases/tag/nightly) (recommended)
 - [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
 - `html`, `css` and `tsx` treesitter grammars (can be installed using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
+
+> [!TIP]
+> If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/tailwindlabs) to learn how to setup the LSP.
 
 ## Installation
 
