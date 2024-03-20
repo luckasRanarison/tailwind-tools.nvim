@@ -20,11 +20,11 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 
 ## Features
 
-The plugin works out of the box with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, ...) and provides the following features:
+The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./queries)) and provides the following features:
 
-- Class color hints (uing LSP)
-- Class concealing (using treesitter)
-- Class sorting (using LSP)
+- Class color hints
+- Class concealing
+- Class sorting (without prettier)
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
 
 > [!NOTE]
