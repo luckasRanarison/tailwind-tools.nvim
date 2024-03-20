@@ -10,7 +10,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
-- [Credits](#credits)
+- [Related](#related)
 - [Contributing](#contributing)
 
 ## Features
@@ -60,7 +60,7 @@ Here is the default configuration:
   },
   conceal = {
     symbol = "󱏿",
-    highlight = { -- extmark highlight options, see :'highlight'
+    highlight = { -- extmark highlight options, see :h 'highlight'
       fg = "#38BDF8",
     },
   },
@@ -103,13 +103,18 @@ Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7t
 },
 ```
 
-## Credits
+## Related
 
-- [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) for inspiration.
-- [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) as a reference for the `textDocument/documentColor` support.
-- [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) which also provides sorting but using external scripts.
-- [u/stringTrimmer](https://www.reddit.com/user/stringTrimmer/) for the nvim-cmp snippet.
+Here are some related projects:
+
+- [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) (official VSCode extension)
+- [tailwind-fold](https://github.com/stivoat/tailwind-fold) (VSCode extension)
+- [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) (uses external scripts)
+- [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim) (basic queries)
+- [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archieved)
 
 ## Contributing
 
-Feature requests, issues and pull requests are all welcome.
+Read the documentation carefully before submitting any issue.
+
+Feature and pull requests are welcome.
