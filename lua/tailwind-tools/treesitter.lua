@@ -25,7 +25,7 @@ M.get_class_iter = function(bufnr)
 
   if vim.tbl_contains(valid_ft, ft) then
     local lang = lang_map[ft] or ft
-    local parser = vim.treesitter.get_parser(bufnr)
+    local parser = vim.treesitter.get_parser(bufnr, lang)
     local tree = parser:parse()
     local root = tree[1]:root()
     local query = assert(vim.treesitter.query.get(lang, "class"))

@@ -1,6 +1,6 @@
 (jsx_attribute
   (property_identifier) @_attribute_name
-  (#eq? @_attribute_name "className")
+  (#any-of? @_attribute_name "class" "className")
   [
    (string
      (string_fragment) @_class_value)
