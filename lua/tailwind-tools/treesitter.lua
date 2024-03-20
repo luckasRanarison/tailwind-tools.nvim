@@ -3,8 +3,6 @@ local M = {}
 local valid_ft = {
   "html",
   "css",
-  "sass",
-  "scss",
   "php",
   "vue",
   "svelte",
@@ -14,7 +12,6 @@ local valid_ft = {
 }
 
 local lang_map = {
-  sass = "scss",
   javascriptreact = "tsx",
   typescriptreact = "tsx",
 }
