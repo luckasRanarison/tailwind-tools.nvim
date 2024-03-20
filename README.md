@@ -47,8 +47,16 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 -- tailwind-tools.lua
 return {
   "luckasRanarison/tailwind-tools.nvim",
-  opts = {}
+  opts = {} -- your configuration
 }
+```
+
+If you are using other package managers you need to call `setup`:
+
+```lua
+require("tailwind-tools").setup({
+  -- your configuration
+})
 ```
 
 ## Configuration
