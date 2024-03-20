@@ -53,13 +53,13 @@ Here is the default configuration:
 ---@type TailwindTools.Option
 {
   document_color = {
-    enabled = true,
-    kind = "inline", -- "inline" | "foreground" | "backgroubd"
+    enabled = true, -- can be toggled by commands
+    kind = "inline", -- "inline" | "foreground" | "background"
     inline_symbol = "󰝤 ", -- only used in inline mode
     debounce = 200, -- in milliseconds, only applied in insert mode
   },
   conceal = {
-    symbol = "󱏿",
+    symbol = "󱏿", -- only a single character is allowed
     highlight = { -- extmark highlight options, see :h 'highlight'
       fg = "#38BDF8",
     },
@@ -107,10 +107,10 @@ Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7t
 
 Here are some related projects:
 
-- [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) (official VSCode extension)
-- [tailwind-fold](https://github.com/stivoat/tailwind-fold) (VSCode extension)
+- [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) (official vscode extension)
+- [tailwind-fold](https://github.com/stivoat/tailwind-fold) (vscode extension)
 - [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) (uses external scripts)
-- [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim) (basic queries)
+- [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim) (has basic queries)
 - [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archieved)
 
 ## Contributing
