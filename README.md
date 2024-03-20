@@ -28,7 +28,7 @@ The plugin works out of the box with all languages inheriting from html, css and
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
 
 > [!NOTE]
-> Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server)
+> Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server).
 
 ## Prerequisites
 
@@ -54,7 +54,7 @@ return {
 ## Configuration
 
 > [!IMPORTANT]
-> Neovim nightly is required for vscode-like inline color hints
+> Neovim nightly is required for vscode-like inline color hints.
 
 Here is the default configuration:
 
