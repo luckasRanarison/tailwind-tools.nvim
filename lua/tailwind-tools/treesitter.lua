@@ -1,15 +1,9 @@
 local M = {}
 
 local lang_map = {
-  html = { "html", "php" },
   css = { "css", "sass", "scss" },
-  tsx = {
-    "astro",
-    "vue",
-    "svete",
-    "javascriptreact",
-    "typescriptreact",
-  },
+  html = { "html", "php", "vue", "svelte", "astro" },
+  tsx = { "javascriptreact", "typescriptreact" },
 }
 
 ---@param bufnr number
