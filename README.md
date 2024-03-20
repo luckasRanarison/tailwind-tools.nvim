@@ -15,7 +15,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
-- [Related](#related)
+- [Related projects](#related-projects)
 - [Contributing](#contributing)
 
 ## Features
@@ -44,6 +44,7 @@ The plugin works out of the box with all languages inheriting from html, css and
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
+-- tailwind-tools.lua
 return {
   "luckasRanarison/tailwind-tools.nvim",
   opts = {}
@@ -53,7 +54,7 @@ return {
 ## Configuration
 
 > [!IMPORTANT]
-> Neovim nightly is required for VSCode like inline color hints
+> Neovim nightly is required for vscode-like inline color hints
 
 Here is the default configuration:
 
@@ -93,7 +94,8 @@ Available commands:
 Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) using [lspkind.nvim](https://github.com/onsails/lspkind.nvim):
 
 ```lua
-{
+-- nvim-cmp.lua
+return {
   "hrsh7th/nvim-cmp",
   dependencies = {
     "luckasRanarison/tailwind-tools.nvim",
@@ -111,14 +113,14 @@ Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7t
 },
 ```
 
-## Related
+## Related projects
 
 Here are some related projects:
 
 - [tailwindcss-intellisense](https://github.com/tailwindlabs/tailwindcss-intellisense) (official vscode extension)
-- [tailwind-fold](https://github.com/stivoat/tailwind-fold) (vscode extension)
 - [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) (uses external scripts)
-- [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim) (has basic queries)
+- [tailwind-fold](https://github.com/stivoat/tailwind-fold) (vscode extension)
+- [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim)
 - [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archieved)
 
 ## Contributing
