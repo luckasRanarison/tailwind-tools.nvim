@@ -6,9 +6,9 @@ local name_map = {
   background = "Bg",
 }
 
----@param red number | string
----@param green number | string
----@param blue number | string
+---@param red number
+---@param green number
+---@param blue number
 ---@param kind TailwindTools.ColorHint
 M.set_hl_from = function(red, green, blue, kind)
   local color = string.format("%02x%02x%02x", red, green, blue)
@@ -16,9 +16,8 @@ M.set_hl_from = function(red, green, blue, kind)
   local opts = nil
 
   if kind == "background" then
-    local r, g, b = tonumber(red), tonumber(green), tonumber(blue)
     -- https://stackoverflow.com/questions/3942878
-    local luminance = r * 0.299 + g * 0.587 + b * 0.114
+    local luminance = red * 0.299 + green * 0.587 + blue * 0.114
     local fg = luminance > 186 and "#000000" or "#FFFFFF"
     opts = { fg = fg, bg = "#" .. color }
   else
