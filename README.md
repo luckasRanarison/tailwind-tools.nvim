@@ -37,7 +37,7 @@ The plugin works with all languages inheriting from html, css and tsx treesitter
 - `html`, `css` and `tsx` treesitter grammars (can be installed using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 
 > [!TIP]
-> If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/tailwindlabs) to learn how to setup the LSP.
+> If you are not familiar with neovim LSP ecosystem check out  [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to learn how to setup the LSP.
 
 ## Installation
 
