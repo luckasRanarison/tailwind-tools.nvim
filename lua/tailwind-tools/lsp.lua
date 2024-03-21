@@ -149,13 +149,16 @@ end
 
 M.sort_selection = function()
   local client = get_tailwindcss()
+
+  if not client then return log.warn("tailwind-language-server is not running") end
+
   local bufnr = vim.api.nvim_get_current_buf()
   local start_col = vim.fn.col("'<") - 1
   local end_col = vim.fn.col("'>")
   local row = vim.api.nvim_win_get_cursor(0)[1] - 1
   local class = vim.api.nvim_buf_get_text(bufnr, row, start_col, row, end_col, {})[1]
 
-  if client and class then
+  if class then
     local params = vim.lsp.util.make_text_document_params(bufnr)
 
     params.classLists = { class }
@@ -169,11 +172,14 @@ end
 M.sort_classes = function()
   local client = get_tailwindcss()
 
-  if not client then return end
+  if not client then return log.warn("tailwind-language-server is not running") end
 
   local bufnr = vim.api.nvim_get_current_buf()
   local params = vim.lsp.util.make_text_document_params(bufnr)
   local class_nodes = treesitter.get_class_iter(bufnr)
+
+  if not class_nodes then return log.warn("No parser is registered for the current filetype") end
+
   local class_text = {}
   local class_ranges = {}
 

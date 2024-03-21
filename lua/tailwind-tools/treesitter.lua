@@ -7,6 +7,7 @@ local valid_ft = {
   "vue",
   "svelte",
   "astro",
+  "htmldjango",
   "javascriptreact",
   "typescriptreact",
 }
@@ -14,6 +15,7 @@ local valid_ft = {
 local lang_map = {
   javascriptreact = "tsx",
   typescriptreact = "tsx",
+  htmldjango = "html",
 }
 
 ---@param bufnr number
