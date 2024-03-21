@@ -17,6 +17,7 @@ M.options = {
       fg = "#38BDF8",
     },
   },
+  custom_filetypes = {},
 }
 
 return M

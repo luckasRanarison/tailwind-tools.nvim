@@ -15,6 +15,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
+- [Extension](#extension)
 - [Related projects](#related-projects)
 - [Contributing](#contributing)
 
@@ -81,6 +82,7 @@ Here is the default configuration:
       fg = "#38BDF8",
     },
   },
+  custom_filetypes = {} -- see the extension section to learn how it works
 }
 ```
 
@@ -123,6 +125,37 @@ return {
 
 > [!TIP]
 > You can extend it by calling the function and get the returned `vim_item`, see the nvim-cmp [wiki](https://github.com/hrsh7th/nvim-cmp/wiki/Menu-Appearance) to learn more.
+
+## Extension
+
+The plugin basically works with any language as long it has a treesitter parser and a `class` query. You can check the currently available queries and supported filetypes [here](./queries), feel free to request other languages support.
+
+But you can also create your own queries! If you are not familiar with treesitter queries you should check out the treesitter query documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax). To add a new filetype you first need to add it to your configuration then the plugin will search for a `class.scm` file (classexpr) associated to the filetype in your `runtimepath`, that file contains a query that will extract all the class values in your file.
+
+You could use your Neovim configuration folder to store queries inside a folder named `query` as shown in the follwing example:
+
+```
+~/.config/nvim
+.
+├── init.lua
+├── lua
+│   └── ...
+└── queries
+    └── myfiletype
+        └── class.scm
+```
+
+The class value should be the **second** matched item in the query as in the follwing example:
+
+```scheme
+(attribute
+  (attribute_name) @_attribute_name ; first match (usually used to check the attribute name)
+  (#eq? @_attribute_name "class")
+  (quoted_attribute_value
+    (attribute_value) @_class_value)) ; second match (the actual value)
+```
+
+Note that this only works for basic use cases, more complex queries cannot be handled in that way and require actual code as in the case of `css`. You can also check out the existing [queries](./queries) to see more examples.
 
 ## Related projects
 

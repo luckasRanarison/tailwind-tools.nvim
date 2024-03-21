@@ -1,6 +1,8 @@
 local M = {}
 
-local valid_ft = {
+local config = require("tailwind-tools.config")
+
+local supported_filetypes = {
   "html",
   "css",
   "php",
@@ -21,8 +23,9 @@ local lang_map = {
 ---@param bufnr number
 M.get_class_iter = function(bufnr)
   local ft = vim.bo[bufnr].ft
+  local filetypes = vim.tbl_extend("keep", config.options.custom_filetypes, supported_filetypes)
 
-  if vim.tbl_contains(valid_ft, ft) then
+  if vim.tbl_contains(filetypes, ft) then
     local lang = lang_map[ft] or ft
     local parser = vim.treesitter.get_parser(bufnr, lang)
     local tree = parser:parse()
