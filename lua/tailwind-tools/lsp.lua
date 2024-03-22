@@ -81,6 +81,7 @@ M.on_attach = function(args)
 
   vim.api.nvim_create_autocmd(color_events, {
     group = vim.g.tailwind_tools.color_au,
+    buffer = bufnr,
     callback = function(a)
       if not state.color.enabled then return end
       if a.event == "TextChangedI" then
