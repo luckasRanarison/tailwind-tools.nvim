@@ -5,5 +5,6 @@
    (string
      (string_fragment) @_class_value)
    (jsx_expression
-     (_) @_class_value)
+     (template_string
+       (string_fragment) @_class_value))
    ])
