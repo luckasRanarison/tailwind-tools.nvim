@@ -165,6 +165,8 @@ M.sort_selection = function()
     params.classLists = { class }
     client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
       if err then return log.error(err.message) end
+      if result.error then return log.error(result.error) end
+
       vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, result.classLists)
     end, bufnr)
   end
@@ -197,6 +199,7 @@ M.sort_classes = function()
   params.classLists = class_text
   client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
     if err then return log.error(err.message) end
+    if result.error then return log.error(result.error) end
 
     for i, edit in pairs(result.classLists) do
       local row, start_col, end_col = unpack(class_ranges[i])
