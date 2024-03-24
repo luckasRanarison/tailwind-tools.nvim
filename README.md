@@ -48,6 +48,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 -- tailwind-tools.lua
 return {
   "luckasRanarison/tailwind-tools.nvim",
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
   opts = {} -- your configuration
 }
 ```
