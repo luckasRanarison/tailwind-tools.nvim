@@ -2,6 +2,7 @@ local M = {}
 
 local log = require("tailwind-tools.log")
 local lsp = require("tailwind-tools.lsp")
+local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
 
@@ -35,6 +36,15 @@ M.setup = function(options)
     group = vim.g.tailwind_tools.conceal_au,
     callback = lsp.on_attach,
   })
+
+  if config.options.conceal.enabled then
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = vim.g.tailwind_tools.conceal_au,
+      callback = function()
+        if not state.conceal.enabled then conceal.enable() end
+      end,
+    })
+  end
 end
 
 return M
