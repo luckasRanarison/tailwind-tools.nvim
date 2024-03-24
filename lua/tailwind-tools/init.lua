@@ -11,7 +11,7 @@ M.setup = function(options)
 
   if vim.version().minor < 10 and config.options.document_color.kind == "inline" then
     log.warn(
-      'Neovim nightly is required for inline color hints, using fallback option. Use value "foreground" or "background" for document_color.kind'
+      'Neovim nightly is required for inline color hints, using fallback option. Should use value "foreground" or "background" for document_color.kind'
     )
     config.options.document_color.kind = "background"
   end
