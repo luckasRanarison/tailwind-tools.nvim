@@ -12,7 +12,7 @@ M.options = {
     debounce = 200,
   },
   conceal = {
-    enabled = true,
+    enabled = false,
     symbol = "󱏿",
     highlight = {
       fg = "#38BDF8",
