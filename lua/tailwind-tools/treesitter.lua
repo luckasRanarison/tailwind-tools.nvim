@@ -1,6 +1,8 @@
 local M = {}
 
+local log = require("tailwind-tools.log")
 local config = require("tailwind-tools.config")
+local parsers = require("nvim-treesitter.parsers")
 
 local supported_filetypes = {
   "html",
@@ -14,25 +16,31 @@ local supported_filetypes = {
   "typescriptreact",
 }
 
-local lang_map = {
-  javascriptreact = "tsx",
-  typescriptreact = "tsx",
-  htmldjango = "html",
-}
-
 ---@param bufnr number
-M.get_class_iter = function(bufnr)
+M.get_class_nodes = function(bufnr)
   local ft = vim.bo[bufnr].ft
   local filetypes = vim.tbl_extend("keep", config.options.custom_filetypes, supported_filetypes)
+  local results = {}
 
-  if vim.tbl_contains(filetypes, ft) then
-    local lang = lang_map[ft] or ft
-    local parser = vim.treesitter.get_parser(bufnr, lang)
-    local tree = parser:parse()
-    local root = tree[1]:root()
-    local query = assert(vim.treesitter.query.get(lang, "class"))
-    return query:iter_matches(root, bufnr, root:start(), root:end_(), { all = true })
-  end
+  if not vim.tbl_contains(filetypes, ft) then return end
+
+  local parser = parsers.get_parser(bufnr)
+
+  if not parser then return log.warn("No parser available for " .. ft) end
+
+  parser:for_each_tree(function(tree, lang_tree)
+    local root = tree:root()
+    local lang = lang_tree:lang()
+    local query = vim.treesitter.query.get(lang, "class")
+
+    if query then
+      for _, match in query:iter_matches(root, bufnr, 0, -1, { all = true }) do
+        results[#results + 1] = match[2][1] or match[2]
+      end
+    end
+  end)
+
+  return results
 end
 
 ---@param node TSNode

@@ -7,7 +7,7 @@ local treesitter = require("tailwind-tools.treesitter")
 
 ---@param bufnr number
 local function set_conceal(bufnr)
-  local class_nodes = treesitter.get_class_iter(bufnr)
+  local class_nodes = treesitter.get_class_nodes(bufnr)
 
   if not class_nodes then return end
 
@@ -16,8 +16,7 @@ local function set_conceal(bufnr)
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
   table.insert(state.conceal.active_buffers, bufnr)
 
-  for _, match in class_nodes do
-    local node = match[2][1] or match[2]
+  for _, node in pairs(class_nodes) do
     local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
 
     vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
