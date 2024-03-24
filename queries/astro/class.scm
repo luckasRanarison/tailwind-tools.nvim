@@ -1,1 +1,1 @@
-; inherits: html, tsx
+; inherits: html, tsx, astro
