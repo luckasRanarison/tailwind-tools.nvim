@@ -40,6 +40,8 @@ M.setup = function(options)
   })
 
   if config.options.conceal.enabled then
+    state.conceal.enabled = config.options.conceal.enabled
+
     vim.api.nvim_create_autocmd("BufEnter", {
       group = vim.g.tailwind_tools.conceal_au,
       callback = function()
