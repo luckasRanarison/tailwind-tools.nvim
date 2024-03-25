@@ -50,8 +50,8 @@ M.get_class_range = function(node, bufnr)
   local children = node:named_children()
 
   if children[1] and vim.treesitter.get_node_text(children[1], bufnr) == "@apply" then
-    start_row, start_col, end_row, _ = children[2]:range()
-    _, _, _, end_col = children[#children]:range()
+    start_row, start_col, _, _ = children[2]:range()
+    _, _, end_row, end_col = children[#children]:range()
   end
 
   return start_row, start_col, end_row, end_col
