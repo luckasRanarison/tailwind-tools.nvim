@@ -156,18 +156,20 @@ M.sort_selection = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local start_col = vim.fn.col("'<") - 1
   local end_col = vim.fn.col("'>")
-  local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local class = vim.api.nvim_buf_get_text(bufnr, row, start_col, row, end_col, {})[1]
+  local start_row = vim.fn.line("'<") - 1
+  local end_row = vim.fn.line("'>") - 1
+  local class = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
 
   if class then
     local params = vim.lsp.util.make_text_document_params(bufnr)
 
-    params.classLists = { class }
+    params.classLists = { table.concat(class, "\n") }
     client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
       if err then return log.error(err.message) end
       if result.error then return log.error(result.error) end
+      local formatted = vim.split(result.classLists[1], "\n")
 
-      vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, result.classLists)
+      vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, formatted)
     end, bufnr)
   end
 end
@@ -188,12 +190,10 @@ M.sort_classes = function()
 
   for _, node in pairs(class_nodes) do
     local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
-    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})[1]
+    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
 
-    if start_row == end_row then
-      class_text[#class_text + 1] = text
-      class_ranges[#class_ranges + 1] = { start_row, start_col, end_col }
-    end
+    class_text[#class_text + 1] = table.concat(text, "\n")
+    class_ranges[#class_ranges + 1] = { start_row, start_col, end_row, end_col }
   end
 
   params.classLists = class_text
@@ -202,9 +202,13 @@ M.sort_classes = function()
     if result.error then return log.error(result.error) end
 
     for i, edit in pairs(result.classLists) do
-      local row, start_col, end_col = unpack(class_ranges[i])
+      local lines = vim.split(edit, "\n")
+      local start_row, start_col, end_row, end_col = unpack(class_ranges[i])
+      local set_text = function()
+        vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, lines)
+      end
       -- Dismiss useless error messages when undoing in nightly
-      pcall(function() vim.api.nvim_buf_set_text(bufnr, row, start_col, row, end_col, { edit }) end)
+      pcall(set_text)
     end
   end, bufnr)
 end
