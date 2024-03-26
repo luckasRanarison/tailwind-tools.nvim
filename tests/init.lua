@@ -27,3 +27,5 @@ require("lazy").setup({
   },
   { dir = "../", dependecies = { "nvim-treesitter/nvim-treesitter" } },
 })
+
+vim.cmd("TSUpdate")
