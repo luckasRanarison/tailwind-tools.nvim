@@ -4,18 +4,20 @@ on:
   pull_request:
 
 jobs:
-  tests:
+  test-nightly:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+        job:
+          - version: stable
+          - version: nightly
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install Neovim
         shell: bash
         run: |
           mkdir -p /tmp/nvim
-          wget -q https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage -O /tmp/nvim/nvim.appimage
+          wget -q https://github.com/neovim/neovim/releases/download/${{ matrix.job.version }}/nvim.appimage -O /tmp/nvim/nvim.appimage
           cd /tmp/nvim
           chmod a+x ./nvim.appimage
           ./nvim.appimage --appimage-extract
@@ -23,4 +25,4 @@ jobs:
       - name: Run Tests
         run: |
           nvim --version
-          nvim --headless -u test/init.lua -c "PlenaryBustedDirectory tests/ { init='test/init.lua' }"
+          nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/ { init='tests/init.lua' }"
