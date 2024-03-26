@@ -104,6 +104,7 @@ M.color_request = function(bufnr)
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then return log.error(err.message) end
+    if not result then return end
     if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     ---@type lsp.ColorInformation[]
