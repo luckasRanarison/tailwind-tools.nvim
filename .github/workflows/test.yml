@@ -7,21 +7,25 @@ jobs:
   test:
     strategy:
       matrix:
-        job:
-          - version: stable
-          - version: nightly
+        version: [stable, nightly]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install Neovim
         shell: bash
         run: |
           mkdir -p /tmp/nvim
-          wget -q https://github.com/neovim/neovim/releases/download/${{ matrix.job.version }}/nvim.appimage -O /tmp/nvim/nvim.appimage
+          wget -q https://github.com/neovim/neovim/releases/download/${{ matrix.version }}/nvim.appimage -O /tmp/nvim/nvim.appimage
           cd /tmp/nvim
           chmod a+x ./nvim.appimage
           ./nvim.appimage --appimage-extract
           echo "/tmp/nvim/squashfs-root/usr/bin/" >> $GITHUB_PATH
+
+      - name: Install parsers
+        run: |
+          nvim --headless -u tests/init.lua -c "TSInstallSync html css tsx astro" -c "q"
+
       - name: Run Tests
         run: |
           nvim --version
