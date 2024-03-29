@@ -17,15 +17,5 @@ vim.o.swapfile = false
 
 require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      auto_install = true,
-      sync_install = true,
-      ensure_installed = { "html", "tsx", "css", "astro" },
-      highlight = { enable = true },
-    },
-    setup = function(_, opts) require("nvim-treesitter.configs").setup(opts) end,
-  },
-  { dir = "../" },
+  { dir = "../", dependencies = { "nvim-treesitter/nvim-treesitter" } },
 })

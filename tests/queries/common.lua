@@ -16,7 +16,7 @@ end
 
 function Runner:classes(expected)
   it("Should get classes", function()
-    self.nodes = assert(treesitter.get_class_nodes(0), "Expected nodes")
+    self.nodes = assert(treesitter.get_class_nodes(0, true), "Expected nodes")
     assert.same(expected, #self.nodes, "Mismatched node count")
   end)
 end
