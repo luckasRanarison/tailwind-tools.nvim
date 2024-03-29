@@ -30,10 +30,6 @@ local function set_conceal(bufnr)
 end
 
 M.enable = function()
-  for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(bufnr) then set_conceal(bufnr) end
-  end
-
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
     group = vim.g.tailwind_tools.conceal_au,
     callback = function(args) set_conceal(args.buf) end,
@@ -47,8 +43,14 @@ M.enable = function()
     end,
   })
 
-  state.conceal.enabled = true
+  for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) then set_conceal(bufnr) end
+  end
+
+  -- Restore color hints
   if state.color.enabled then lsp.color_request(0) end
+
+  state.conceal.enabled = true
 end
 
 M.disable = function()
@@ -64,9 +66,10 @@ M.disable = function()
     end
   end
 
+  if state.color.enabled then lsp.color_request(0) end
+
   state.conceal.active_buffers = {}
   state.conceal.enabled = false
-  if state.color.enabled then lsp.color_request(0) end
 end
 
 M.toggle = function()

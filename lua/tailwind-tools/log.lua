@@ -3,7 +3,9 @@ local M = {}
 local levels = vim.log.levels
 
 local notify_fn = function(level)
-  return function(message) vim.notify("[tailwind-tools] " .. message, level) end
+  return
+  ---@param message string
+  function(message) vim.notify("[tailwind-tools] " .. message, level) end
 end
 
 M.debug = notify_fn(levels.DEBUG)
