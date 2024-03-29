@@ -104,8 +104,7 @@ M.color_request = function(bufnr)
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then return log.error(err.message) end
-    if not result then return end
-    if not vim.api.nvim_buf_is_valid(bufnr) then return end
+    if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     ---@type lsp.ColorInformation[]
     local colors = result
@@ -168,6 +167,7 @@ M.sort_selection = function()
     client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
       if err then return log.error(err.message) end
       if result.error then return log.error(result.error) end
+      if not vim.api.nvim_buf_is_valid(bufnr) then return end
       local formatted = vim.split(result.classLists[1], "\n")
 
       vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, formatted)
@@ -201,6 +201,7 @@ M.sort_classes = function()
   client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
     if err then return log.error(err.message) end
     if result.error then return log.error(result.error) end
+    if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     for i, edit in pairs(result.classLists) do
       local lines = vim.split(edit, "\n")
