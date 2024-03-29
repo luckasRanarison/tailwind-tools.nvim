@@ -17,7 +17,8 @@ local supported_filetypes = {
 }
 
 ---@param bufnr number
-M.get_class_nodes = function(bufnr)
+---@param all boolean?
+M.get_class_nodes = function(bufnr, all)
   local ft = vim.bo[bufnr].ft
   local filetypes = vim.tbl_extend("keep", config.options.custom_filetypes, supported_filetypes)
   local results = {}
@@ -27,6 +28,8 @@ M.get_class_nodes = function(bufnr)
   local parser = parsers.get_parser(bufnr)
 
   if not parser then return log.warn("No parser available for " .. ft) end
+
+  if all and vim.version().minor == 10 then parser:parse(true) end
 
   parser:for_each_tree(function(tree, lang_tree)
     local root = tree:root()

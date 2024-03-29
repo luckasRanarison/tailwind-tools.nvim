@@ -182,7 +182,7 @@ M.sort_classes = function()
 
   local bufnr = vim.api.nvim_get_current_buf()
   local params = vim.lsp.util.make_text_document_params(bufnr)
-  local class_nodes = treesitter.get_class_nodes(bufnr)
+  local class_nodes = treesitter.get_class_nodes(bufnr, true)
 
   if not class_nodes then return end
 
