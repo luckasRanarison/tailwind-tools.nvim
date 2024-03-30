@@ -33,7 +33,7 @@ local function set_extmark(bufnr, color)
   local namespace = vim.g.tailwind_tools.color_ns
   local start_row = color.range.start.line
   local start_col = color.range.start.character
-  local opts = nil
+  local opts
 
   if hl_kind == "inline" then
     opts = {

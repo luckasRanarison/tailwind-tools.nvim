@@ -13,7 +13,7 @@ local name_map = {
 M.set_hl_from = function(red, green, blue, kind)
   local color = string.format("%02x%02x%02x", red, green, blue)
   local group = "TailwindColor" .. name_map[kind] .. color
-  local opts = nil
+  local opts
 
   if kind == "background" then
     -- https://stackoverflow.com/questions/3942878
