@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-white bg-neutral-900;
+}
+
+a {
+  @apply font-semibold text-blue-600
+  hover:text-blue-400 dark:text-white;
+}
