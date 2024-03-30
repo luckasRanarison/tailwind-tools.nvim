@@ -8,6 +8,7 @@ local supported_filetypes = {
   "html",
   "css",
   "php",
+  "twig",
   "vue",
   "svelte",
   "astro",
