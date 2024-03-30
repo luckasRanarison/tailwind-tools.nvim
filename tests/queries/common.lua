@@ -8,9 +8,11 @@ local Runner = {}
 Runner.__index = Runner
 
 ---@param file_path string
-function Runner:new(file_path)
+---@param filetype string?
+function Runner:new(file_path, filetype)
   assert.same(1, vim.fn.filereadable(file_path), file_path .. " is not readable")
   vim.cmd.edit(file_path)
+  if filetype then vim.bo.filetype = filetype end
   return setmetatable({ nodes = {} }, self)
 end
 
