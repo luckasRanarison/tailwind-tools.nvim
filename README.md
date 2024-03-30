@@ -27,6 +27,7 @@ The plugin works with all languages inheriting from html, css and tsx treesitter
 - Class concealing
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
+- Class motions
 
 > [!NOTE]
 > Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server).
@@ -100,6 +101,8 @@ Available commands:
 - `TailwindColorToggle`: toggles color hints.
 - `TailwindSort`: sorts all classes in the current buffer.
 - `TailwindSortSelection`: sorts selected classes in visual mode.
+- `TailwindNextClass`: moves the cursor to the nearest next class node.
+- `TailwindPrevClass`: moves the cursor to the nearest previous class node.
 
 ## Utilities
 

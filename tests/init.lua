@@ -17,5 +17,5 @@ vim.o.swapfile = false
 
 require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
-  { dir = "../", dependencies = { "nvim-treesitter/nvim-treesitter" } },
+  { dir = "./", opts = {}, dependencies = { "nvim-treesitter/nvim-treesitter" } },
 })

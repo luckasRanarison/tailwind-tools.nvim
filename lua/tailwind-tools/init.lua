@@ -5,6 +5,7 @@ local lsp = require("tailwind-tools.lsp")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
+local motions = require("tailwind-tools.motions")
 
 ---@param options TailwindTools.Option
 M.setup = function(options)
@@ -34,6 +35,8 @@ M.setup = function(options)
   vim.api.nvim_create_user_command("TailwindColorEnable", lsp.enable_color, { nargs = 0 })
   vim.api.nvim_create_user_command("TailwindColorDisable", lsp.disable_color, { nargs = 0 })
   vim.api.nvim_create_user_command("TailwindColorToggle", lsp.toggle_colors, { nargs = 0 })
+  vim.api.nvim_create_user_command("TailwindNextClass", motions.move_to_next_class, { nargs = 0 })
+  vim.api.nvim_create_user_command("TailwindPrevClass", motions.move_to_prev_class, { nargs = 0 })
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.g.tailwind_tools.conceal_au,
