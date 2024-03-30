@@ -24,7 +24,7 @@ jobs:
 
       - name: Install parsers
         run: |
-          nvim --headless -u tests/init.lua -c "TSInstallSync html css tsx astro" -c "q"
+          nvim --headless -u tests/init.lua -c "TSInstallSync html css tsx astro php twig svelte vue htmldjango" -c "q"
 
       - name: Run Tests
         run: |
