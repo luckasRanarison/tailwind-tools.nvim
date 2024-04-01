@@ -1,5 +1,3 @@
-local config = require("tailwind-tools.config")
-
 return {
   conceal = {
     enabled = false,
@@ -7,7 +5,7 @@ return {
   },
   color = {
     request_timer = nil,
-    enabled = config.options.document_color.enabled,
+    enabled = false,
     active_buffers = {},
   },
 }
