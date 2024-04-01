@@ -50,7 +50,7 @@ M.setup = function(options)
     vim.api.nvim_create_autocmd("BufEnter", {
       group = vim.g.tailwind_tools.conceal_au,
       callback = function()
-        if not state.conceal.enabled then conceal.enable() end
+        if state.conceal.enabled then conceal.enable() end
       end,
     })
   end
