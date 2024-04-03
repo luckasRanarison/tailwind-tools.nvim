@@ -11,6 +11,9 @@ local motions = require("tailwind-tools.motions")
 M.setup = function(options)
   config.options = vim.tbl_deep_extend("keep", options, config.options)
 
+  state.conceal.enabled = config.options.conceal.enabled
+  state.color.enabled = config.options.document_color.enabled
+
   if vim.version().minor < 10 and config.options.document_color.kind == "inline" then
     log.warn(
       "Neovim nightly is required for inline color hints, using fallback option."
@@ -43,14 +46,12 @@ M.setup = function(options)
     callback = lsp.on_attach,
   })
 
-  if config.options.conceal.enabled then
-    vim.api.nvim_create_autocmd("BufEnter", {
-      group = vim.g.tailwind_tools.conceal_au,
-      callback = function()
-        if not state.conceal.enabled then conceal.enable() end
-      end,
-    })
-  end
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.g.tailwind_tools.conceal_au,
+    callback = function()
+      if state.conceal.enabled then conceal.enable() end
+    end,
+  })
 end
 
 return M
