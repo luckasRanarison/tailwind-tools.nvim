@@ -92,9 +92,7 @@ M.on_attach = function(args)
     end,
   })
 
-  if state.color.enabled then
-    M.color_request(bufnr)
-  end
+  if state.color.enabled then M.color_request(bufnr) end
 end
 
 ---@param bufnr number
