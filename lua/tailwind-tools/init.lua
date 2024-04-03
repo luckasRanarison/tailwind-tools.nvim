@@ -46,14 +46,12 @@ M.setup = function(options)
     callback = lsp.on_attach,
   })
 
-  if config.options.conceal.enabled then
-    vim.api.nvim_create_autocmd("BufEnter", {
-      group = vim.g.tailwind_tools.conceal_au,
-      callback = function()
-        if state.conceal.enabled then conceal.enable() end
-      end,
-    })
-  end
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.g.tailwind_tools.conceal_au,
+    callback = function()
+      if state.conceal.enabled then conceal.enable() end
+    end,
+  })
 end
 
 return M
