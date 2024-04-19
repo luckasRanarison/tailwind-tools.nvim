@@ -16,16 +16,20 @@ local function set_conceal(bufnr)
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
   table.insert(state.conceal.active_buffers, bufnr)
 
+  local opts = config.options.conceal
+
   for _, node in pairs(class_nodes) do
     local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
 
-    vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
-      end_line = end_row,
-      end_col = end_col,
-      conceal = config.options.conceal.symbol,
-      hl_group = "TailwindConceal",
-      priority = 0, -- To ignore conceal hl_group when focused
-    })
+    if not opts.min_length or node:byte_length() >= opts.min_length then
+      vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
+        end_line = end_row,
+        end_col = end_col,
+        conceal = opts.symbol,
+        hl_group = "TailwindConceal",
+        priority = 0, -- To ignore conceal hl_group when focused
+      })
+    end
   end
 end
 

@@ -13,6 +13,7 @@ M.options = {
   },
   conceal = {
     enabled = false,
+    min_length = nil,
     symbol = "󱏿",
     highlight = {
       fg = "#38BDF8",
