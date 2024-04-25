@@ -20,6 +20,18 @@ M.options = {
     },
   },
   custom_filetypes = {},
+  supported_filetypes = {
+    "html",
+    "css",
+    "php",
+    "twig",
+    "vue",
+    "svelte",
+    "astro",
+    "htmldjango",
+    "javascriptreact",
+    "typescriptreact",
+  },
 }
 
 return M

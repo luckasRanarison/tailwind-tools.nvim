@@ -43,6 +43,7 @@ M.setup = function(options)
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.g.tailwind_tools.conceal_au,
+    pattern = config.options.supported_filetypes,
     callback = lsp.on_attach,
   })
 

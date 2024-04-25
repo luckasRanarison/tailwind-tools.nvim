@@ -87,6 +87,18 @@ Here is the default configuration:
     },
   },
   custom_filetypes = {} -- see the extension section to learn how it works
+  supported_filetypes = {
+    "html",
+    "css",
+    "php",
+    "twig",
+    "vue",
+    "svelte",
+    "astro",
+    "htmldjango",
+    "javascriptreact",
+    "typescriptreact",
+  
 }
 ```
 
