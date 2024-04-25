@@ -4,24 +4,12 @@ local log = require("tailwind-tools.log")
 local config = require("tailwind-tools.config")
 local parsers = require("nvim-treesitter.parsers")
 
-local supported_filetypes = {
-  "html",
-  "css",
-  "php",
-  "twig",
-  "vue",
-  "svelte",
-  "astro",
-  "htmldjango",
-  "javascriptreact",
-  "typescriptreact",
-}
-
 ---@param bufnr number
 ---@param all boolean?
 M.get_class_nodes = function(bufnr, all)
   local ft = vim.bo[bufnr].ft
-  local filetypes = vim.tbl_extend("keep", config.options.custom_filetypes, supported_filetypes)
+  local filetypes =
+    vim.tbl_extend("keep", config.options.custom_filetypes, config.options.supported_filetypes)
   local results = {}
 
   if not vim.tbl_contains(filetypes, ft) then return end
