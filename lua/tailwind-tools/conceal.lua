@@ -36,11 +36,13 @@ end
 M.enable = function()
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
     group = vim.g.tailwind_tools.conceal_au,
+    pattern = config.options.supported_filetypes,
     callback = function(args) set_conceal(args.buf) end,
   })
   -- Workaround to reset conceallevel per buffer
   vim.api.nvim_create_autocmd("BufEnter", {
     group = vim.g.tailwind_tools.conceal_au,
+    pattern = config.options.supported_filetypes,
     callback = function(args)
       vim.wo.conceallevel = vim.opt.conceallevel:get()
       if state.conceal.enabled then set_conceal(args.buf) end
