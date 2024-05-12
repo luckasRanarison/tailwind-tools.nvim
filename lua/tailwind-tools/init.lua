@@ -42,7 +42,7 @@ M.setup = function(options)
   vim.api.nvim_create_user_command("TailwindPrevClass", motions.move_to_prev_class, { nargs = 0 })
 
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.g.tailwind_tools.conceal_au,
+    group = vim.g.tailwind_tools.color_au,
     callback = lsp.on_attach,
   })
 
