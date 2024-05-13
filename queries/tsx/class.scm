@@ -3,8 +3,8 @@
   (#any-of? @_attribute_name "class" "className")
   [
    (string
-     (string_fragment) @_class_value)
+     (string_fragment) @tailwind)
    (jsx_expression
      (template_string
-       (string_fragment) @_class_value))
+       (string_fragment) @tailwind))
    ])
