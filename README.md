@@ -34,7 +34,7 @@ The plugin works with all languages inheriting from html, css and tsx treesitter
 
 ## Prerequisites
 
-- Latest Neovim [stable](https://github.com/neovim/neovim/releases/tag/stable) or [nightly](https://github.com/neovim/neovim/releases/tag/nightly) (recommended)
+- Neovim v0.9 or higher (v0.10 is recommended)
 - [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
 - `html`, `css`, `tsx` and your other languages treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 
@@ -65,7 +65,7 @@ require("tailwind-tools").setup({
 ## Configuration
 
 > [!IMPORTANT]
-> Neovim nightly is required for vscode-like inline color hints.
+> Neovim v0.10 is required for vscode-like inline color hints.
 
 Here is the default configuration:
 
