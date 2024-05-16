@@ -53,6 +53,7 @@ M.get_class_range = function(node, bufnr)
   local start_row, start_col, end_row, end_col = node:range()
   local children = node:named_children()
 
+  -- A special case for extracting postcss class range
   if children[1] and vim.treesitter.get_node_text(children[1], bufnr) == "@apply" then
     start_row, start_col, _, _ = children[2]:range()
     _, _, end_row, end_col = children[#children]:range()
