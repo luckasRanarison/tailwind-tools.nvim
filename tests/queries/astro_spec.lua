@@ -2,10 +2,11 @@ local common = require("tests.queries.common")
 local runner = common.Runner:new("tests/queries/astro/index.astro")
 
 describe("queries astro:", function()
-  runner:classes(3)
+  runner:classes(4)
   runner:ranges({
-    { 4, 12, 4, 26 },
-    { 5, 14, 5, 41 },
-    { 7, 33, 7, 43 },
+    { 4, 17, 4, 42 },
+    { 6, 12, 6, 26 },
+    { 7, 14, 7, 41 },
+    { 9, 33, 9, 43 },
   })
 end)
