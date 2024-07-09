@@ -33,22 +33,16 @@ local function set_extmark(bufnr, color)
   local namespace = vim.g.tailwind_tools.color_ns
   local start_row = color.range.start.line
   local start_col = color.range.start.character
-  local opts
+  local opts = {}
 
   if hl_kind == "inline" then
-    opts = {
-      virt_text = {
-        { config.options.document_color.inline_symbol, hl_group },
-      },
-      virt_text_pos = "inline",
-    }
+    opts.virt_text = { { config.options.document_color.inline_symbol, hl_group } }
+    opts.virt_text_pos = "inline"
   else
-    opts = {
-      hl_group = hl_group,
-      end_row = color.range["end"].line,
-      end_col = color.range["end"].character,
-      priority = 1000,
-    }
+    opts.hl_group = hl_group
+    opts.end_row = color.range["end"].line
+    opts.end_col = color.range["end"].character
+    opts.priority = 1000
   end
 
   vim.api.nvim_buf_set_extmark(bufnr, namespace, start_row, start_col, opts)
