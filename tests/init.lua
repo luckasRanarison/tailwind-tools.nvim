@@ -16,6 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 vim.o.swapfile = false
 
 require("lazy").setup({
-  { "nvim-lua/plenary.nvim" },
+  { "nvim-lua/plenary.nvim", cmd = "PlenaryBustedDirectory" },
   { dir = "./", opts = {}, dependencies = { "nvim-treesitter/nvim-treesitter" } },
 })
