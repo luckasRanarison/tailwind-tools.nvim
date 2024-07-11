@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> This plugin is a community project and is **NOT** officialy supported by [Tailwind Labs](https://github.com/tailwindlabs).
+> This plugin is a community project and is **NOT** officially supported by [Tailwind Labs](https://github.com/tailwindlabs).
 
 # tailwind-tools.nvim
 
