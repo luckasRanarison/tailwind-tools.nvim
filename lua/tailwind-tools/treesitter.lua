@@ -12,6 +12,8 @@ local supported_filetypes = {
   "vue",
   "svelte",
   "astro",
+  "heex",
+  "elixir",
   "htmldjango",
   "javascriptreact",
   "typescriptreact",
