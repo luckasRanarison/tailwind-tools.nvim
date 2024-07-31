@@ -32,7 +32,7 @@ M.get_class_nodes = function(bufnr, all)
 
   if not parser then return log.warn("No parser available for " .. ft) end
 
-  if all and vim.version().minor == 10 then parser:parse(true) end
+  if all and vim.version().minor >= 10 then parser:parse(true) end
 
   parser:for_each_tree(function(tree, lang_tree)
     local root = tree:root()
