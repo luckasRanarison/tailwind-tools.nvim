@@ -21,7 +21,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 
 ## Features
 
-The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./queries)) and provides the following features:
+The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./lua/tailwind-tools/filetypes.lua)) and provides the following features:
 
 - Class color hints
 - Class concealing
