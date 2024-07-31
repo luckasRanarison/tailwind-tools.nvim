@@ -6,9 +6,7 @@
   },
   "workspace.library": [
     "/usr/local/share/nvim/runtime/lua",
-    "~/.local/share/nvim/lazy/neodev.nvim/types/stable",
     "~/.local/share/nvim/lazy/nvim-cmp",
-    "~/.local/share/nvim/lazy/nvim-treesitter",
     "${3rd}/luv/library",
     "${3rd}/luassert/library"
   ]

@@ -2,36 +2,20 @@ local M = {}
 
 local log = require("tailwind-tools.log")
 local config = require("tailwind-tools.config")
-local parsers = require("nvim-treesitter.parsers")
-
-local supported_filetypes = {
-  "html",
-  "css",
-  "php",
-  "twig",
-  "vue",
-  "svelte",
-  "astro",
-  "heex",
-  "elixir",
-  "htmldjango",
-  "javascriptreact",
-  "typescriptreact",
-}
+local filetypes = require("tailwind-tools.filetypes")
 
 ---@param bufnr number
 ---@param all boolean?
 M.get_class_nodes = function(bufnr, all)
   local ft = vim.bo[bufnr].ft
-  local filetypes = vim.tbl_extend("keep", config.options.custom_filetypes, supported_filetypes)
+  local supported_filetypes = vim.tbl_extend("keep", filetypes, config.options.custom_filetypes)
+
+  if not vim.tbl_contains(supported_filetypes, ft) then return end
+
   local results = {}
-
-  if not vim.tbl_contains(filetypes, ft) then return end
-
-  local parser = parsers.get_parser(bufnr)
+  local parser = vim.treesitter.get_parser(bufnr)
 
   if not parser then return log.warn("No parser available for " .. ft) end
-
   if all and vim.version().minor >= 10 then parser:parse(true) end
 
   parser:for_each_tree(function(tree, lang_tree)
@@ -40,6 +24,7 @@ M.get_class_nodes = function(bufnr, all)
     local query = vim.treesitter.query.get(lang, "class")
 
     if query then
+      ---@diagnostic disable-next-line: redundant-parameter
       for id, node in query:iter_captures(root, bufnr, 0, -1, { all = true }) do
         if query.captures[id] == "tailwind" then results[#results + 1] = node end
       end
