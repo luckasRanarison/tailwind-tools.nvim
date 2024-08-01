@@ -3,7 +3,7 @@
 
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
+Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and Treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
 
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
@@ -21,7 +21,7 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 
 ## Features
 
-The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./lua/tailwind-tools/filetypes.lua)) and Lua patterns can also be used as a fallback.
+The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./lua/tailwind-tools/filetypes.lua)). Lua patterns can also be used as a fallback.
 
 It currently provides the following features:
 
@@ -38,7 +38,7 @@ It currently provides the following features:
 
 - Neovim v0.9 or higher (v0.10 is recommended)
 - [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
-- `html`, `css`, `tsx` and your other languages treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
+- `html`, `css`, `tsx` and other language Treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 
 > [!TIP]
 > If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to learn how to setup the LSP.
@@ -146,13 +146,23 @@ return {
 
 ## Extension
 
-The plugin already supports many languages, but requests for additional language support and PRs are welcome.
-
-You can also extend the language support in your configuration by using Treesitter queries or Lua patterns (or both). Treesitter queries are recommended but can be harder to write, if you are not familiar with Treesitter queries, check out the treesitter query documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
+The plugin already supports many languages, but requests for additional language support and PRs are welcome. You can also extend the language support in your configuration by using Treesitter queries or Lua patterns (or both).
 
 ### Treesitter queries
 
-After adding a new filetype to the `queries` list in your configuration, the plugin will search for a `class.scm` file (classexpr) associated with that filetype in your `runtimepath`. You can use your Neovim configuration folder to store queries in the following way:
+Treesitter queries are recommended but can be harder to write, if you are not familiar with Treesitter queries, check out the documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
+
+You can define custom queries for a filetype by adding the filetype to the `queries` list, like this:
+
+```lua
+{
+  extension = {
+    queries = { "myfiletype" },
+  }
+}
+```
+
+The plugin will search for a `class.scm` file (classexpr) associated with that filetype in your `runtimepath`. You can use your Neovim configuration folder to store queries in the following way:
 
 ```
 ~/.config/nvim
@@ -187,11 +197,16 @@ You can define custom patterns by attaching a list of patterns to filetypes. Eac
 
 ```lua
 {
-  patterns = {
-    javascript = { "clsx%(([^)]+)%)" },
+  extension = {
+    patterns = {
+      javascript = { "clsx%(([^)]+)%)" },
+    },
   }
 }
 ```
+
+> [!TIP]
+> Lua patterns can be combined with Treesitter queries. You can use both for a single filetype to get the combined results.
 
 ## Related projects
 
