@@ -1,30 +1,25 @@
 local M = {}
 
-local config = require("tailwind-tools.config")
 local patterns = require("tailwind-tools.patterns")
 local filetypes = require("tailwind-tools.filetypes")
 local tresitter = require("tailwind-tools.treesitter")
+local opts = require("tailwind-tools.config").options
 
 ---@param bufnr number
+---@return number[][]
 M.get_ranges = function(bufnr)
-  local ft = vim.bo[bufnr].ft
-  local custom_patterns = config.options.custom_patterns
-  local pattern_ft = vim.tbl_keys(custom_patterns)
-  local query_ft = vim.tbl_keys(config.options.custom_queries)
-
-  vim.list_extend(filetypes, query_ft)
-  vim.list_extend(filetypes, pattern_ft)
-
-  if not vim.tbl_contains(filetypes, ft) then return end
-
   local results = {}
-  local pattern_list = patterns.builtin_patterns[ft] or custom_patterns[ft]
+  local ft = vim.bo[bufnr].ft
+  local query_list = vim.tbl_extend("force", filetypes.treesitter, opts.custom_queries)
+  local pattern_list = vim.tbl_extend("force", filetypes.luapattern, opts.custom_patterns)
 
-  for _, pattern in pairs(pattern_list or {}) do
+  for _, pattern in pairs(pattern_list[ft] or {}) do
     vim.list_extend(results, patterns.find_class_ranges(bufnr, pattern))
   end
 
-  vim.list_extend(results, tresitter.find_class_ranges(bufnr, ft) or {})
+  if vim.tbl_contains(query_list, ft) then
+    vim.list_extend(results, tresitter.find_class_ranges(bufnr, ft) or {})
+  end
 
   return results
 end

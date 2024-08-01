@@ -8,7 +8,6 @@ local move_to_class = function(comp)
   local bufnr = vim.api.nvim_get_current_buf()
   local class_ranges = classes.get_ranges(bufnr)
 
-  if not class_ranges then return end
   if #class_ranges == 0 then return log.info("No classes") end
 
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))

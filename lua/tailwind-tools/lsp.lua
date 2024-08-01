@@ -178,7 +178,7 @@ M.sort_classes = function()
   local params = vim.lsp.util.make_text_document_params(bufnr)
   local class_ranges = classes.get_ranges(bufnr)
 
-  if not class_ranges then return end
+  if #class_ranges == 0 then return end
 
   local class_text = {}
 

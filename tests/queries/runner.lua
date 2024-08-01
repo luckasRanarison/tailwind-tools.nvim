@@ -18,7 +18,7 @@ M.test = function(spec)
     vim.cmd.edit(spec.file)
     vim.bo.filetype = spec.filetype or vim.bo.filetype
 
-    local ranges = assert(classes.get_ranges(0), "Expected range list, got nil")
+    local ranges = classes.get_ranges(0)
 
     it(
       "Should get class count",

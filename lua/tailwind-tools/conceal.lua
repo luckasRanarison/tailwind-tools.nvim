@@ -9,7 +9,7 @@ local classes = require("tailwind-tools.classes")
 local function set_conceal(bufnr)
   local class_ranges = classes.get_ranges(bufnr)
 
-  if not class_ranges then return end
+  if #class_ranges == 0 then return end
 
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
