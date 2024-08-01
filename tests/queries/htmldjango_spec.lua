@@ -1,10 +1,12 @@
-local common = require("tests.queries.common")
-local runner = common.Runner:new("tests/queries/html/index.html", "htmldjango")
-
-describe("queries htmldjango:", function()
-  runner:classes(2)
-  runner:ranges({
+local spec = {
+  name = "html",
+  provider = "treesitter",
+  file = "tests/queries/html/index.html",
+  filetype = "htmldjango",
+  ranges = {
     { 10, 14, 10, 47 },
     { 11, 16, 11, 39 },
-  })
-end)
+  },
+}
+
+require("tests.queries.runner").test(spec)

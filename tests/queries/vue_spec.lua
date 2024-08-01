@@ -1,11 +1,12 @@
-local common = require("tests.queries.common")
-local runner = common.Runner:new("tests/queries/vue/test.vue")
-
-describe("queries vue:", function()
-  runner:classes(3)
-  runner:ranges({
+local spec = {
+  name = "vue",
+  provider = "treesitter",
+  file = "tests/queries/vue/test.vue",
+  ranges = {
     { 1, 14, 1, 28 },
     { 2, 16, 2, 43 },
     { 4, 39, 4, 49 },
-  })
-end)
+  },
+}
+
+require("tests.queries.runner").test(spec)
