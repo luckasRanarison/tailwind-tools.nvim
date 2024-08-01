@@ -61,7 +61,7 @@ M.find_class_ranges = function(bufnr, pattern)
 end
 
 M.builtin_patterns = {
-  rust = "class=[\"']([^\"']+)[\"']",
+  rust = { "class=[\"']([^\"']+)[\"']" },
 }
 
 return M

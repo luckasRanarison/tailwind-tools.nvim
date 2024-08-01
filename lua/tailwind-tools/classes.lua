@@ -17,16 +17,16 @@ M.get_ranges = function(bufnr)
 
   if not vim.tbl_contains(filetypes, ft) then return end
 
-  local class_ranges
-  local pattern = patterns.builtin_patterns[ft] or custom_patterns[ft]
+  local results = {}
+  local pattern_list = patterns.builtin_patterns[ft] or custom_patterns[ft]
 
-  if pattern then
-    class_ranges = patterns.find_class_ranges(bufnr, pattern)
-  else
-    class_ranges = tresitter.find_class_ranges(bufnr, ft)
+  for _, pattern in pairs(pattern_list or {}) do
+    vim.list_extend(results, patterns.find_class_ranges(bufnr, pattern))
   end
 
-  return class_ranges
+  vim.list_extend(results, tresitter.find_class_ranges(bufnr, ft) or {})
+
+  return results
 end
 
 return M
