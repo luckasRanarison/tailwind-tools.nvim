@@ -1,25 +1,25 @@
 local M = {}
 
 local log = require("tailwind-tools.log")
-local treesitter = require("tailwind-tools.treesitter")
+local classes = require("tailwind-tools.classes")
 
 ---@param comp fun(a: number, b: number): boolean
 local move_to_class = function(comp)
-  local nodes = treesitter.get_class_nodes(0, true)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local class_ranges = classes.get_ranges(bufnr)
 
-  if not nodes then return end
-  if #nodes == 0 then return log.info("No classes") end
+  if #class_ranges == 0 then return log.info("No classes") end
 
   local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
 
-  table.sort(nodes, function(a, b)
-    local a_row, a_col = treesitter.get_class_range(a, 0)
-    local b_row, b_col = treesitter.get_class_range(b, 0)
+  table.sort(class_ranges, function(a, b)
+    local a_row, a_col = unpack(a)
+    local b_row, b_col = unpack(b)
     return a_row == b_row and comp(b_col, a_col) or comp(b_row, a_row)
   end)
 
-  for _, node in ipairs(nodes) do
-    local node_row, node_col = treesitter.get_class_range(node, 0)
+  for _, range in ipairs(class_ranges) do
+    local node_row, node_col = unpack(range)
     local row = cursor_row - 1
 
     if comp(node_row, row) or (node_row == row and comp(node_col, cursor_col)) then

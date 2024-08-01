@@ -3,7 +3,7 @@
 
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
+Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and Treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
 
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
@@ -21,7 +21,9 @@ Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integrati
 
 ## Features
 
-The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./lua/tailwind-tools/filetypes.lua)) and provides the following features:
+The plugin works with all languages inheriting from html, css and tsx treesitter grammars (php, astro, vue, svelte, [...](./lua/tailwind-tools/filetypes.lua)). Lua patterns can also be used as a fallback.
+
+It currently provides the following features:
 
 - Class color hints
 - Class concealing
@@ -36,7 +38,7 @@ The plugin works with all languages inheriting from html, css and tsx treesitter
 
 - Neovim v0.9 or higher (v0.10 is recommended)
 - [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
-- `html`, `css`, `tsx` and your other languages treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
+- `html`, `css`, `tsx` and other language Treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 
 > [!TIP]
 > If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to learn how to setup the LSP.
@@ -86,7 +88,15 @@ Here is the default configuration:
       fg = "#38BDF8",
     },
   },
-  custom_filetypes = {} -- see the extension section to learn how it works
+  -- see the extension section to learn more
+  extension = {
+    queries = {}, -- a list of filetypes having custom `class` queries
+    patterns = { -- a map of filetypes to Lua pattern lists
+      -- exmaple:
+      -- rust = { "class=[\"']([^\"']+)[\"']" },
+      -- javascript = { "clsx%(([^)]+)%)" },
+    },
+  },
 }
 ```
 
@@ -136,11 +146,23 @@ return {
 
 ## Extension
 
-The plugin basically works with any language as long it has a treesitter parser and a `class` query. You can check the currently available queries and supported filetypes [here](./queries), feel free to request other languages support.
+The plugin already supports many languages, but requests for additional language support and PRs are welcome. You can also extend the language support in your configuration by using Treesitter queries or Lua patterns (or both).
 
-But you can also create your own queries! If you are not familiar with treesitter queries you should check out the treesitter query documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
+### Treesitter queries
 
-To add a new filetype you first need to add it to your configuration then the plugin will search for a `class.scm` file (classexpr) associated to that filetype in your `runtimepath`. You could use your Neovim configuration folder to store queries in the following way:
+Treesitter queries are recommended but can be harder to write, if you are not familiar with Treesitter queries, check out the documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
+
+You can define custom queries for a filetype by adding the filetype to the `queries` list, like this:
+
+```lua
+{
+  extension = {
+    queries = { "myfiletype" },
+  }
+}
+```
+
+The plugin will search for a `class.scm` file (classexpr) associated with that filetype in your `runtimepath`. You can use your Neovim configuration folder to store queries in the following way:
 
 ```
 ~/.config/nvim
@@ -153,7 +175,7 @@ To add a new filetype you first need to add it to your configuration then the pl
         └── class.scm
 ```
 
-The `class.scm` file should contain a query used to extract the class values for a given filetype. The class value should be captured using `@tailwind` as shown in the follwing example:
+The `class.scm` file should contain a query used to extract the class values for a given filetype. The class value should be captured using `@tailwind`, as shown in the follwing example:
 
 ```scheme
 ; queries/myfiletype/class.scm
@@ -166,6 +188,25 @@ The `class.scm` file should contain a query used to extract the class values for
 
 > [!NOTE]
 > Some class ranges cannot be precisely captured using queries alone and are handled in code. You can also check out the existing [queries](./queries) to see more examples.
+
+### Lua patterns
+
+[Lua patterns](https://www.lua.org/pil/20.2.html) are easier to write, but note that the underlying implementation is not completely efficient, although this inefficiency is likely negligible. Currently, there are no reliable APIs for performing pattern searches and retrieving information about capture positions.
+
+You can define custom patterns by attaching a list of patterns to filetypes. Each pattern should have exactly **one** capture group representing the class value, as shown below:
+
+```lua
+{
+  extension = {
+    patterns = {
+      javascript = { "clsx%(([^)]+)%)" },
+    },
+  }
+}
+```
+
+> [!TIP]
+> Lua patterns can be combined with Treesitter queries. You can use both for a single filetype to get the combined results.
 
 ## Related projects
 
