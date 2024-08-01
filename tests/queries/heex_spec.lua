@@ -1,4 +1,4 @@
-local spec = {
+require("tests.queries.runner").test({
   name = "heex",
   provider = "treesitter",
   file = "tests/queries/heex/index.html.heex",
@@ -7,6 +7,4 @@ local spec = {
     { 1, 13, 1, 20 },
     { 2, 12, 5, 4 },
   },
-}
-
-require("tests.queries.runner").test(spec)
+})

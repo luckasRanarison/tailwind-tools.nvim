@@ -1,4 +1,4 @@
-local spec = {
+require("tests.queries.runner").test({
   name = "svelte",
   provider = "treesitter",
   file = "tests/queries/svelte/test.svelte",
@@ -7,6 +7,4 @@ local spec = {
     { 5, 14, 5, 41 },
     { 8, 17, 8, 27 },
   },
-}
-
-require("tests.queries.runner").test(spec)
+})

@@ -1,4 +1,4 @@
-local spec = {
+require("tests.queries.runner").test({
   name = "twig",
   provider = "treesitter",
   file = "tests/queries/twig/test.twig",
@@ -7,6 +7,4 @@ local spec = {
     { 1, 14, 1, 41 },
     { 4, 17, 4, 27 },
   },
-}
-
-require("tests.queries.runner").test(spec)
+})
