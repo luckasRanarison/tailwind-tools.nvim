@@ -19,8 +19,10 @@ M.options = {
       fg = "#38BDF8",
     },
   },
-  custom_patterns = {},
-  custom_queries = {},
+  extension = {
+    queries = {},
+    patterns = {},
+  },
 }
 
 return M
