@@ -1,22 +1,15 @@
 local M = {}
 
 local log = require("tailwind-tools.log")
-local config = require("tailwind-tools.config")
-local filetypes = require("tailwind-tools.filetypes")
 
 ---@param bufnr number
----@param all boolean?
-M.get_class_nodes = function(bufnr, all)
-  local ft = vim.bo[bufnr].ft
-  local supported_filetypes = vim.tbl_extend("keep", filetypes, config.options.custom_filetypes)
-
-  if not vim.tbl_contains(supported_filetypes, ft) then return end
-
+---@param ft string
+local function find_class_nodes(bufnr, ft)
   local results = {}
   local parser = vim.treesitter.get_parser(bufnr)
 
-  if not parser then return log.warn("No parser available for " .. ft) end
-  if all and vim.version().minor >= 10 then parser:parse(true) end
+  if not parser then return log.error("No parser available for " .. ft) end
+  if vim.version().minor >= 10 then parser:parse(true) end
 
   parser:for_each_tree(function(tree, lang_tree)
     local root = tree:root()
@@ -36,7 +29,7 @@ end
 
 ---@param node TSNode
 ---@param bufnr number
-M.get_class_range = function(node, bufnr)
+local function get_class_range(node, bufnr)
   local start_row, start_col, end_row, end_col = node:range()
   local children = node:named_children()
 
@@ -47,6 +40,22 @@ M.get_class_range = function(node, bufnr)
   end
 
   return start_row, start_col, end_row, end_col
+end
+
+---@param bufnr number
+---@param ft string
+M.find_class_ranges = function(bufnr, ft)
+  local nodes = find_class_nodes(bufnr, ft)
+
+  if not nodes then return end
+
+  local results = {}
+
+  for _, node in pairs(nodes) do
+    results[#results + 1] = table.pack(get_class_range(node, bufnr))
+  end
+
+  return results
 end
 
 return M

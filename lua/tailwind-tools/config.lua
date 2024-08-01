@@ -19,7 +19,8 @@ M.options = {
       fg = "#38BDF8",
     },
   },
-  custom_filetypes = {},
+  custom_patterns = {},
+  custom_queries = {},
 }
 
 return M

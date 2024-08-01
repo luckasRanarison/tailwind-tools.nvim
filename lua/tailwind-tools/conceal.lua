@@ -3,13 +3,13 @@ local M = {}
 local lsp = require("tailwind-tools.lsp")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
-local treesitter = require("tailwind-tools.treesitter")
+local classes = require("tailwind-tools.classes")
 
 ---@param bufnr number
 local function set_conceal(bufnr)
-  local class_nodes = treesitter.get_class_nodes(bufnr)
+  local class_ranges = classes.get_ranges(bufnr)
 
-  if not class_nodes then return end
+  if not class_ranges then return end
 
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
@@ -18,10 +18,10 @@ local function set_conceal(bufnr)
 
   local opts = config.options.conceal
 
-  for _, node in pairs(class_nodes) do
-    local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
+  for _, range in pairs(class_ranges) do
+    local start_row, start_col, end_row, end_col = unpack(range)
 
-    if not opts.min_length or node:byte_length() >= opts.min_length then
+    if not opts.min_length or end_row ~= start_row or end_col - start_col >= opts.min_length then
       vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
         end_line = end_row,
         end_col = end_col,

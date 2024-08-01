@@ -4,7 +4,7 @@ local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
-local treesitter = require("tailwind-tools.treesitter")
+local classes = require("tailwind-tools.classes")
 
 local color_events = {
   "BufEnter",
@@ -176,15 +176,14 @@ M.sort_classes = function()
 
   local bufnr = vim.api.nvim_get_current_buf()
   local params = vim.lsp.util.make_text_document_params(bufnr)
-  local class_nodes = treesitter.get_class_nodes(bufnr, true)
+  local class_ranges = classes.get_ranges(bufnr)
 
-  if not class_nodes then return end
+  if not class_ranges then return end
 
   local class_text = {}
-  local class_ranges = {}
 
-  for _, node in pairs(class_nodes) do
-    local start_row, start_col, end_row, end_col = treesitter.get_class_range(node, bufnr)
+  for _, range in pairs(class_ranges) do
+    local start_row, start_col, end_row, end_col = unpack(range)
     local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
 
     class_text[#class_text + 1] = table.concat(text, "\n")

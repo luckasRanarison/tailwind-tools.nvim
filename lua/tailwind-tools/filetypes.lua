@@ -6,6 +6,7 @@ return {
   "vue",
   "svelte",
   "astro",
+  "rust",
   "heex",
   "elixir",
   "htmldjango",

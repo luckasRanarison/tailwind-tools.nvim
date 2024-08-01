@@ -5,7 +5,7 @@ local treesitter = require("tailwind-tools.treesitter")
 
 ---@param comp fun(a: number, b: number): boolean
 local move_to_class = function(comp)
-  local nodes = treesitter.get_class_nodes(0, true)
+  local nodes = treesitter.find_class_nodes(0, true)
 
   if not nodes then return end
   if #nodes == 0 then return log.info("No classes") end
