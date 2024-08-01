@@ -187,10 +187,10 @@ M.sort_classes = function()
     local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
 
     class_text[#class_text + 1] = table.concat(text, "\n")
-    class_ranges[#class_ranges + 1] = { start_row, start_col, end_row, end_col }
   end
 
   params.classLists = class_text
+
   client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
     if err then return log.error(err.message) end
     if result.error then return log.error(result.error) end

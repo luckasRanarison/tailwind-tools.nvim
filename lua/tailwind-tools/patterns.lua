@@ -33,32 +33,35 @@ end
 
 ---@param bufnr number
 ---@param pattern string
----@param delimiter string
-M.find_class_ranges = function(bufnr, pattern, delimiter)
+M.find_class_ranges = function(bufnr, pattern)
   local results = {}
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
-  local s = table.concat(lines, "\n")
-  local offset = 1
+  local substr = table.concat(lines, "\n")
+  local offset = 0
 
   while true do
-    local substr = s:sub(offset)
     local b_start, b_end, class = substr:find(pattern)
 
     if b_start == nil then break end
 
-    local class_start = substr:find(delimiter) + offset
-    local class_end = class_start + #class
-    local pos = table.pack(byte_range_to_pos(class_start - 1, class_end - 1, bufnr))
+    substr = substr:sub(b_start)
+    offset = offset + b_start - 1
 
-    results[#results + 1] = pos
-    offset = offset + b_end
+    local match_len = b_end - b_start
+    local class_start = substr:find(class, 1, true) + offset - 1
+    local class_end = class_start + #class
+    local sr, sc, er, ec = byte_range_to_pos(class_start, class_end, bufnr)
+
+    results[#results + 1] = { sr, sc, er, ec }
+    substr = substr:sub(match_len)
+    offset = offset + match_len - 1
   end
 
   return results
 end
 
 M.builtin_patterns = {
-  rust = { "class=[\"']([^\"']+)[\"']", "[\"']" },
+  rust = "class=[\"']([^\"']+)[\"']",
 }
 
 return M

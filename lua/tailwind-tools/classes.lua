@@ -21,7 +21,7 @@ M.get_ranges = function(bufnr)
   local pattern = patterns.builtin_patterns[ft] or custom_patterns[ft]
 
   if pattern then
-    class_ranges = patterns.find_class_ranges(bufnr, pattern[1], pattern[2])
+    class_ranges = patterns.find_class_ranges(bufnr, pattern)
   else
     class_ranges = tresitter.find_class_ranges(bufnr, ft)
   end

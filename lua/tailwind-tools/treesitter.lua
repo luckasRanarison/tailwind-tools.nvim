@@ -52,7 +52,8 @@ M.find_class_ranges = function(bufnr, ft)
   local results = {}
 
   for _, node in pairs(nodes) do
-    results[#results + 1] = table.pack(get_class_range(node, bufnr))
+    local sr, sc, er, ec = get_class_range(node, bufnr)
+    results[#results + 1] = { sr, sc, er, ec }
   end
 
   return results
