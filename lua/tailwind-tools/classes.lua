@@ -19,7 +19,7 @@ M.get_ranges = function(bufnr)
   end
 
   if vim.tbl_contains(query_list, ft) then
-    vim.list_extend(results, tresitter.find_class_ranges(bufnr, ft) or {})
+    vim.list_extend(results, tresitter.find_class_ranges(bufnr, ft))
   end
 
   return results

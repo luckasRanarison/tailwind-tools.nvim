@@ -28,14 +28,19 @@ local function find_class_nodes(bufnr, ft)
 end
 
 ---@param node TSNode
----@param bufnr number
-local function get_class_range(node, bufnr)
+local function get_class_range(node)
   local start_row, start_col, end_row, end_col = node:range()
   local children = node:named_children()
 
-  -- A special case for extracting postcss class range
-  if children[1] and vim.treesitter.get_node_text(children[1], bufnr) == "@apply" then
+  -- PostCSS @apply rules
+  if children[1] and children[1]:type() == "at_keyword" then
     start_row, start_col, _, _ = children[2]:range()
+    _, _, end_row, end_col = children[#children]:range()
+  end
+
+  -- JS/TS function arguments
+  if node:type() == "arguments" then
+    start_row, start_col, _, _ = children[1]:range()
     _, _, end_row, end_col = children[#children]:range()
   end
 
@@ -45,15 +50,14 @@ end
 ---@param bufnr number
 ---@param ft string
 M.find_class_ranges = function(bufnr, ft)
+  local results = {}
   local nodes = find_class_nodes(bufnr, ft)
 
-  if not nodes then return end
-
-  local results = {}
-
-  for _, node in pairs(nodes) do
-    local sr, sc, er, ec = get_class_range(node, bufnr)
-    results[#results + 1] = { sr, sc, er, ec }
+  if nodes then
+    for _, node in pairs(nodes) do
+      local sr, sc, er, ec = get_class_range(node)
+      results[#results + 1] = { sr, sc, er, ec }
+    end
   end
 
   return results
