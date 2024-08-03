@@ -3,7 +3,7 @@ require("tests.queries.runner").test({
   provider = "treesitter",
   file = "tests/queries/vue/test.vue",
   ranges = {
-    { 1, 14, 1, 28 },
+    { 1, 21, 1, 40 },
     { 2, 16, 2, 43 },
     { 4, 39, 4, 49 },
   },

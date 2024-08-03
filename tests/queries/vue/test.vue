@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-neutral-700">
+  <div v-bind:class="{ container: true }">
     <div class="font-semibold text-blue-400">Test</div>
     <ul>
       <li v-for="item in items" class="text-white">{{ item }}</li>
