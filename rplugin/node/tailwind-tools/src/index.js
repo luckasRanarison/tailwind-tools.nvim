@@ -1,5 +1,6 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
+const { getNodeModuleResolver } = require("./utils");
 
 class Plugin {
   /**
@@ -19,21 +20,20 @@ class Plugin {
 
   async getRawConfig() {
     const cwd = await this.nvim.call("getcwd");
-    const tailwindPath = path.join(cwd, "node_modules/tailwindcss");
+    const tailwindPath = path.join(cwd, "node_modules", "tailwindcss");
 
     if (!fs.existsSync(tailwindPath)) return;
 
-    const resolveFnPath = path.join(tailwindPath, "resolveConfig");
-    const resolveConfig = require(resolveFnPath);
-    const projectConfigPath = path.join(cwd, "tailwind.config.js");
+    const _require = getNodeModuleResolver(cwd);
+    const resolveConfig = _require("tailwindcss/resolveConfig");
+    const loadConfig = _require("tailwindcss/lib/public/load-config").default;
 
-    let projectConfig = {};
+    const configExtensions = ["js", "ts", "cjs"];
+    const configPath = configExtensions
+      .map((ext) => path.join(cwd, `tailwind.config.${ext}`))
+      .find((filePath) => fs.existsSync(filePath));
 
-    if (fs.existsSync(projectConfigPath)) {
-      projectConfig = await import(projectConfigPath);
-    }
-
-    return resolveConfig(projectConfig.default ?? projectConfig);
+    return resolveConfig(configPath ? loadConfig(configPath) : {});
   }
 }
 
