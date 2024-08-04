@@ -14,7 +14,7 @@ local function set_conceal(bufnr)
   vim.wo.conceallevel = 2
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
   vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
-  table.insert(state.conceal.active_buffers, bufnr)
+  state.conceal.active_buffers[bufnr] = true
 
   local opts = config.options.conceal
 
@@ -64,7 +64,7 @@ M.disable = function()
     event = { "TextChanged", "TextChangedI" },
   })
 
-  for _, bufnr in pairs(state.conceal.active_buffers) do
+  for bufnr, _ in pairs(state.conceal.active_buffers) do
     if vim.api.nvim_buf_is_valid(bufnr) then
       vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.conceal_ns, 0, -1)
     end

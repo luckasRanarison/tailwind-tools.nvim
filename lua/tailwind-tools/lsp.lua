@@ -46,7 +46,7 @@ local function set_extmark(bufnr, color)
   end
 
   vim.api.nvim_buf_set_extmark(bufnr, namespace, start_row, start_col, opts)
-  table.insert(state.color.active_buffers, bufnr)
+  state.color.active_buffers[bufnr] = true
 end
 
 ---@param bufnr number
@@ -124,7 +124,7 @@ M.enable_color = function()
 end
 
 M.disable_color = function()
-  for _, bufnr in pairs(state.color.active_buffers) do
+  for bufnr, _ in pairs(state.color.active_buffers) do
     if vim.api.nvim_buf_is_valid(bufnr) then
       vim.api.nvim_buf_clear_namespace(bufnr, vim.g.tailwind_tools.color_ns, 0, -1)
     end
