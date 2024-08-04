@@ -48,7 +48,7 @@ M.find_class_ranges = function(bufnr, ft)
     ---@diagnostic disable-next-line: redundant-parameter
     for id, node, metadata in query:iter_captures(root, bufnr, 0, -1, { all = true }) do
       local capture_id = query.captures[id]
-      local capture_metadata = metadata[id] or {}
+      local capture_metadata = metadata[id] or {} --[[@as TailwindTools.CaptureMetadata]]
 
       if capture_id:find("tailwind") then
         results[#results + 1] = get_class_range(node, capture_metadata, capture_id)
