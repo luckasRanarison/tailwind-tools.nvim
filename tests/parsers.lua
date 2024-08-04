@@ -11,6 +11,7 @@ local parsers = {
   "heex",
   "elixir",
   "javascript",
+  "typescript",
   "templ",
 }
 

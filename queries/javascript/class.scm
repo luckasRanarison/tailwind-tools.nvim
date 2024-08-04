@@ -1,3 +1,5 @@
+; inherits: tsx
+
 (call_expression
   function: [
     (identifier) @ident
