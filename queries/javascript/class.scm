@@ -1,3 +1,5 @@
+; inherits: tsx
+
 (call_expression
   function: [
     (identifier) @ident
@@ -11,14 +13,4 @@
       (_)+) @tailwind ; the actual class range is extracted in the code
     (template_string
       (string_fragment) @tailwind)
-  ])
-
-(jsx_attribute
-  (property_identifier) @_attribute_name
-  (#any-of? @_attribute_name "class" "className" "style" "css" "tw")
-  [
-    (string
-      (string_fragment) @tailwind)
-    (jsx_expression
-      (_) @tailwind)
   ])
