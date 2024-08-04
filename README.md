@@ -150,7 +150,7 @@ The plugin already supports many languages, but requests for additional language
 
 ### Treesitter queries
 
-Treesitter queries are recommended but can be harder to write, if you are not familiar with Treesitter queries, check out the documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
+Treesitter queries are recommended because they can precisely capture the class values at the AST level, but they can be harder to write. If you are not familiar with Treesitter queries, check out the documentation from [Neovim](https://neovim.io/doc/user/treesitter.html#treesitter-query) or [Treesitter](https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax).
 
 You can define custom queries for a filetype by adding the filetype to the `queries` list, like this:
 
@@ -186,12 +186,26 @@ The `class.scm` file should contain a query used to extract the class values for
     (attribute_value) @tailwind))
 ```
 
-> [!NOTE]
-> Some class ranges cannot be precisely captured using queries alone and are handled in code. You can also check out the existing [queries](./queries) to see more examples.
+Note that quantified captures (using `+` or `?`) cannot be captured using `@tailwind`. Instead, you must capture the parent node using `@ŧailwind.inner`.
+
+```scheme
+(arguments
+  (_)+) @tailwind.inner
+```
+
+You can also define node offsets by using the `#set!` directive and assign the `start` or `end` variables to some offset values (defaults to 0).
+
+```scheme
+((postcss_statement
+   (at_keyword) @_keyword
+   (#eq? @_keyword "@apply")
+   (plain_value)+) @tailwind.inner
+ (#set! @tailwind.inner "start" 1))
+```
 
 ### Lua patterns
 
-[Lua patterns](https://www.lua.org/pil/20.2.html) are easier to write, but note that the underlying implementation is not completely efficient, although this inefficiency is likely negligible. Currently, there are no reliable APIs for performing pattern searches and retrieving information about capture positions.
+[Lua patterns](https://www.lua.org/pil/20.2.html) are easier to write, but they have some limitations. Unlike Treesitter queries, Lua patterns cannot capture nested structures, they are limited to basic pattern matching.
 
 You can define custom patterns by attaching a list of patterns to filetypes. Each pattern should have exactly **one** capture group representing the class value, as shown below:
 
