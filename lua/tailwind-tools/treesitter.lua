@@ -18,7 +18,7 @@ local function get_class_range(node, metadata, capture_id)
     local m_end = metadata["end"] and tonumber(metadata["end"]) or 0
 
     s_row, s_col, _, _ = children[m_start + 1]:range()
-    _, _, e_row, e_col = children[#children + m_end]:range()
+    _, _, e_row, e_col = children[#children - m_end]:range()
   end
 
   return { s_row, s_col, e_row, e_col }
