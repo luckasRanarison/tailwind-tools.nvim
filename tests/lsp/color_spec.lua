@@ -5,7 +5,7 @@ local get_extmarks = require("tests.common").get_extmarks
 
 local ns = vim.g.tailwind_tools.color_ns
 
-describe("lsp:", function()
+describe("color:", function()
   it("Should attach to the buffer", function()
     vim.cmd.edit("tests/lsp/project/index.html")
 
