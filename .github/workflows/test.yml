@@ -27,9 +27,20 @@ jobs:
           ./nvim.appimage --appimage-extract
           echo "/tmp/nvim/squashfs-root/usr/bin/" >> $GITHUB_PATH
 
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Install parsers
         run: |
           nvim --headless -u tests/init.lua -c "luafile tests/parsers.lua"
+
+      - name: Install tailwindcss-language-server
+        run: npm install -g @tailwindcss/language-server
+
+      - name: Install test project dependencies
+        run: cd tests/lsp/project && npm install
 
       - name: Run Tests
         run: |

@@ -1,12 +1,9 @@
 local assert = require("luassert")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
+local get_extmarks = require("tests.common").get_extmarks
 
-local function get_extmark_ranges(bunfr)
-  local ns = vim.g.tailwind_tools.conceal_ns
-  local extmarks = vim.api.nvim_buf_get_extmarks(bunfr, ns, 0, -1, { details = true })
-  return vim.tbl_map(function(r) return { r[2], r[3], r[4].end_row, r[4].end_col } end, extmarks)
-end
+local ns = vim.g.tailwind_tools.conceal_ns
 
 describe("conceal:", function()
   it("Should conceal all classes", function()
@@ -18,7 +15,7 @@ describe("conceal:", function()
       { 11, 16, 11, 39 },
     }
 
-    assert.same(expected, get_extmark_ranges(0))
+    assert.same(expected, get_extmarks(0, ns))
   end)
 
   it("Should conceal on BufEnter", function()
@@ -29,7 +26,7 @@ describe("conceal:", function()
       { 9, 9, 10, 37 },
     }
 
-    assert.same(expected, get_extmark_ranges(0))
+    assert.same(expected, get_extmarks(0, ns))
   end)
 
   it("Should clear conceals in all buffers", function()
@@ -41,7 +38,7 @@ describe("conceal:", function()
 
     for bufnr, _ in pairs(buffers) do
       assert(vim.api.nvim_buf_is_valid(bufnr))
-      assert({}, get_extmark_ranges(bufnr))
+      assert({}, get_extmarks(bufnr, ns))
     end
   end)
 
@@ -56,10 +53,10 @@ describe("conceal:", function()
       { 9, 19, 10, 41 },
     }
 
-    assert.same(expected, get_extmark_ranges(0))
+    assert.same(expected, get_extmarks(0, ns))
 
     vim.cmd.TailwindConcealDisable()
 
-    assert.same({}, get_extmark_ranges(0))
+    assert.same({}, get_extmarks(0, ns))
   end)
 end)
