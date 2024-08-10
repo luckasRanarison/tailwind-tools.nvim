@@ -27,6 +27,9 @@ const classNameMap = {
   gridAutoColumns: "auto-cols",
   gridTemplateRows: "grid-rows",
   gridTemplateColumns: "grid-cols",
+  textDecorationColor: "decoration",
+  textDecorationThickness: "decoration",
+  textUnderlineOffset: "underline-offset",
   zIndex: "z",
 };
 
