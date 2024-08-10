@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const utils = require("./utils");
+const tailwind = require("./tailwind");
 
 class Plugin {
   /**
@@ -12,19 +13,19 @@ class Plugin {
     plugin.registerFunction(
       "TailwindGetConfig",
       this.getTailwindConfig.bind(this),
-      { sync: true }
+      { sync: true },
     );
 
     plugin.registerFunction(
       "TailwindGetUtilities",
       this.getUtilities.bind(this),
-      { sync: true }
+      { sync: true },
     );
 
     plugin.registerFunction(
       "TailwindExpandUtilities",
       this.expandUtilities.bind(this),
-      { sync: true }
+      { sync: true },
     );
   }
 
@@ -61,23 +62,19 @@ class Plugin {
 
     const root = await this.getProjectRoot();
     const _require = utils.getNodeModuleResolver(root);
-    const flattenPalette = _require("tailwindcss/lib/util/flattenColorPalette");
-
     const { theme } = config;
+    const { corePlugins } = _require("tailwindcss/lib/corePlugins");
+    const nameClass = _require("tailwindcss/lib/util/negateValue");
+    const negateValue = _require("tailwindcss/lib/util/nameClass");
+    const params = { theme, nameClass, negateValue };
 
-    for (const key in theme) {
-      if (utils.isColorClass(key)) theme[key] = flattenPalette(theme[key]);
+    const results = {};
+
+    for (const [key, plugin] of Object.entries(corePlugins)) {
+      results[key] = tailwind.getUtilities(plugin, params);
     }
 
-    const entries = Object.entries(theme).flatMap(([className, values]) => {
-      const normalizedName = utils.normalizeClassName(className);
-      return Object.entries(values).map(([subName, value]) => ({
-        name: utils.mergeClass(normalizedName, subName),
-        value: value,
-      }));
-    });
-
-    return entries;
+    return results;
   }
 
   /**
@@ -93,8 +90,8 @@ class Plugin {
     const rootDir = await this.getProjectRoot();
     const _require = utils.getNodeModuleResolver(rootDir);
     const postcss = _require("postcss");
-    const tailwind = _require("tailwindcss");
-    const processor = postcss(tailwind(config));
+    const tailwindcss = _require("tailwindcss");
+    const processor = postcss(tailwindcss(config));
 
     return processor
       .process("@tailwind utilities", { from: undefined })

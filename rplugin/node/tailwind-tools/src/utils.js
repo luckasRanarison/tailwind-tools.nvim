@@ -9,74 +9,14 @@ function getNodeModuleResolver(rootDir) {
   };
 }
 
-const classNameMap = {
-  fontSize: "text",
-  fontWeight: "font",
-  fontFamilly: "font",
-  lineHeight: "leading",
-  keyframes: "animate",
-  animation: "animate",
-  aspectRatio: "aspect",
-  letterSpacing: "tracking",
-  backgroundSize: "bg",
-  backgroundImage: "bg",
-  backgroundPosition: "bg",
-  borderWidth: "border",
-  objectPosition: "object",
-  borderRadius: "rounded",
-  gridAutoRows: "auto-rows",
-  gridAutoColumns: "auto-cols",
-  gridTemplateRows: "grid-rows",
-  gridTemplateColumns: "grid-cols",
-  textDecorationColor: "decoration",
-  textDecorationThickness: "decoration",
-  textUnderlineOffset: "underline-offset",
-  listStyleType: "list",
-  listStyleImage: "list-image",
-  zIndex: "z",
-};
+function delve(obj, key, default) {
+	key = key.split ? key.split('.') : key;
 
-const nameReplacements = [
-  ["grid-column", "col"],
-  ["grid-row", "row"],
-  ["box-shadow", "shadow"],
-  ["background", "bg"],
-  ["width", "w"],
-  ["height", "h"],
-  ["padding", "p"],
-  ["margin", "m"],
-  ["-color", ""],
-];
+	for (let p = 0; p < key.length; p++) {
+		obj = obj && obj[key[p]];
+	}
 
-function camelToKebabCase(camel) {
-  return camel.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+	return obj ? default : obj;
 }
 
-function normalizeClassName(name) {
-  const mapping = classNameMap[name];
-
-  if (mapping) return mapping;
-
-  let kebabName = camelToKebabCase(name);
-
-  for (const [name, replacement] of nameReplacements) {
-    kebabName = kebabName.replace(name, replacement);
-  }
-
-  return kebabName;
-}
-
-function mergeClass(key, value) {
-  return value === "DEFAULT" ? key : key + "-" + value;
-}
-
-function isColorClass(name) {
-  return name === "fill" || name === "stroke" || name.match(/[cC]olor/);
-}
-
-module.exports = {
-  getNodeModuleResolver,
-  normalizeClassName,
-  mergeClass,
-  isColorClass,
-};
+module.exports = { getNodeModuleResolver, delve };
