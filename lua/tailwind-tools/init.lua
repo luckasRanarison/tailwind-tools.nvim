@@ -52,6 +52,9 @@ M.setup = function(options)
       if state.conceal.enabled then conceal.enable() end
     end,
   })
+
+  local has_telescope, telescope = pcall(require, "telescope")
+  if has_telescope then telescope.load_extension("tailwind") end
 end
 
 return M

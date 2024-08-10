@@ -1,0 +1,23 @@
+{
+  "name": "tailwind-tools",
+  "version": "1.0.0",
+  "description": "tailwind-tools.nvim NodeJS remote plugin",
+  "keywords": [
+    "tailwindcss",
+    "neovim"
+  ],
+  "license": "MIT",
+  "author": "LIOKA Ranarison Fiderana",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luckasRanarison/tailwind-tools.nvim.git"
+  },
+  "bugs": {
+    "url": "https://github.com/luckasRanarison/tailwind-tools.nvim/issues"
+  },
+  "homepage": "https://github.com/luckasRanarison/tailwind-tools.nvim#readme",
+  "main": "src/index.js",
+  "dependencies": {
+    "neovim": "^5.1.0"
+  }
+}
