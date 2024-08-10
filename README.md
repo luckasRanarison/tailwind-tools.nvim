@@ -3,7 +3,7 @@
 
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and Treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
+An unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) written in Lua and JavaScript, leveraging the built-in LSP client, Treesitter, and the NodeJS plugin host. It is inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
 
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
@@ -27,10 +27,10 @@ It currently provides the following features:
 
 - Class color hints
 - Class concealing
+- Class motions
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
 - Class previewier (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
-- Class motions
 
 > [!NOTE]
 > Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server).
@@ -55,12 +55,15 @@ return {
   "luckasRanarison/tailwind-tools.nvim",
   name = "tailwind-tools",
   build = ":UpdateRemotePlugins",
-  dependencies = { "nvim-treesitter/nvim-treesitter" },
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-telescope/telescope.nvim", -- optional
+  },
   opts = {} -- your configuration
 }
 ```
 
-If you are using other package managers you need register the remote plugin by running the `:UpdateRemotePlugins` command, then call `setup` to enable the lua plugin:
+If you are using other package managers, you need register the remote plugin by running the `:UpdateRemotePlugins` command, then call `setup` to enable the lua plugin:
 
 ```lua
 require("tailwind-tools").setup({
