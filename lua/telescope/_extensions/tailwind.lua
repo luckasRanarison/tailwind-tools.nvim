@@ -27,7 +27,7 @@ end
 local function class_picker()
   local classes = vim.fn.TailwindGetUtilities() --[[@as TailwindTools.ClassEntry[] | nil]]
 
-  if not classes then return log.error("No project found") end
+  if classes == vim.NIL then return log.error("No project found") end
 
   local displayer = entry_display.create({
     separator = "",
