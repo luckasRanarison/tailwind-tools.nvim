@@ -1,5 +1,6 @@
 local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
+local classes = require("tailwind-tools.classes")
 local plugin_config = require("tailwind-tools.config")
 
 local actions = require("telescope.actions")
@@ -24,10 +25,10 @@ local function get_hl_kind(class_name)
   return "background"
 end
 
-local function class_picker()
-  local classes = vim.fn.TailwindGetUtilities() --[[@as TailwindTools.ClassEntry[] | nil]]
+local function utility_picker()
+  local utilities = vim.fn.TailwindGetUtilities() --[[@as TailwindTools.ClassEntry[] | nil]]
 
-  if classes == vim.NIL then return log.error("No project found") end
+  if utilities == vim.NIL then return log.error("No project found") end
 
   local displayer = entry_display.create({
     separator = "",
@@ -35,7 +36,7 @@ local function class_picker()
   })
 
   local finder = finders.new_table({
-    results = classes,
+    results = utilities,
     ---@param entry TailwindTools.ClassEntry
     entry_maker = function(entry)
       local highlight = "Normal"
@@ -60,7 +61,7 @@ local function class_picker()
   })
 
   local previewer = previewers.new_buffer_previewer({
-    title = "Preview",
+    title = "CSS Output",
     define_preview = function(self, entry)
       local bufnr = self.state.bufnr
       local css = vim.fn.TailwindExpandUtilities({ entry.value.name })
@@ -98,9 +99,49 @@ local function class_picker()
     :find()
 end
 
+local function class_picker()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local class_ranges = classes.get_ranges(bufnr)
+
+  if #class_ranges == 0 then return log.info("No classes") end
+
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local entries = {}
+
+  for _, range in pairs(class_ranges) do
+    local start_row, start_col, end_row, end_col = unpack(range)
+    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+
+    entries[#entries + 1] = { range = range, text = table.concat(text, "\n") }
+  end
+
+  local finder = finders.new_table({
+    results = entries,
+    entry_maker = function(entry)
+      return {
+        value = entry,
+        ordinal = entry.text,
+        display = entry.text,
+        path = filename,
+        lnum = entry.range[1] + 1,
+      }
+    end,
+  })
+
+  pickers
+    .new({}, {
+      prompt_title = "Tailwind classes",
+      finder = finder,
+      sorter = config.generic_sorter(),
+      previewer = previewers.vim_buffer_vimgrep.new({ title = "Preview" }),
+    })
+    :find()
+end
+
 return require("telescope").register_extension({
   setup = function() end,
   exports = {
-    utilities = class_picker,
+    classes = class_picker,
+    utilities = utility_picker,
   },
 })

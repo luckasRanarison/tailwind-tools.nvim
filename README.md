@@ -165,7 +165,9 @@ The plugins registers by default a telescope extension that you can call using `
 
 Available subcommands:
 
-- `utilities`: Lists all utility classes available in the current projects.
+- `classes`: Lists all the classes in the current file and allows to jump to the selected location.
+
+- `utilities`: Lists all utility classes available in the current projects with a custom callback.
 
 ## Extension
 
