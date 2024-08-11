@@ -1,3 +1,5 @@
+---@diagnostic disable: unused-local
+
 local M = {}
 
 ---@alias TailwindTools.ColorHint "foreground" | "background" | "inline"
@@ -17,6 +19,11 @@ M.options = {
     symbol = "󱏿",
     highlight = {
       fg = "#38BDF8",
+    },
+  },
+  telescope = {
+    utilities = {
+      callback = function(_name, _css) end,
     },
   },
   extension = {

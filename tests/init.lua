@@ -18,7 +18,12 @@ vim.o.swapfile = false
 require("lazy").setup({
   { "neovim/nvim-lspconfig" },
   { "nvim-lua/plenary.nvim", cmd = "PlenaryBustedDirectory" },
-  { dir = "./", opts = {}, dependencies = { "nvim-treesitter/nvim-treesitter" } },
+  {
+    dir = "./",
+    name = "tailwind-tools",
+    opts = {},
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
 })
 
 require("lspconfig").tailwindcss.setup({})

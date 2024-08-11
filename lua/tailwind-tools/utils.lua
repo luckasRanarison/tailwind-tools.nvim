@@ -24,4 +24,15 @@ M.set_hl_from = function(red, green, blue, style)
   return group
 end
 
+---@param s string
+M.extract_color = function(s)
+  local base, _, _, _r, _g, _b = 10, s:find("rgba?%((%d+).%s*(%d+).%s*(%d+)")
+
+  if not _r then
+    base, _, _, _r, _g, _b = 16, s:find("#(%x%x)(%x%x)(%x%x)")
+  end
+
+  if _r then return tonumber(_r, base), tonumber(_g, base), tonumber(_b, base) end
+end
+
 return M

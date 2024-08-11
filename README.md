@@ -3,7 +3,7 @@
 
 # tailwind-tools.nvim
 
-Unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) using the built-in LSP client and Treesitter, inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
+An unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integration and tooling for [Neovim](https://github.com/neovim/neovim) written in Lua and JavaScript, leveraging the built-in LSP client, Treesitter, and the NodeJS plugin host. It is inspired by the official Visual Studio Code [extension](https://github.com/tailwindlabs/tailwindcss-intellisense).
 
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
@@ -27,9 +27,10 @@ It currently provides the following features:
 
 - Class color hints
 - Class concealing
+- Class motions
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
-- Class motions
+- Class previewer (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
 
 > [!NOTE]
 > Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server).
@@ -39,6 +40,7 @@ It currently provides the following features:
 - Neovim v0.9 or higher (v0.10 is recommended)
 - [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
 - `html`, `css`, `tsx` and other language Treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
+- Neovim [node-client](https://www.npmjs.com/package/neovim) (using npm)
 
 > [!TIP]
 > If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to learn how to setup the LSP.
@@ -51,12 +53,17 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 -- tailwind-tools.lua
 return {
   "luckasRanarison/tailwind-tools.nvim",
-  dependencies = { "nvim-treesitter/nvim-treesitter" },
+  name = "tailwind-tools",
+  build = ":UpdateRemotePlugins",
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-telescope/telescope.nvim", -- optional
+  },
   opts = {} -- your configuration
 }
 ```
 
-If you are using other package managers you need to call `setup`:
+If you are using other package managers, you need register the remote plugin by running the `:UpdateRemotePlugins` command, then call `setup` to enable the lua plugin:
 
 ```lua
 require("tailwind-tools").setup({
@@ -88,6 +95,12 @@ Here is the default configuration:
       fg = "#38BDF8",
     },
   },
+  telescope = {
+    utilities = {
+      -- the function used when selecting an utility class in telescope
+      callback = function(name, class) end,
+    },
+  },
   -- see the extension section to learn more
   extension = {
     queries = {}, -- a list of filetypes having custom `class` queries
@@ -117,6 +130,8 @@ Available commands:
 
 ## Utilities
 
+### nvim-cmp
+
 Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) using [lspkind.nvim](https://github.com/onsails/lspkind.nvim):
 
 ```lua
@@ -143,6 +158,16 @@ return {
 
 > [!TIP]
 > You can extend it by calling the function and get the returned `vim_item`, see the nvim-cmp [wiki](https://github.com/hrsh7th/nvim-cmp/wiki/Menu-Appearance) to learn more.
+
+### telescope.nvim
+
+The plugins registers by default a telescope extension that you can call using `:Telescope tailwind <subcommand>`
+
+Available subcommands:
+
+- `classes`: Lists all the classes in the current file and allows to jump to the selected location.
+
+- `utilities`: Lists all utility classes available in the current projects with a custom callback.
 
 ## Extension
 
@@ -186,7 +211,7 @@ The `class.scm` file should contain a query used to extract the class values for
     (attribute_value) @tailwind))
 ```
 
-Note that quantified captures (using `+` or `?`) cannot be captured using `@tailwind`. Instead, you must capture the parent node using `@ŧailwind.inner`.
+Note that quantified captures (using `+` or `?`) cannot be captured using `@tailwind`. Instead, you must capture the parent node using `@tailwind.inner`.
 
 ```scheme
 (arguments
