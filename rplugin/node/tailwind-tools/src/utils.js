@@ -9,14 +9,4 @@ function getNodeModuleResolver(rootDir) {
   };
 }
 
-function delve(obj, key, default) {
-	key = key.split ? key.split('.') : key;
-
-	for (let p = 0; p < key.length; p++) {
-		obj = obj && obj[key[p]];
-	}
-
-	return obj ? default : obj;
-}
-
-module.exports = { getNodeModuleResolver, delve };
+module.exports = { getNodeModuleResolver };

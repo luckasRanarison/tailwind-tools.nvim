@@ -1,8 +1,6 @@
 /**
- * @see https://github.com/tailwindlabs/tailwindcss.com/blob/a29be90b7f2fb2560bfdc7778eb4de66af99d88a/next.config.js
+ * @see https://github.com/tailwindlabs/tailwindcss.com/blob/master/next.config.mjs
  */
-
-const utils = require("./utils");
 
 function normalizeProperties(input) {
   if (typeof input !== "object") return input;
@@ -11,12 +9,12 @@ function normalizeProperties(input) {
   return Object.keys(input).reduce((newObj, key) => {
     const val = input[key];
     const newVal = typeof val === "object" ? normalizeProperties(val) : val;
-    const kebabKey = key.replace(
+    const kebabName = key.replace(
       /([a-z])([A-Z])/g,
-      (_, p1, p2) => `${p1}-${p2.toLowerCase()}`,
+      (_, p1, p2) => `${p1}-${p2.toLowerCase()}`
     );
 
-    newObj[kebabKey] = newVal;
+    newObj[kebabName] = newVal;
 
     return newObj;
   }, {});
@@ -30,15 +28,13 @@ function getUtilities(plugin, params) {
   const addUtilities = (utils) => {
     utils = Array.isArray(utils) ? utils : [utils];
 
-    for (let i = 0; i < utils.length; i++) {
-      for (let prop in utils[i]) {
-        for (let p in utils[i][prop]) {
-          if (p.startsWith("@defaults")) {
-            delete utils[i][prop][p];
-          }
+    for (const util of utils) {
+      for (const prop in util) {
+        for (const p in util[prop]) {
+          if (p.startsWith("@defaults")) delete util[prop][p];
         }
 
-        utilities[prop] = normalizeProperties(utils[i][prop]);
+        utilities[prop] = normalizeProperties(util[prop]);
       }
     }
   };
@@ -51,52 +47,41 @@ function getUtilities(plugin, params) {
     if (supportsNegativeValues) {
       const negativeValues = [];
 
-      for (let [key, value] of modifierValues) {
+      for (const [key, value] of modifierValues) {
         const negatedValue = params.negateValue(value);
-
-        if (negatedValue) {
-          negativeValues.push([`-${key}`, negatedValue]);
-        }
+        if (negatedValue) negativeValues.push([`-${key}`, negatedValue]);
       }
+
       modifierValues.push(...negativeValues);
     }
 
-    const result = Object.entries(matches).flatMap(
-      ([name, utilityFunction]) => {
-        return modifierValues
-          .map(([modifier, value]) => {
-            const declarations = utilityFunction(value, {
-              includeRules(rules) {
-                addUtilities(rules);
-              },
-            });
+    const result = Object.entries(matches).flatMap(([name, utilityFunction]) =>
+      modifierValues
+        .map(([modifier, value]) => {
+          const className = params.nameClass(name, modifier);
+          const declarations = utilityFunction(value, {
+            includeRules(rules) {
+              addUtilities(rules);
+            },
+          });
 
-            if (!declarations) {
-              return null;
-            }
-
-            return {
-              [params.nameClass(name, modifier)]: declarations,
-            };
-          })
-          .filter(Boolean);
-      },
+          if (declarations) return { [className]: declarations };
+        })
+        .filter((v) => v)
     );
 
-    for (let obj of result) {
-      for (let key in obj) {
+    for (const obj of result) {
+      for (const key in obj) {
         let deleteKey = false;
 
-        for (let subkey in obj[key]) {
+        for (const subkey in obj[key]) {
           if (subkey.startsWith("@defaults")) {
             delete obj[key][subkey];
             continue;
           }
 
           if (subkey.includes("&")) {
-            result.push({
-              [subkey.replace(/&/g, key)]: obj[key][subkey],
-            });
+            result.push({ [subkey.replace(/&/g, key)]: obj[key][subkey] });
             deleteKey = true;
           }
         }
@@ -115,7 +100,9 @@ function getUtilities(plugin, params) {
     corePlugins: () => true,
     prefix: (x) => x,
     config: (option, defaultValue) => (option ? defaultValue : { future: {} }),
-    theme: (key, defaultValue) => utils.delve(params.theme, key, defaultValue),
+    theme: (key, defaultValue) =>
+      key.split(".").reduce((prev, k) => prev && prev[k], params.theme) ??
+      defaultValue,
     addUtilities,
     matchUtilities,
   });

@@ -40,18 +40,21 @@ local function class_picker()
     entry_maker = function(entry)
       local highlight = "Normal"
 
-      if type(entry.value) == "string" then
-        local r, g, b = utils.extract_color(entry.value)
-        if r then
-          local kind = get_hl_kind(entry.name)
-          highlight = utils.set_hl_from(r, g, b, kind)
+      for _, value in pairs(entry.value) do
+        if type(value) == "string" then
+          local r, g, b = utils.extract_color(value)
+
+          if r then
+            local kind = get_hl_kind(entry.name)
+            highlight = utils.set_hl_from(r, g, b, kind)
+          end
         end
       end
 
       return {
         value = entry,
-        display = function() return displayer({ { entry.name, highlight } }) end,
         ordinal = entry.name,
+        display = function() return displayer({ { entry.name, highlight } }) end,
       }
     end,
   })

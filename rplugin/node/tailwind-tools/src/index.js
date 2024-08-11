@@ -13,19 +13,19 @@ class Plugin {
     plugin.registerFunction(
       "TailwindGetConfig",
       this.getTailwindConfig.bind(this),
-      { sync: true },
+      { sync: true }
     );
 
     plugin.registerFunction(
       "TailwindGetUtilities",
       this.getUtilities.bind(this),
-      { sync: true },
+      { sync: true }
     );
 
     plugin.registerFunction(
       "TailwindExpandUtilities",
       this.expandUtilities.bind(this),
-      { sync: true },
+      { sync: true }
     );
   }
 
@@ -62,19 +62,23 @@ class Plugin {
 
     const root = await this.getProjectRoot();
     const _require = utils.getNodeModuleResolver(root);
-    const { theme } = config;
     const { corePlugins } = _require("tailwindcss/lib/corePlugins");
-    const nameClass = _require("tailwindcss/lib/util/negateValue");
-    const negateValue = _require("tailwindcss/lib/util/nameClass");
-    const params = { theme, nameClass, negateValue };
+    const negateValue = _require("tailwindcss/lib/util/negateValue");
+    const nameClass = _require("tailwindcss/lib/util/nameClass");
+    const params = { theme: config.theme, nameClass, negateValue };
 
-    const results = {};
+    const utilties = {};
 
     for (const [key, plugin] of Object.entries(corePlugins)) {
-      results[key] = tailwind.getUtilities(plugin, params);
+      utilties[key] = tailwind.getUtilities(plugin, params);
     }
 
-    return results;
+    return Object.values(utilties).flatMap((values) =>
+      Object.entries(values).map(([name, value]) => ({
+        name: name.slice(1), // remove the dot
+        value,
+      }))
+    );
   }
 
   /**
@@ -90,8 +94,8 @@ class Plugin {
     const rootDir = await this.getProjectRoot();
     const _require = utils.getNodeModuleResolver(rootDir);
     const postcss = _require("postcss");
-    const tailwindcss = _require("tailwindcss");
-    const processor = postcss(tailwindcss(config));
+    const tailwind = _require("tailwindcss");
+    const processor = postcss(tailwind(config));
 
     return processor
       .process("@tailwind utilities", { from: undefined })

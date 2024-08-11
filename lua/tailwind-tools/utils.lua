@@ -26,7 +26,7 @@ end
 
 ---@param s string
 M.extract_color = function(s)
-  local base, _, _, _r, _g, _b = 10, s:find("rgba?%((%d+), (%d+), (%d+)")
+  local base, _, _, _r, _g, _b = 10, s:find("rgba?%((%d+).%s*(%d+).%s*(%d+)")
 
   if not _r then
     base, _, _, _r, _g, _b = 16, s:find("#(%x%x)(%x%x)(%x%x)")
