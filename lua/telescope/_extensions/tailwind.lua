@@ -90,7 +90,7 @@ local function utility_picker()
 
   pickers
     .new({}, {
-      prompt_title = "Tailwind classes",
+      prompt_title = "Tailwind utilities",
       finder = finder,
       sorter = config.generic_sorter(),
       previewer = previewer,
@@ -133,7 +133,7 @@ local function class_picker()
       prompt_title = "Tailwind classes",
       finder = finder,
       sorter = config.generic_sorter(),
-      previewer = previewers.vim_buffer_vimgrep.new({ title = "Preview" }),
+      previewer = previewers.vim_buffer_vimgrep.new({}),
     })
     :find()
 end

@@ -30,7 +30,7 @@ It currently provides the following features:
 - Class motions
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
-- Class previewier (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
+- Class previewer (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
 
 > [!NOTE]
 > Language services like autocompletion, diagnostics and hover are already provided by [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server).
