@@ -3,6 +3,7 @@
   "workspace.library": [
     "/usr/local/share/nvim/runtime/lua",
     "~/.local/share/nvim/lazy/nvim-cmp",
+    "~/.local/share/nvim/lazy/telescope.nvim",
     "${3rd}/luv/library",
     "${3rd}/luassert/library",
     "${3rd}/busted/library"

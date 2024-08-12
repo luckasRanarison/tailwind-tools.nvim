@@ -19,12 +19,12 @@ local function set_conceal(bufnr)
   local opts = config.options.conceal
 
   for _, range in pairs(class_ranges) do
-    local start_row, start_col, end_row, end_col = unpack(range)
+    local s_row, s_col, e_row, e_col = unpack(range)
 
-    if not opts.min_length or end_row ~= start_row or end_col - start_col >= opts.min_length then
-      vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, start_row, start_col, {
-        end_line = end_row,
-        end_col = end_col,
+    if not opts.min_length or e_row ~= s_row or e_col - s_col >= opts.min_length then
+      vim.api.nvim_buf_set_extmark(bufnr, vim.g.tailwind_tools.conceal_ns, s_row, s_col, {
+        end_line = e_row,
+        end_col = e_col,
         conceal = opts.symbol,
         hl_group = "TailwindConceal",
         priority = 0, -- To ignore conceal hl_group when focused

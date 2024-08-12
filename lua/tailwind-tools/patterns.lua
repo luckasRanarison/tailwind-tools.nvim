@@ -11,24 +11,24 @@ local function byte_range_to_pos(b_start, b_end, bufnr)
     line_offsets[i] = vim.api.nvim_buf_get_offset(bufnr, i - 1)
   end
 
-  local start_row, start_col, end_row, end_col
+  local s_row, s_col, e_row, e_col
 
   for line, offset in pairs(line_offsets) do
     local next_offset = line_offsets[line + 1]
 
     if not next_offset or b_start >= offset and b_start < next_offset then
-      start_row = line - 1
-      start_col = b_start - offset
+      s_row = line - 1
+      s_col = b_start - offset
     end
 
     if not next_offset or b_end >= offset and b_end < next_offset then
-      end_row = line - 1
-      end_col = b_end - offset
+      e_row = line - 1
+      e_col = b_end - offset
       break
     end
   end
 
-  return start_row, start_col, end_row, end_col
+  return s_row, s_col, e_row, e_col
 end
 
 ---@param bufnr number
@@ -50,9 +50,9 @@ M.find_class_ranges = function(bufnr, pattern)
     local match_len = b_end - b_start
     local class_start = substr:find(class, 1, true) + offset - 1
     local class_end = class_start + #class
-    local sr, sc, er, ec = byte_range_to_pos(class_start, class_end, bufnr)
+    local s_row, s_col, e_row, e_col = byte_range_to_pos(class_start, class_end, bufnr)
 
-    results[#results + 1] = { sr, sc, er, ec }
+    results[#results + 1] = { s_row, s_col, e_row, e_col }
     substr = substr:sub(match_len)
     offset = offset + match_len - 1
   end

@@ -26,13 +26,13 @@ end
 
 ---@param s string
 M.extract_color = function(s)
-  local base, _, _, _r, _g, _b = 10, s:find("rgba?%((%d+).%s*(%d+).%s*(%d+)")
+  local base, _, _, r, g, b = 10, s:find("rgba?%((%d+).%s*(%d+).%s*(%d+)")
 
-  if not _r then
-    base, _, _, _r, _g, _b = 16, s:find("#(%x%x)(%x%x)(%x%x)")
+  if not r then
+    base, _, _, r, g, b = 16, s:find("#(%x%x)(%x%x)(%x%x)")
   end
 
-  if _r then return tonumber(_r, base), tonumber(_g, base), tonumber(_b, base) end
+  if r then return tonumber(r, base), tonumber(g, base), tonumber(b, base) end
 end
 
 ---Returns the 0-based range of the visual selection (start_row, start_col, end_row, end_col)

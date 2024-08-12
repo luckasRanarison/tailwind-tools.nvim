@@ -109,8 +109,8 @@ local function class_picker()
   local entries = {}
 
   for _, range in pairs(class_ranges) do
-    local start_row, start_col, end_row, end_col = unpack(range)
-    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+    local s_row, s_col, e_row, e_col = unpack(range)
+    local text = vim.api.nvim_buf_get_text(bufnr, s_row, s_col, e_row, e_col, {})
 
     entries[#entries + 1] = { range = range, text = table.concat(text, "\n") }
   end
