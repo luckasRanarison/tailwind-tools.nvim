@@ -123,8 +123,8 @@ Available commands:
 - `TailwindColorEnable`: enables color hints for all buffers.
 - `TailwindColorDisable`: disables color hints.
 - `TailwindColorToggle`: toggles color hints.
-- `TailwindSort`: sorts all classes in the current buffer.
-- `TailwindSortSelection`: sorts selected classes in visual mode.
+- `TailwindSort(Sync)`: sorts all classes in the current buffer.
+- `TailwindSortSelection(Sync)`: sorts selected classes in visual mode.
 - `TailwindNextClass`: moves the cursor to the nearest next class node.
 - `TailwindPrevClass`: moves the cursor to the nearest previous class node.
 

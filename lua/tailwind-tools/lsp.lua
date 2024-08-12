@@ -67,6 +67,55 @@ local function debounced_color_request(bufnr)
   )
 end
 
+---@param ranges number[][]
+---@param bufnr number
+---@param sync boolean
+local function sort_classes(ranges, bufnr, sync)
+  local client = get_tailwindcss()
+
+  if not client then return log.error("tailwind-language-server is not running") end
+  if #ranges == 0 then return end
+
+  local class_text = {}
+
+  for _, range in pairs(ranges) do
+    local start_row, start_col, end_row, end_col = unpack(range)
+    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+
+    class_text[#class_text + 1] = table.concat(text, "\n")
+  end
+
+  local params = vim.tbl_extend("error", vim.lsp.util.make_text_document_params(bufnr), {
+    classLists = class_text,
+  })
+
+  local handler = function(err, result, _, _)
+    if err then return log.error(err.message) end
+    if result.error then return log.error(result.error) end
+    if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
+
+    for i, edit in pairs(result.classLists) do
+      local lines = vim.split(edit, "\n")
+      local s_row, s_col, e_row, e_col = unpack(ranges[i])
+
+      -- Dismiss useless error messages when undoing in nightly
+      pcall(function() vim.api.nvim_buf_set_text(bufnr, s_row, s_col, e_row, e_col, lines) end)
+    end
+  end
+
+  if sync then
+    local response = client.request_sync("@/tailwindCSS/sortSelection", params, 2000, bufnr)
+
+    if response then
+      handler(response.err, response.result)
+    else
+      log.error("LSP request timed out")
+    end
+  else
+    client.request("@/tailwindCSS/sortSelection", params, handler, bufnr)
+  end
+end
+
 M.on_attach = function(args)
   local bufnr = args.buf
   local client = get_tailwindcss()
@@ -142,70 +191,21 @@ M.toggle_colors = function()
   end
 end
 
-M.sort_selection = function()
-  local client = get_tailwindcss()
-
-  if not client then return log.warn("tailwind-language-server is not running") end
-
+---@param sync boolean
+M.sort_selection = function(sync)
   local bufnr = vim.api.nvim_get_current_buf()
-  local start_col = vim.fn.col("'<") - 1
-  local end_col = vim.fn.col("'>")
-  local start_row = vim.fn.line("'<") - 1
-  local end_row = vim.fn.line("'>") - 1
-  local class = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+  local s_row, s_col, e_row, e_col = utils.get_visual_range()
+  local class_ranges = { { s_row, s_col, e_row, e_col } }
 
-  if class then
-    local params = vim.lsp.util.make_text_document_params(bufnr)
-
-    params.classLists = { table.concat(class, "\n") }
-    client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
-      if err then return log.error(err.message) end
-      if result.error then return log.error(result.error) end
-      if not vim.api.nvim_buf_is_valid(bufnr) then return end
-      local formatted = vim.split(result.classLists[1], "\n")
-
-      vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, formatted)
-    end, bufnr)
-  end
+  sort_classes(class_ranges, bufnr, sync)
 end
 
-M.sort_classes = function()
-  local client = get_tailwindcss()
-
-  if not client then return log.warn("tailwind-language-server is not running") end
-
+---@param sync boolean
+M.sort_classes = function(sync)
   local bufnr = vim.api.nvim_get_current_buf()
-  local params = vim.lsp.util.make_text_document_params(bufnr)
   local class_ranges = classes.get_ranges(bufnr)
 
-  if #class_ranges == 0 then return end
-
-  local class_text = {}
-
-  for _, range in pairs(class_ranges) do
-    local start_row, start_col, end_row, end_col = unpack(range)
-    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
-
-    class_text[#class_text + 1] = table.concat(text, "\n")
-  end
-
-  params.classLists = class_text
-
-  client.request("@/tailwindCSS/sortSelection", params, function(err, result, _, _)
-    if err then return log.error(err.message) end
-    if result.error then return log.error(result.error) end
-    if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
-
-    for i, edit in pairs(result.classLists) do
-      local lines = vim.split(edit, "\n")
-      local start_row, start_col, end_row, end_col = unpack(class_ranges[i])
-      local set_text = function()
-        vim.api.nvim_buf_set_text(bufnr, start_row, start_col, end_row, end_col, lines)
-      end
-      -- Dismiss useless error messages when undoing in nightly
-      pcall(set_text)
-    end
-  end, bufnr)
+  sort_classes(class_ranges, bufnr, sync)
 end
 
 return M

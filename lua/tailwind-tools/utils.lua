@@ -35,4 +35,14 @@ M.extract_color = function(s)
   if _r then return tonumber(_r, base), tonumber(_g, base), tonumber(_b, base) end
 end
 
+---Returns the 0-based range of the visual selection (start_row, start_col, end_row, end_col)
+M.get_visual_range = function()
+  local s_row = vim.fn.line("'<") - 1
+  local s_col = vim.fn.col("'<") - 1
+  local e_row = vim.fn.line("'>") - 1
+  local e_col = vim.fn.col("'>")
+
+  return s_row, s_col, e_row, e_col
+end
+
 return M

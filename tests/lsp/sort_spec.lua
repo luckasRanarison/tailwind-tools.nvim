@@ -1,4 +1,5 @@
 local assert = require("luassert")
+local utils = require("tailwind-tools.utils")
 
 describe("sort:", function()
   it("Should initialize project", function()
@@ -30,15 +31,10 @@ describe("sort:", function()
   it("Should sort selection", function()
     vim.cmd.TailwindNextClass()
     vim.cmd.normal('vi"\28\14')
-    vim.cmd([['<,'>TailwindSortSelection]])
-    vim.wait(2000, function() return vim.bo.modified end)
+    vim.cmd([['<,'>TailwindSortSelectionSync]])
 
-    local start_col = vim.fn.col("'<") - 1
-    local end_col = vim.fn.col("'>")
-    local start_row = vim.fn.line("'<") - 1
-    local end_row = vim.fn.line("'>") - 1
-    local class = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col, {})
-
+    local s_row, s_col, e_row, e_col = utils.get_visual_range()
+    local class = vim.api.nvim_buf_get_text(0, s_row, s_col, e_row, e_col, {})
     local expected = "flex h-screen w-screen items-center justify-center bg-[#111827]"
 
     assert.same(expected, class[1])
@@ -46,8 +42,7 @@ describe("sort:", function()
 
   it("Should sort all classes", function()
     vim.cmd.normal("u")
-    vim.cmd.TailwindSort()
-    vim.wait(2000, function() return vim.bo.modified end)
+    vim.cmd.TailwindSortSync()
 
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 

@@ -30,16 +30,21 @@ M.setup = function(options)
   }
 
   vim.api.nvim_set_hl(0, "TailwindConceal", config.options.conceal.highlight)
-  vim.api.nvim_create_user_command("TailwindConcealEnable", conceal.enable, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindConcealDisable", conceal.disable, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindConcealToggle", conceal.toggle, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindSortSelection", lsp.sort_selection, { range = "%" })
-  vim.api.nvim_create_user_command("TailwindSort", lsp.sort_classes, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindColorEnable", lsp.enable_color, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindColorDisable", lsp.disable_color, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindColorToggle", lsp.toggle_colors, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindNextClass", motions.move_to_next_class, { nargs = 0 })
-  vim.api.nvim_create_user_command("TailwindPrevClass", motions.move_to_prev_class, { nargs = 0 })
+
+  local cmd = vim.api.nvim_create_user_command
+
+  cmd("TailwindConcealEnable", conceal.enable, { nargs = 0 })
+  cmd("TailwindConcealDisable", conceal.disable, { nargs = 0 })
+  cmd("TailwindConcealToggle", conceal.toggle, { nargs = 0 })
+  cmd("TailwindSort", lsp.sort_classes, { nargs = 0 })
+  cmd("TailwindSortSelection", lsp.sort_selection, { range = "%" })
+  cmd("TailwindColorEnable", lsp.enable_color, { nargs = 0 })
+  cmd("TailwindColorDisable", lsp.disable_color, { nargs = 0 })
+  cmd("TailwindColorToggle", lsp.toggle_colors, { nargs = 0 })
+  cmd("TailwindNextClass", motions.move_to_next_class, { nargs = 0 })
+  cmd("TailwindPrevClass", motions.move_to_prev_class, { nargs = 0 })
+  cmd("TailwindSortSync", function() lsp.sort_classes(true) end, { nargs = 0 })
+  cmd("TailwindSortSelectionSync", function() lsp.sort_selection(true) end, { range = "%" })
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.g.tailwind_tools.color_au,
