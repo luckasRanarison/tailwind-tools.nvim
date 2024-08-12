@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - docs
-    paths:
-      - README.md 
-      - .github/workflows/docs.yml 
+    # paths:
+    #   - README.md
+    #   - .github/workflows/docs.yml
 
 permissions:
   contents: write
