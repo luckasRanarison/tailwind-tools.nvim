@@ -1,0 +1,27 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - README.md
+      - .github/workflows/docs.yml
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: pandoc to vimdoc
+    steps:
+      - uses: actions/checkout@v2
+      - uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: ${{ github.event.repository.name }}
+          version: "NVIM v0.9.0"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "docs: auto generate"
+          branch: ${{ github.head_ref }}
