@@ -1,21 +1,5 @@
 *tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 12
 
-==============================================================================
-Table of Contents                      *tailwind-tools.nvim-table-of-contents*
-
-1. tailwind-tools.nvim               |tailwind-tools.nvim-tailwind-tools.nvim|
-  - Contents                |tailwind-tools.nvim-tailwind-tools.nvim-contents|
-  - Features                |tailwind-tools.nvim-tailwind-tools.nvim-features|
-  - Prerequisites      |tailwind-tools.nvim-tailwind-tools.nvim-prerequisites|
-  - Installation        |tailwind-tools.nvim-tailwind-tools.nvim-installation|
-  - Configuration      |tailwind-tools.nvim-tailwind-tools.nvim-configuration|
-  - Commands                |tailwind-tools.nvim-tailwind-tools.nvim-commands|
-  - Utilities              |tailwind-tools.nvim-tailwind-tools.nvim-utilities|
-  - Extension              |tailwind-tools.nvim-tailwind-tools.nvim-extension|
-  - Related projects|tailwind-tools.nvim-tailwind-tools.nvim-related-projects|
-  - Contributing        |tailwind-tools.nvim-tailwind-tools.nvim-contributing|
-2. Links                                           |tailwind-tools.nvim-links|
-
   [!IMPORTANT] This plugin is a community project and is **NOT** officially
   supported by Tailwind Labs <https://github.com/tailwindlabs>.
 
@@ -29,7 +13,7 @@ NodeJS plugin host. It is inspired by the official Visual Studio Code extension
 <https://github.com/tailwindlabs/tailwindcss-intellisense>.
 
 
-CONTENTS                    *tailwind-tools.nvim-tailwind-tools.nvim-contents*
+CONTENTS                                        *tailwind-tools.nvim-contents*
 
 - |tailwind-tools.nvim-features|
 - |tailwind-tools.nvim-prerequisites|
@@ -42,7 +26,7 @@ CONTENTS                    *tailwind-tools.nvim-tailwind-tools.nvim-contents*
 - |tailwind-tools.nvim-contributing|
 
 
-FEATURES                    *tailwind-tools.nvim-tailwind-tools.nvim-features*
+FEATURES                                        *tailwind-tools.nvim-features*
 
 The plugin works with all languages inheriting from html, css and tsx
 treesitter grammars (php, astro, vue, svelte, …
@@ -63,7 +47,7 @@ It currently provides the following features:
   already provided by tailwindcss-language-server
   <https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server>.
 
-PREREQUISITES          *tailwind-tools.nvim-tailwind-tools.nvim-prerequisites*
+PREREQUISITES                              *tailwind-tools.nvim-prerequisites*
 
 - Neovim v0.9 or higher (v0.10 is recommended)
 - tailwindcss-language-server <https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server> >= `v0.0.14` (can be installed using Mason <https://github.com/williamboman/mason.nvim>)
@@ -75,7 +59,7 @@ PREREQUISITES          *tailwind-tools.nvim-tailwind-tools.nvim-prerequisites*
   nvim-lspconfig <https://github.com/neovim/nvim-lspconfig> to learn how to setup
   the LSP.
 
-INSTALLATION            *tailwind-tools.nvim-tailwind-tools.nvim-installation*
+INSTALLATION                                *tailwind-tools.nvim-installation*
 
 Using lazy.nvim <https://github.com/folke/lazy.nvim>:
 
@@ -104,7 +88,7 @@ plugin:
 <
 
 
-CONFIGURATION          *tailwind-tools.nvim-tailwind-tools.nvim-configuration*
+CONFIGURATION                              *tailwind-tools.nvim-configuration*
 
 
   [!IMPORTANT] Neovim v0.10 is required for vscode-like inline color hints.
@@ -146,7 +130,7 @@ Here is the default configuration:
 <
 
 
-COMMANDS                    *tailwind-tools.nvim-tailwind-tools.nvim-commands*
+COMMANDS                                        *tailwind-tools.nvim-commands*
 
 Available commands:
 
@@ -162,7 +146,7 @@ Available commands:
 - `TailwindPrevClass`: moves the cursor to the nearest previous class node.
 
 
-UTILITIES                  *tailwind-tools.nvim-tailwind-tools.nvim-utilities*
+UTILITIES                                      *tailwind-tools.nvim-utilities*
 
 
 NVIM-CMP ~
@@ -211,7 +195,7 @@ Available subcommands:
     custom callback.
 
 
-EXTENSION                  *tailwind-tools.nvim-tailwind-tools.nvim-extension*
+EXTENSION                                      *tailwind-tools.nvim-extension*
 
 The plugin already supports many languages, but requests for additional
 language support and PRs are welcome. You can also extend the language support
@@ -309,7 +293,7 @@ value, as shown below:
   [!TIP] Lua patterns can be combined with Treesitter queries. You can use both
   for a single filetype to get the combined results.
 
-RELATED PROJECTS    *tailwind-tools.nvim-tailwind-tools.nvim-related-projects*
+RELATED PROJECTS                        *tailwind-tools.nvim-related-projects*
 
 Here are some related projects:
 
@@ -320,7 +304,7 @@ Here are some related projects:
 - document-color.nvim <https://github.com/mrshmllow/document-color.nvim> (archieved)
 
 
-CONTRIBUTING            *tailwind-tools.nvim-tailwind-tools.nvim-contributing*
+CONTRIBUTING                                *tailwind-tools.nvim-contributing*
 
 Read the documentation carefully before submitting any issue.
 
