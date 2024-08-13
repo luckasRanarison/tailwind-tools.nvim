@@ -3,6 +3,7 @@ local M = {}
 local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
 local state = require("tailwind-tools.state")
+local regex = require("tailwind-tools.regex")
 local config = require("tailwind-tools.config")
 local classes = require("tailwind-tools.classes")
 
@@ -206,6 +207,31 @@ M.sort_classes = function(sync)
   local class_ranges = classes.get_ranges(bufnr)
 
   sort_classes(class_ranges, bufnr, sync)
+end
+
+---@param regex_names string[]
+M.set_class_regex = function(regex_names)
+  local client = get_tailwindcss()
+
+  if not client then return log.error("tailwind-language-server is not running") end
+
+  local settings = client.config.settings.tailwindCSS
+  local regexes = {}
+
+  for _, name in pairs(regex_names) do
+    local value = regex[name]
+
+    if value then
+      vim.list_extend(regexes, value)
+    else
+      log.error(string.format('Unknown regex "%s"', name))
+    end
+  end
+
+  if not settings.experimental then settings.experimental = {} end
+
+  settings.experimental.classRegex = regexes
+  client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
 end
 
 return M
