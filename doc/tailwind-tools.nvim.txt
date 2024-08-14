@@ -1,4 +1,4 @@
-*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 12
+*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 14
 
   [!IMPORTANT] This plugin is a community project and is **NOT** officially
   supported by Tailwind Labs <https://github.com/tailwindlabs>.
@@ -111,6 +111,9 @@ Here is the default configuration:
           fg = "#38BDF8",
         },
       },
+      cmp = {
+        highlight = "foreground" -- highlight either bg or fg of text in color previews in cmp menu. can be "foreground" | "background"
+      }
       telescope = {
         utilities = {
           -- the function used when selecting an utility class in telescope
