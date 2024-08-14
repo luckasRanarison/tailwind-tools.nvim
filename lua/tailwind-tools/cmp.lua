@@ -14,14 +14,8 @@ M.lspkind_format = function(entry, vim_item)
     local content = type(doc) == "string" and doc or doc.value
     local r, g, b = utils.extract_color(content)
 
-    if config.options.cmp.highlight == "background" then
-      if r then
-        vim_item.kind_hl_group = utils.set_hl_from(r, g, b, "background")
-        return vim_item
-      end
-    end
-
-    if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b, "foreground") end
+    local style = config.option.cmp.highlight
+    if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b, style) end
   end
 
   return vim_item
