@@ -28,6 +28,7 @@ It currently provides the following features:
 - Class color hints
 - Class concealing
 - Class motions
+- Dynamic class regex registration
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
 - Class previewer (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
@@ -127,6 +128,8 @@ Available commands:
 - `TailwindSortSelection(Sync)`: sorts selected classes in visual mode.
 - `TailwindNextClass`: moves the cursor to the nearest next class node.
 - `TailwindPrevClass`: moves the cursor to the nearest previous class node.
+- `TailwindSetClassRegex`: takes a list of [predefined](./lua/tailwind-tools/regex.lua) class regex (thanks to [tailwind-intellisense-regex-list](https://github.com/paolotiu/tailwind-intellisense-regex-list)), and dynamically registers them to the server. (has autocompletion)
+- `TailwindClearClassRegex`: unregisters all class regex. 
 
 ## Utilities
 
@@ -256,6 +259,7 @@ Here are some related projects:
 - [tailwind-fold](https://github.com/stivoat/tailwind-fold) (vscode extension)
 - [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim)
 - [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archieved)
+- [tailwind-intellisense-regex-list](https://github.com/paolotiu/tailwind-intellisense-regex-list)
 
 ## Contributing
 
