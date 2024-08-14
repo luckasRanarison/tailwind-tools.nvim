@@ -9,7 +9,7 @@ local motions = require("tailwind-tools.motions")
 
 ---@param options TailwindTools.Option
 M.setup = function(options)
-  config.options = vim.tbl_deep_extend("keep", options, config.options)
+  config.options = vim.tbl_deep_extend("keep", options or {}, config.options)
 
   state.conceal.enabled = config.options.conceal.enabled
   state.color.enabled = config.options.document_color.enabled
