@@ -95,6 +95,9 @@ Here is the default configuration:
       fg = "#38BDF8",
     },
   },
+  cmp = {
+    highlight = "foreground" -- highlight either bg or fg of text in color previews in cmp menu. can be "foreground" | "background"
+  }
   telescope = {
     utilities = {
       -- the function used when selecting an utility class in telescope
