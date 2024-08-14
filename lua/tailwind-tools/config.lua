@@ -3,6 +3,7 @@
 local M = {}
 
 ---@alias TailwindTools.ColorHint "foreground" | "background" | "inline"
+---@alias TailwindTools.CmpHighlightHint "foreground" | "background"
 
 ---@class TailwindTools.Option
 M.options = {
@@ -20,6 +21,10 @@ M.options = {
     highlight = {
       fg = "#38BDF8",
     },
+  },
+  cmp = {
+    ---@type TailwindTools.CmpHighlightHint
+    highlight = "foreground",
   },
   telescope = {
     utilities = {
