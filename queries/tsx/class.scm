@@ -5,5 +5,5 @@
     (string
       (string_fragment) @tailwind)
     (jsx_expression
-      (_) @tailwind)
+      (template_string) @tailwind.inner)
   ])

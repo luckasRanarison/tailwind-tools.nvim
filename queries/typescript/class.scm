@@ -8,7 +8,6 @@
   (#eq? @object.ident "tw")
   arguments: [
     (arguments
-       (_)+) @tailwind.inner
-    (template_string
-      (string_fragment) @tailwind)
+      (_)+) @tailwind.inner
+    (template_string) @tailwind.inner
   ])
