@@ -15,9 +15,7 @@ NodeJS plugin host. It is inspired by the official Visual Studio Code extension
 
 CONTENTS                                        *tailwind-tools.nvim-contents*
 
-- |tailwind-tools.nvim-features|
-- |tailwind-tools.nvim-prerequisites|
-- |tailwind-tools.nvim-installation|
+- |tailwind-tools.nvim-features| |tailwind-tools.nvim-prerequisites| |tailwind-tools.nvim-installation|
 - |tailwind-tools.nvim-configuration|
 - |tailwind-tools.nvim-commands|
 - |tailwind-tools.nvim-utilities|
@@ -89,9 +87,9 @@ CONFIGURATION                              *tailwind-tools.nvim-configuration*
 
 
   [!IMPORTANT] Neovim v0.10 is required for vscode-like inline color hints.
-By default, the plugin automatically configures the server using nvim-lspconfig
-<https://github.com/neovim/nvim-lspconfig>, if it is installed. Make sure you
-do not set up the server elsewhere.
+By default, the plugin automatically configures tailwindcss-language-server
+using nvim-lspconfig <https://github.com/neovim/nvim-lspconfig>, if it is
+installed. Make sure you do not set up the server elsewhere.
 
 Here is the default configuration:
 
@@ -100,7 +98,7 @@ Here is the default configuration:
     {
       server = {
         override = true, -- setup the server from the plugin if true
-        settings = {} -- shortcut for `settings.tailwindCSS`,
+        settings = {}, -- shortcut for `settings.tailwindCSS`
         on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
       },
       document_color = {
@@ -118,12 +116,11 @@ Here is the default configuration:
         },
       },
       cmp = {
-        highlight = "foreground" -- highlight either bg or fg of text in color previews in cmp menu. can be "foreground" | "background"
-      }
+        highlight = "foreground", -- color preview style, "foreground" | "background"
+      },
       telescope = {
         utilities = {
-          -- the function used when selecting an utility class in telescope
-          callback = function(name, class) end,
+          callback = function(name, class) end, -- callback used when selecting an utility class in telescope
         },
       },
       -- see the extension section to learn more
