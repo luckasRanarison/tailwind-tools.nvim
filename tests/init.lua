@@ -16,13 +16,14 @@ vim.opt.rtp:prepend(lazypath)
 vim.o.swapfile = false
 
 require("lazy").setup({
-  { "neovim/nvim-lspconfig" },
   { "nvim-lua/plenary.nvim", cmd = "PlenaryBustedDirectory" },
   {
     dir = "./",
-    name = "tailwind-tools",
-    opts = {},
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "neovim/nvim-lspconfig",
+    },
+    config = function() require("tailwind-tools").setup({}) end,
   },
 })
 

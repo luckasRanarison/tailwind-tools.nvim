@@ -4,6 +4,7 @@
     "/usr/local/share/nvim/runtime/lua",
     "~/.local/share/nvim/lazy/nvim-cmp",
     "~/.local/share/nvim/lazy/telescope.nvim",
+    "~/.local/share/nvim/lazy/nvim-lspconfig",
     "${3rd}/luv/library",
     "${3rd}/luassert/library",
     "${3rd}/busted/library"
