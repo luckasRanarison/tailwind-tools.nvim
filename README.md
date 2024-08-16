@@ -74,16 +74,16 @@ require("tailwind-tools").setup({
 > [!IMPORTANT]
 > Neovim v0.10 is required for vscode-like inline color hints.
 
-By default, the plugin automatically configures the server using nvim-lspconfig, if it is installed. Make sure you do not set up the server elsewhere.
+By default, the plugin automatically configures the server using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig), if it is installed. Make sure you do not set up the server elsewhere.
 
 Here is the default configuration:
 
 ```lua
 ---@type TailwindTools.Option
 {
-  server = { -- nvim-lspconfig wrapper
+  server = {
     override = true, -- setup the server from the plugin if true
-    settings = {}, -- passed to `settings.tailwindCSS`
+    settings = {} -- shortcut for `settings.tailwindCSS`,
     on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
   },
   document_color = {
