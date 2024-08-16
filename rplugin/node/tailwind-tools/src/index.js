@@ -11,12 +11,6 @@ class Plugin {
     this.nvim = plugin.nvim;
 
     plugin.registerFunction(
-      "TailwindGetConfig",
-      this.getTailwindConfig.bind(this),
-      { sync: true }
-    );
-
-    plugin.registerFunction(
       "TailwindGetUtilities",
       this.getUtilities.bind(this),
       { sync: true }
@@ -29,9 +23,34 @@ class Plugin {
     );
   }
 
-  // TODO: Get the running language server root directory?
-  getProjectRoot() {
-    return this.nvim.call("getcwd");
+  /**
+   * @returns {Promise<string>}
+   */
+  async getProjectRoot() {
+    let currentDir = await this.nvim.call("expand", "%:p:h");
+
+    while (true) {
+      const parentDir = path.dirname(currentDir);
+
+      if (parentDir === currentDir) break;
+      if (this.findConfigPath(currentDir)) return currentDir;
+
+      currentDir = parentDir;
+    }
+
+    return currentDir;
+  }
+
+  findConfigPath(directory) {
+    const configFiles = [
+      "tailwind.config.js",
+      "tailwind.config.ts",
+      "tailwind.config.cjs",
+    ];
+
+    return configFiles
+      .map((filename) => path.join(directory, filename))
+      .find((filePath) => fs.existsSync(filePath));
   }
 
   async getTailwindConfig() {
@@ -43,11 +62,7 @@ class Plugin {
     const _require = utils.getNodeModuleResolver(rootDir);
     const resolveConfig = _require("tailwindcss/resolveConfig");
     const loadConfig = _require("tailwindcss/lib/public/load-config");
-
-    const configExtensions = ["js", "ts", "cjs"];
-    const configPath = configExtensions
-      .map((ext) => path.join(rootDir, `tailwind.config.${ext}`))
-      .find((filePath) => fs.existsSync(filePath));
+    const configPath = this.findConfigPath(rootDir);
 
     return resolveConfig(configPath ? loadConfig(configPath) : {});
   }
@@ -83,6 +98,7 @@ class Plugin {
 
   /**
    * @param {string[]} classes
+   * @returns {Promise<string>}
    */
   async expandUtilities(classes) {
     const config = await this.getTailwindConfig();
