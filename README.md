@@ -8,10 +8,7 @@ An unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integr
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
 ## Contents
-
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [Features](#features) [Prerequisites](#prerequisites) [Installation](#installation)
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
@@ -74,7 +71,7 @@ require("tailwind-tools").setup({
 > [!IMPORTANT]
 > Neovim v0.10 is required for vscode-like inline color hints.
 
-By default, the plugin automatically configures the server using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig), if it is installed. Make sure you do not set up the server elsewhere.
+By default, the plugin automatically configures tailwindcss-language-server using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig), if it is installed. Make sure you do not set up the server elsewhere.
 
 Here is the default configuration:
 
@@ -83,7 +80,7 @@ Here is the default configuration:
 {
   server = {
     override = true, -- setup the server from the plugin if true
-    settings = {} -- shortcut for `settings.tailwindCSS`,
+    settings = {}, -- shortcut for `settings.tailwindCSS`
     on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
   },
   document_color = {
@@ -101,12 +98,11 @@ Here is the default configuration:
     },
   },
   cmp = {
-    highlight = "foreground" -- highlight either bg or fg of text in color previews in cmp menu. can be "foreground" | "background"
-  }
+    highlight = "foreground", -- color preview style, "foreground" | "background"
+  },
   telescope = {
     utilities = {
-      -- the function used when selecting an utility class in telescope
-      callback = function(name, class) end,
+      callback = function(name, class) end, -- callback used when selecting an utility class in telescope
     },
   },
   -- see the extension section to learn more
