@@ -7,6 +7,12 @@ local M = {}
 
 ---@class TailwindTools.Option
 M.options = {
+  ---@class TailwindTools.ServerOption
+  server = {
+    override = true,
+    settings = {},
+    on_attach = function(_client, _bufnr) end,
+  },
   document_color = {
     enabled = true,
     ---@type TailwindTools.ColorHint

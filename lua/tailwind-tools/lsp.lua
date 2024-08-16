@@ -116,6 +116,29 @@ local function sort_classes(ranges, bufnr, sync)
   end
 end
 
+---@param opts TailwindTools.ServerOption
+M.setup = function(opts, lspconfig)
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+  capabilities.textDocument.colorProvider = {
+    dynamicRegistration = true,
+  }
+
+  lspconfig.tailwindcss.setup({
+    capabilities = capabilities,
+    on_attach = opts.on_attach,
+    settings = {
+      tailwindCSS = opts.settings,
+    },
+    root_dir = lspconfig.util.root_pattern(
+      "tailwind.config.js",
+      "tailwind.config.cjs",
+      "tailwind.config.mjs",
+      "tailwind.config.ts"
+    ),
+  })
+end
+
 M.on_attach = function(args)
   local bufnr = args.buf
   local client = get_tailwindcss()

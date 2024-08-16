@@ -38,12 +38,9 @@ It currently provides the following features:
 ## Prerequisites
 
 - Neovim v0.9 or higher (v0.10 is recommended)
-- [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim))
+- [tailwindcss-language-server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/master/packages/tailwindcss-language-server) >= `v0.0.14` (can be installed using [Mason](https://github.com/williamboman/mason.nvim) or npm)
 - `html`, `css`, `tsx` and other language Treesitter grammars (using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter))
 - Neovim [node-client](https://www.npmjs.com/package/neovim) (using npm)
-
-> [!TIP]
-> If you are not familiar with neovim LSP ecosystem check out [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to learn how to setup the LSP.
 
 ## Installation
 
@@ -58,6 +55,7 @@ return {
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "nvim-telescope/telescope.nvim", -- optional
+    "neovim/nvim-lspconfig", -- optional
   },
   opts = {} -- your configuration
 }
@@ -76,11 +74,18 @@ require("tailwind-tools").setup({
 > [!IMPORTANT]
 > Neovim v0.10 is required for vscode-like inline color hints.
 
+By default, the plugin automatically configures the server using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig), if it is installed. Make sure you do not set up the server elsewhere.
+
 Here is the default configuration:
 
 ```lua
 ---@type TailwindTools.Option
 {
+  server = {
+    override = true, -- setup the server from the plugin if true
+    settings = {} -- shortcut for `settings.tailwindCSS`,
+    on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
+  },
   document_color = {
     enabled = true, -- can be toggled by commands
     kind = "inline", -- "inline" | "foreground" | "background"
