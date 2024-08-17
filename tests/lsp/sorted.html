@@ -1,18 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <link rel="stylesheet" href="./style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite App</title>
-</head>
-
-<body>
-  <div class="flex h-screen w-screen items-center justify-center bg-[#111827]">
-    <h1 class="text-3xl font-semibold text-[#22d3ee]">Hello World</h1>
-  </div>
-</body>
-
+  <body>
+    <div
+      class="flex h-screen w-screen items-center justify-center bg-[#111827]"
+    >
+      <h1 class="text-3xl font-semibold text-[#22d3ee]">Hello World</h1>
+    </div>
+    <script>
+      const _sorted = tw`flex font-semibold`;
+      const _nonSorted = tw("font-semibold", "flex");
+    </script>
+  </body>
 </html>

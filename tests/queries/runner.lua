@@ -9,6 +9,7 @@ local classes = require("tailwind-tools.classes")
 ---@field file string
 ---@field filetype? string
 ---@field ranges number[][]
+---@field filters? TailwindTools.ClassFilter
 
 ---@param spec TestSpec
 M.test = function(spec)
@@ -18,7 +19,7 @@ M.test = function(spec)
     vim.cmd.edit(spec.file)
     vim.bo.filetype = spec.filetype or vim.bo.filetype
 
-    local ranges = classes.get_ranges(0)
+    local ranges = classes.get_ranges(0, spec.filters)
 
     it(
       "Should get class count",

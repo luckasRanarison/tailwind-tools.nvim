@@ -4,4 +4,5 @@
   (attribute_name) @_attribute_name
   (#eq? @_attribute_name "class:list")
   (attribute_interpolation
-    (attribute_js_expr) @tailwind))
+    (attribute_js_expr) @tailwind._expr)
+  (#set! @tailwind._expr "sort" "skip"))

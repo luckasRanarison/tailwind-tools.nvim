@@ -26,8 +26,8 @@ describe("color:", function()
     local extmarks = get_extmarks(0, ns, { "virt_text" })
 
     local expected = {
-      { 12, 65, { virt_text = { { symbol, "TailwindColorFg111827" } } } },
-      { 13, 38, { virt_text = { { symbol, "TailwindColorFg22d3ee" } } } },
+      { 12, 64, { virt_text = { { symbol, "TailwindColorFg111827" } } } },
+      { 14, 40, { virt_text = { { symbol, "TailwindColorFg22d3ee" } } } },
     }
 
     assert.same(expected, extmarks)
@@ -49,8 +49,8 @@ describe("color:", function()
     local extmarks = get_extmarks(0, ns, { "hl_group" })
 
     local expected = {
-      { 12, 65, 12, 77, { hl_group = "TailwindColorBg111827" } },
-      { 13, 38, 13, 52, { hl_group = "TailwindColorBg22d3ee" } },
+      { 12, 64, 12, 76, { hl_group = "TailwindColorBg111827" } },
+      { 14, 40, 14, 54, { hl_group = "TailwindColorBg22d3ee" } },
     }
 
     assert.same(expected, extmarks)
@@ -67,8 +67,8 @@ describe("color:", function()
     local extmarks = get_extmarks(0, ns, { "hl_group" })
 
     local expected = {
-      { 12, 65, 12, 77, { hl_group = "TailwindColorFg111827" } },
-      { 13, 38, 13, 52, { hl_group = "TailwindColorFg22d3ee" } },
+      { 12, 64, 12, 76, { hl_group = "TailwindColorFg111827" } },
+      { 14, 40, 14, 54, { hl_group = "TailwindColorFg22d3ee" } },
     }
 
     assert.same(expected, extmarks)

@@ -226,7 +226,7 @@ end
 ---@param sync boolean
 M.sort_classes = function(sync)
   local bufnr = vim.api.nvim_get_current_buf()
-  local class_ranges = classes.get_ranges(bufnr)
+  local class_ranges = classes.get_ranges(bufnr, { sortable = true })
 
   sort_classes(class_ranges, bufnr, sync)
 end

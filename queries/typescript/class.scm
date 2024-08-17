@@ -1,13 +1,14 @@
 (call_expression
   function: [
-    (identifier) @ident
+    (identifier) @_ident
     (member_expression
-      object: (identifier) @object.ident)
+      object: (identifier) @_object.ident)
   ]
-  (#any-of? @ident "clsx" "classnames" "tw" "css")
-  (#eq? @object.ident "tw")
+  (#any-of? @_ident "clsx" "classnames" "tw" "css")
+  (#eq? @_object.ident "tw")
   arguments: [
-    (arguments
-      (_)+) @tailwind.inner
-    (template_string) @tailwind.inner
+    ((arguments
+     (_)+) @tailwind.inner._args
+     (#set! @tailwind.inner._args "sort" "skip"))
+    (template_string) @tailwind.inner._str
   ])
