@@ -1,4 +1,4 @@
-*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 16
+*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 17
 
   [!IMPORTANT] This plugin is a community project and is **NOT** officially
   supported by Tailwind Labs <https://github.com/tailwindlabs>.
@@ -152,6 +152,9 @@ Available commands:
 - `TailwindPrevClass`: moves the cursor to the nearest previous class node.
 
 
+  [!NOTE] In normal mode, `TailwindNextClass` and `TailwindPrevClass` can be used
+  with a count to jump through multiple classes at once.
+
 UTILITIES                                      *tailwind-tools.nvim-utilities*
 
 
@@ -197,7 +200,7 @@ Available subcommands:
 
 - `classes`: Lists all the classes in the current file and allows to jump to the
     selected location.
-- `utilities`: Lists all utility classes available in the current projects with a
+- `utilities`: Lists all utility classes available in the current project with a
     custom callback.
 
 
