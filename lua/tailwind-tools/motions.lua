@@ -29,11 +29,15 @@ local move_to_class = function(comp)
 end
 
 M.move_to_next_class = function()
-  move_to_class(function(a, b) return a > b end)
+  for _ = 1, vim.v.count1 do
+    move_to_class(function(a, b) return a > b end)
+  end
 end
 
 M.move_to_prev_class = function()
-  move_to_class(function(a, b) return a < b end)
+  for _ = 1, vim.v.count1 do
+    move_to_class(function(a, b) return a < b end)
+  end
 end
 
 return M

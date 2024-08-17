@@ -132,6 +132,9 @@ Available commands:
 - `TailwindNextClass`: moves the cursor to the nearest next class node.
 - `TailwindPrevClass`: moves the cursor to the nearest previous class node.
 
+> [!NOTE]
+> In normal mode, `TailwindNextClass` and `TailwindPrevClass` can be used with a count to jump through multiple classes at once.
+
 ## Utilities
 
 ### nvim-cmp
@@ -171,7 +174,7 @@ Available subcommands:
 
 - `classes`: Lists all the classes in the current file and allows to jump to the selected location.
 
-- `utilities`: Lists all utility classes available in the current projects with a custom callback.
+- `utilities`: Lists all utility classes available in the current project with a custom callback.
 
 ## Extension
 
