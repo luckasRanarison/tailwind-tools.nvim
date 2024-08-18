@@ -8,7 +8,9 @@ An unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integr
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
 ## Contents
-- [Features](#features) [Prerequisites](#prerequisites) [Installation](#installation)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [Configuration](#configuration)
 - [Commands](#commands)
 - [Utilities](#utilities)
