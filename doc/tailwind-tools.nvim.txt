@@ -1,4 +1,4 @@
-*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 17
+*tailwind-tools.nvim.txt*      For NVIM v0.9.0     Last change: 2024 August 18
 
   [!IMPORTANT] This plugin is a community project and is **NOT** officially
   supported by Tailwind Labs <https://github.com/tailwindlabs>.
@@ -15,7 +15,9 @@ NodeJS plugin host. It is inspired by the official Visual Studio Code extension
 
 CONTENTS                                        *tailwind-tools.nvim-contents*
 
-- |tailwind-tools.nvim-features| |tailwind-tools.nvim-prerequisites| |tailwind-tools.nvim-installation|
+- |tailwind-tools.nvim-features|
+- |tailwind-tools.nvim-prerequisites|
+- |tailwind-tools.nvim-installation|
 - |tailwind-tools.nvim-configuration|
 - |tailwind-tools.nvim-commands|
 - |tailwind-tools.nvim-utilities|
