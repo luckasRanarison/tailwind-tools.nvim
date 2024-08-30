@@ -11,6 +11,14 @@ M.check = function()
     end
   end
 
+  local function check_plugin(name, module)
+    if pcall(require, module) then
+      health.ok(name .. " is installed")
+    else
+      health.error(name .. " is not installed")
+    end
+  end
+
   health.start("Treesitter parsers")
 
   check_parser("html")
@@ -27,17 +35,8 @@ M.check = function()
 
   health.start("Plugin dependencies (optional)")
 
-  if pcall(require, "lspconfig") then
-    health.ok("nvim-lspconfig is installed")
-  else
-    health.error("nvim-lspconfig is not installed")
-  end
-
-  if pcall(require, "telescope") then
-    health.ok("telescope.nvim is installed")
-  else
-    health.error("telescope.nvim is not installed")
-  end
+  check_plugin("nvim-lspconfig", "lspconfig")
+  check_plugin("telescope.nvim", "telescope")
 
   local has_node_health, node_health = pcall(require, "provider.node.health")
 
