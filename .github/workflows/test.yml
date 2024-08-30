@@ -36,13 +36,20 @@ jobs:
         run: |
           nvim --headless -u tests/init.lua -c "luafile tests/parsers.lua"
 
-      - name: Install tailwindcss-language-server
-        run: npm install -g @tailwindcss/language-server
+      - name: Install npm dependencies
+        run: |
+          npm install -g neovim @tailwindcss/language-server
+          cd tests/lsp/project && npm install
 
-      - name: Install test project dependencies
-        run: cd tests/lsp/project && npm install
-
-      - name: Run Tests
+      - name: Run checkhealth
         run: |
           nvim --version
-          nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/ { init='tests/init.lua' }"
+          nvim --headless -u tests/init.lua "+checkhealth tailwind-tools" "+w! health.log" +qa
+          cat health.log
+
+          if grep -q "ERROR" health.log; then
+            exit 1
+          fi
+
+      - name: Run Tests
+        run: nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/ { init='tests/init.lua' }"
