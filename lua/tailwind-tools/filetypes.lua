@@ -23,6 +23,13 @@ local filetypes = {
   luapattern = {
     rust = { "class=[\"']([^\"']+)[\"']" },
   },
+  server = {
+    eelixir = "html-eex",
+    eruby = "erb",
+    templ = "html",
+    rust = "html",
+    heex = "html",
+  },
 }
 
 ---@param ft string
@@ -35,6 +42,8 @@ M.has_queries = function(ft)
   return vim.tbl_contains(filetypes.treesitter, ft)
     or vim.tbl_contains(config.options.extension.queries, ft)
 end
+
+M.get_server_map = function() return filetypes.server end
 
 ---@return string[]
 M.get_all = function()

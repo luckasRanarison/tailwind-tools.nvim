@@ -129,8 +129,12 @@ M.setup = function(opts, lspconfig)
     capabilities = capabilities,
     on_attach = opts.on_attach,
     filetypes = filetypes.get_all(),
+    init_options = {
+      userLanguages = filetypes.get_server_map(),
+    },
     settings = {
       tailwindCSS = opts.settings,
+      includeLanguages = filetypes.get_server_map(),
     },
     root_dir = lspconfig.util.root_pattern(
       "tailwind.config.js",
