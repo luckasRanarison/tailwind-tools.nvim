@@ -46,7 +46,9 @@ jobs:
         run: |
           nvim --version
 
-          nvim -u "tests/init.lua" --headless "+checkhealth tailwind-tools" "+w! health.log" +qa
+          nvim --headless -u tests/init.lua "+checkhealth tailwind-tools" "+w! health.log" +qa
+
+          cat health.log
 
           if grep -q "ERROR" health.log; then
             exit 1
