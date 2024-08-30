@@ -13,8 +13,8 @@ M.lspkind_format = function(entry, vim_item)
   if vim_item.kind == "Color" and doc then
     local content = type(doc) == "string" and doc or doc.value
     local r, g, b = utils.extract_color(content)
-
     local style = config.options.cmp.highlight
+
     if r then vim_item.kind_hl_group = utils.set_hl_from(r, g, b, style) end
   end
 

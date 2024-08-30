@@ -11,7 +11,7 @@ M.check = function()
     end
   end
 
-  local function check_plugin(name, module)
+  local check_plugin = function(name, module)
     if pcall(require, module) then
       health.ok(name .. " is installed")
     else
