@@ -39,7 +39,9 @@ M.check = function()
     health.error("telescope.nvim is not installed")
   end
 
-  require("provider.node.health").check()
+  local has_node_health, node_health = pcall(require, "provider.node.health")
+
+  if has_node_health then node_health.check() end
 end
 
 return M

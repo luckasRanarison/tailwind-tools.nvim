@@ -36,6 +36,9 @@ jobs:
         run: |
           nvim --headless -u tests/init.lua -c "luafile tests/parsers.lua"
 
+      - name: Install node-client
+        run: npm install -g neovim
+
       - name: Install tailwindcss-language-server
         run: npm install -g @tailwindcss/language-server
 
