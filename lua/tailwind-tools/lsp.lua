@@ -5,6 +5,7 @@ local utils = require("tailwind-tools.utils")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local classes = require("tailwind-tools.classes")
+local filetypes = require("tailwind-tools.filetypes")
 
 local color_events = {
   "BufEnter",
@@ -127,6 +128,7 @@ M.setup = function(opts, lspconfig)
   lspconfig.tailwindcss.setup({
     capabilities = capabilities,
     on_attach = opts.on_attach,
+    filetypes = filetypes.get_all(),
     settings = {
       tailwindCSS = opts.settings,
     },
