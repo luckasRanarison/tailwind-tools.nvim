@@ -45,4 +45,11 @@ jobs:
       - name: Run Tests
         run: |
           nvim --version
+
+          nvim -u "tests/init.lua" --headless "+checkhealth tailwind-tools" "+w! health.log" +qa
+
+          if grep -q "ERROR" health.log; then
+            exit 1
+          fi
+
           nvim --headless -u tests/init.lua -c "PlenaryBustedDirectory tests/ { init='tests/init.lua' }"

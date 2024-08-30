@@ -11,7 +11,7 @@ M.check = function()
     end
   end
 
-  health.start("Parsers")
+  health.start("Treesitter parsers")
 
   check_parser("html")
   check_parser("tsx")
@@ -25,21 +25,21 @@ M.check = function()
     health.error("not installed")
   end
 
-  health.start("nvim-lspconfig (optional)")
+  health.start("Plugin dependencies (optional)")
 
   if pcall(require, "lspconfig") then
-    health.ok("installed")
+    health.ok("nvim-lspconfig is installed")
   else
-    health.warn("not installed")
+    health.error("nvim-lspconfig is not installed")
   end
-
-  health.start("telescope.nvim (optional)")
 
   if pcall(require, "telescope") then
-    health.ok("installed")
+    health.ok("telescope.nvim is installed")
   else
-    health.warn("not installed")
+    health.error("telescope.nvim is not installed")
   end
+
+  require("provider.node.health").check()
 end
 
 return M
