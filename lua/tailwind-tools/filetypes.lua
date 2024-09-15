@@ -7,6 +7,7 @@ local filetypes = {
     "html",
     "css",
     "php",
+    "blade",
     "twig",
     "vue",
     "heex",
