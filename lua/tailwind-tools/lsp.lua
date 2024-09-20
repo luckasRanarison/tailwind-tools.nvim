@@ -140,7 +140,8 @@ M.setup = function(opts, lspconfig)
       "tailwind.config.js",
       "tailwind.config.cjs",
       "tailwind.config.mjs",
-      "tailwind.config.ts"
+      "tailwind.config.ts",
+      ".git"
     ),
   })
 end
