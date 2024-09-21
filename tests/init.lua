@@ -27,5 +27,3 @@ require("lazy").setup({
     config = function() require("tailwind-tools").setup({}) end,
   },
 })
-
-require("lspconfig").tailwindcss.setup({})
