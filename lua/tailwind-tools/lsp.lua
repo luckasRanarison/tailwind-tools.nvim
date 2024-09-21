@@ -137,10 +137,8 @@ M.setup = function(opts, lspconfig)
       includeLanguages = filetypes.get_server_map(),
     },
     root_dir = lspconfig.util.root_pattern(
-      "tailwind.config.js",
-      "tailwind.config.cjs",
-      "tailwind.config.mjs",
-      "tailwind.config.ts"
+      "tailwind.config.{js,cjs,mjs,ts}",
+      "assets/tailwind.config.{js,cjs,mjs,ts}"
     ),
   })
 end
