@@ -15,6 +15,7 @@ local filetypes = {
     "templ",
     "svelte",
     "elixir",
+    "eelixir",
     "htmldjango",
     "javascript",
     "typescript",
