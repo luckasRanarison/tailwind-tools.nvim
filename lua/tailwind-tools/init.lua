@@ -41,7 +41,10 @@ local function register_autocmd()
 
   autocmd("Colorscheme", {
     group = vim.g.tailwind_tools.color_au,
-    callback = function() lsp.color_request(0) end,
+    callback = function()
+      lsp.color_request(0)
+      vim.api.nvim_set_hl(0, "TailwindConceal", config.options.conceal.highlight)
+    end,
   })
 end
 
