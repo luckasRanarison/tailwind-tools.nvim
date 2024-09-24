@@ -73,4 +73,17 @@ describe("color:", function()
 
     assert.same(expected, extmarks)
   end)
+
+  it("Should not be affected by colorscheme", function()
+    vim.cmd.colorscheme("vim")
+
+    local extmarks = get_extmarks(0, ns, { "hl_group" })
+
+    local expected = {
+      { 12, 64, 12, 76, { hl_group = "TailwindColorFg111827" } },
+      { 14, 40, 14, 54, { hl_group = "TailwindColorFg22d3ee" } },
+    }
+
+    assert.same(expected, extmarks)
+  end)
 end)

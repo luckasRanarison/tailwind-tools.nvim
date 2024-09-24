@@ -7,7 +7,7 @@ local M = {}
 M.set_hl_from = function(red, green, blue, style)
   local suffix = style == "background" and "Bg" or "Fg"
   local color = string.format("%02x%02x%02x", red, green, blue)
-  local group = "TailwindColor" .. suffix .. color
+  local hl_name = "TailwindColor" .. suffix .. color
   local opts
 
   if style == "background" then
@@ -19,9 +19,9 @@ M.set_hl_from = function(red, green, blue, style)
     opts = { fg = "#" .. color }
   end
 
-  if vim.fn.hlID(group) < 1 then vim.api.nvim_set_hl(0, group, opts) end
+  if vim.api.nvim_get_hl(0, { name = hl_name }) then vim.api.nvim_set_hl(0, hl_name, opts) end
 
-  return group
+  return hl_name
 end
 
 ---@param s string

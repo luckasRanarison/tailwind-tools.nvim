@@ -38,6 +38,11 @@ local function register_autocmd()
       if state.conceal.enabled then conceal.enable() end
     end,
   })
+
+  autocmd("Colorscheme", {
+    group = vim.g.tailwind_tools.color_au,
+    callback = function() lsp.color_request(0) end,
+  })
 end
 
 ---@param options TailwindTools.Option
