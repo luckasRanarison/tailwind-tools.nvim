@@ -2,6 +2,7 @@ local log = require("tailwind-tools.log")
 local utils = require("tailwind-tools.utils")
 local classes = require("tailwind-tools.classes")
 local plugin_config = require("tailwind-tools.config")
+local rplugin = require("tailwind-tools.rplugin")
 
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
@@ -10,10 +11,6 @@ local pickers = require("telescope.pickers")
 local previewers = require("telescope.previewers")
 local entry_display = require("telescope.pickers.entry_display")
 local config = require("telescope.config").values
-
----@class TailwindTools.ClassEntry
----@field name string
----@field value any
 
 local fg_prefixes = { "text", "border", "outline" }
 
@@ -26,9 +23,9 @@ local function get_hl_kind(class_name)
 end
 
 local function utility_picker()
-  local utilities = vim.fn.TailwindGetUtilities() --[[@as TailwindTools.ClassEntry[] | nil]]
+  local utilities = rplugin.get_utilities()
 
-  if utilities == vim.NIL then return log.error("No project found") end
+  if not utilities then return log.error("No project found") end
 
   local displayer = entry_display.create({
     separator = "",
@@ -64,9 +61,9 @@ local function utility_picker()
     title = "CSS Output",
     define_preview = function(self, entry)
       local bufnr = self.state.bufnr
-      local css = vim.fn.TailwindExpandUtilities({ entry.value.name })
+      local css = rplugin.expand_utilities({ entry.value.name })
 
-      if type(css) == "string" then
+      if css then
         vim.bo[bufnr].ft = "css"
         vim.api.nvim_buf_set_text(bufnr, 0, -1, 0, -1, vim.split(css, "\n"))
         entry.value.css = css
