@@ -138,7 +138,8 @@ M.setup = function(opts, lspconfig)
     },
     root_dir = lspconfig.util.root_pattern(
       "tailwind.config.{js,cjs,mjs,ts}",
-      "assets/tailwind.config.{js,cjs,mjs,ts}"
+      "assets/tailwind.config.{js,cjs,mjs,ts}",
+      "theme/static_src/tailwind.config.{js,cjs,mjs,ts}"
     ),
   })
 end
