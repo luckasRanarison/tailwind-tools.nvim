@@ -111,7 +111,7 @@ Here is the default configuration:
   extension = {
     queries = {}, -- a list of filetypes having custom `class` queries
     patterns = { -- a map of filetypes to Lua pattern lists
-      -- exmaple:
+      -- example:
       -- rust = { "class=[\"']([^\"']+)[\"']" },
       -- javascript = { "clsx%(([^)]+)%)" },
     },
@@ -209,7 +209,7 @@ The plugin will search for a `class.scm` file (classexpr) associated with that f
         └── class.scm
 ```
 
-The `class.scm` file should contain a query used to extract the class values for a given filetype. The class value should be captured using `@tailwind`, as shown in the follwing example:
+The `class.scm` file should contain a query used to extract the class values for a given filetype. The class value should be captured using `@tailwind`, as shown in the following example:
 
 ```scheme
 ; queries/myfiletype/class.scm
@@ -264,7 +264,7 @@ Here are some related projects:
 - [tailwind-sorter.nvim](https://github.com/laytan/tailwind-sorter.nvim) (uses external scripts)
 - [tailwind-fold](https://github.com/stivoat/tailwind-fold) (vscode extension)
 - [tailwind-fold.nvim](https://github.com/razak17/tailwind-fold.nvim)
-- [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archieved)
+- [document-color.nvim](https://github.com/mrshmllow/document-color.nvim) (archived)
 
 ## Contributing
 
