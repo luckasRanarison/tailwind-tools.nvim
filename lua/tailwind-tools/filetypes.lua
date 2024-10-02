@@ -12,6 +12,7 @@ local filetypes = {
     "vue",
     "heex",
     "astro",
+    "eruby",
     "templ",
     "svelte",
     "elixir",
