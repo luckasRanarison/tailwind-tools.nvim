@@ -6,6 +6,7 @@ local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
 local motions = require("tailwind-tools.motions")
+local classes = require("tailwind-tools.classes")
 
 local function register_usercmd()
   local usercmd = vim.api.nvim_create_user_command
@@ -77,7 +78,7 @@ M.setup = function(options)
   local has_lspconfig, lspconfig = pcall(require, "lspconfig")
 
   if has_telescope then telescope.load_extension("tailwind") end
-  if has_lspconfig and server_opts.override then lsp.setup(server_opts.settings, lspconfig) end
+  if has_lspconfig and server_opts.override then lsp.setup(server_opts, lspconfig) end
 
   register_usercmd()
   register_autocmd()

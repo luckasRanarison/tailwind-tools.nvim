@@ -15,6 +15,8 @@ local color_events = {
   "CursorMovedI",
 }
 
+local everywhere_re = { "([a-zA-Z0-9\\-:]+)" }
+
 ---@return vim.lsp.Client?
 local function get_tailwindcss()
   ---@diagnostic disable-next-line: deprecated
@@ -117,6 +119,25 @@ local function sort_classes(ranges, bufnr, sync)
   end
 end
 
+---@param regex string[] | string[][]
+M.register_regex = function(regex)
+  local client = get_tailwindcss()
+
+  if not client then return end
+
+  local update = {
+    tailwindCSS = {
+      experimental = { classRegex = regex },
+    },
+  }
+
+  client.settings = vim.tbl_deep_extend("force", client.settings, update)
+
+  client.notify("workspace/didChangeConfiguration", {
+    settings = client.settings,
+  })
+end
+
 ---@param opts TailwindTools.ServerOption
 M.setup = function(opts, lspconfig)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -162,6 +183,17 @@ M.on_attach = function(args)
       end
     end,
   })
+
+  if config.options.server.client_extension then
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+      callback = function(opts)
+        -- Dynamically toggle regex based on cursor position
+        local regex = classes.is_inside(opts.buf) and everywhere_re or {}
+        M.register_regex(regex)
+        M.color_request(opts.buf)
+      end,
+    })
+  end
 
   if state.color.enabled then M.color_request(bufnr) end
 end

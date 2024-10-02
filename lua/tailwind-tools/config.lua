@@ -11,6 +11,7 @@ M.options = {
   server = {
     override = true,
     settings = {},
+    client_extension = true,
     on_attach = function(_client, _bufnr) end,
   },
   document_color = {

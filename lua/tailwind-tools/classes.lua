@@ -30,4 +30,19 @@ M.get_ranges = function(bufnr, filters)
   return results
 end
 
+---@param bufnr number
+M.is_inside = function(bufnr)
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local ranges = M.get_ranges(bufnr)
+
+  row = row - 1
+
+  for _, range in pairs(ranges) do
+    local s_row, s_col, e_row, e_col = unpack(range)
+    if (row >= s_row and row <= e_row) and (col >= s_col and col <= e_col) then return true end
+  end
+
+  return false
+end
+
 return M
