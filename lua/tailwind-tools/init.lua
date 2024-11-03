@@ -77,7 +77,7 @@ M.setup = function(options)
   local has_lspconfig, lspconfig = pcall(require, "lspconfig")
 
   if has_telescope then telescope.load_extension("tailwind") end
-  if has_lspconfig and server_opts.override then lsp.setup(server_opts.settings, lspconfig) end
+  if has_lspconfig and server_opts.override then lsp.setup(server_opts, lspconfig) end
 
   register_usercmd()
   register_autocmd()
