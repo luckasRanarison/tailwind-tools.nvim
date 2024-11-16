@@ -1,4 +1,4 @@
-*tailwind-tools.nvim.txt*    For NVIM v0.9.0    Last change: 2024 September 26
+*tailwind-tools.nvim.txt*     For NVIM v0.9.0    Last change: 2024 November 16
 
   [!IMPORTANT] This plugin is a community project and is **NOT** officially
   supported by Tailwind Labs <https://github.com/tailwindlabs>.
@@ -171,7 +171,7 @@ Utility function for highlighting colors in nvim-cmp
     return {
       "hrsh7th/nvim-cmp",
       dependencies = {
-        "luckasRanarison/tailwind-tools.nvim",
+        "tailwind-tools",
         "onsails/lspkind-nvim",
         -- ...
       },
