@@ -4,7 +4,7 @@
     (member_expression
       object: (identifier) @_object.ident)
   ]
-  (#any-of? @_ident "clsx" "classnames" "tw" "css")
+  (#any-of? @_ident "clsx" "classnames" "tw" "css" "cva")
   (#eq? @_object.ident "tw")
   arguments: [
     ((arguments

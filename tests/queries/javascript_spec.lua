@@ -5,10 +5,11 @@ runner.test({
   provider = "treesitter",
   file = "tests/queries/javascript/test.js",
   ranges = {
-    { 0, 5, 0, 25 },
-    { 1, 11, 1, 36 },
-    { 2, 3, 2, 39 },
-    { 3, 9, 3, 34 },
+    { 0, 4, 0, 10 },
+    { 1, 5, 1, 25 },
+    { 2, 11, 2, 36 },
+    { 3, 3, 3, 39 },
+    { 4, 9, 4, 34 },
   },
 })
 
