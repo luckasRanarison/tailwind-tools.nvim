@@ -148,7 +148,7 @@ Utility function for highlighting colors in [nvim-cmp](https://github.com/hrsh7t
 return {
   "hrsh7th/nvim-cmp",
   dependencies = {
-    "luckasRanarison/tailwind-tools.nvim",
+    "tailwind-tools",
     "onsails/lspkind-nvim",
     -- ...
   },
