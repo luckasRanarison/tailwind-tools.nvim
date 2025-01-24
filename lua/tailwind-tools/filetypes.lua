@@ -24,7 +24,7 @@ local filetypes = {
     "typescriptreact",
   },
   luapattern = {
-    rust = { "class=[\"']([^\"']+)[\"']" },
+    rust = { "class[=:]%s*[\"']([^\"']+)[\"']" },
   },
   server = {
     eelixir = "html-eex",
