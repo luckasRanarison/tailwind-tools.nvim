@@ -32,7 +32,7 @@ for version, file in pairs(files) do
       local response
 
       vim.wait(10000, function()
-        response = client.request_sync("@/tailwindCSS/getProject", params, 2000, bufnr)
+        response = client.request_sync("@/tailwindCSS/getProject", params, 5000, bufnr)
         return response and response.result
       end)
 
