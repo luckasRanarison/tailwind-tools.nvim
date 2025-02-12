@@ -13,21 +13,19 @@ jobs:
     strategy:
       matrix:
         version: [stable, nightly]
+
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Neovim
-        shell: bash
-        run: |
-          mkdir -p /tmp/nvim
-          wget -q https://github.com/neovim/neovim/releases/download/${{ matrix.version }}/nvim.appimage -O /tmp/nvim/nvim.appimage
-          cd /tmp/nvim
-          chmod a+x ./nvim.appimage
-          ./nvim.appimage --appimage-extract
-          echo "/tmp/nvim/squashfs-root/usr/bin/" >> $GITHUB_PATH
+      - name: Setup neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.version }}
 
-      - name: Set up Node
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -39,7 +37,8 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm install -g neovim @tailwindcss/language-server
-          cd tests/lsp/project && npm install
+          cd tests/lsp/v3 && npm install
+          cd ../v4 && npm install
 
       - name: Run checkhealth
         run: |
