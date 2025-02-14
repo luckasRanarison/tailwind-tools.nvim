@@ -5,8 +5,8 @@ local config = require("tailwind-tools.config")
 local get_extmarks = require("tests.common").get_extmarks
 
 local files = {
-  { version = "v3", path = "tests/lsp/v3/index.html" },
-  { version = "v4", path = "tests/lsp/v4/index.html" },
+  { id = "v3", version = "3.4.17", path = "tests/lsp/v3/index.html" },
+  { id = "v4", version = "4.0.6", path = "tests/lsp/v4/index.html" },
 }
 
 for _, file in pairs(files) do
@@ -14,7 +14,7 @@ for _, file in pairs(files) do
   vim.cmd.LspRestart()
   vim.wait(5000, function() end)
 
-  describe(("project (%s):"):format(file.version), function()
+  describe(("project (%s):"):format(file.id), function()
     it("Should initialize project", function()
       vim.cmd.edit(file.path)
 
@@ -38,11 +38,12 @@ for _, file in pairs(files) do
       end)
 
       assert(response, "No response from the server")
-      assert(response.result, "No project found")
+      assert(response.result, "No project found: " .. vim.json.encode(response))
+      assert.same(response.result.version, file.version, "Version mismatch")
     end)
   end)
 
-  describe(("color (%s):"):format(file.version), function()
+  describe(("color (%s):"):format(file.id), function()
     local ns = vim.g.tailwind_tools.color_ns
 
     it("Should show inline colors", function()
@@ -116,7 +117,7 @@ for _, file in pairs(files) do
     end)
   end)
 
-  describe(("sort (%s):"):format(file.version), function()
+  describe(("sort (%s):"):format(file.id), function()
     it("Should sort selection", function()
       vim.cmd.TailwindNextClass()
       vim.cmd.normal('vi"\28\14')
