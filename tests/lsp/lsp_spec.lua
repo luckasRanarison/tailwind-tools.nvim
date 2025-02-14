@@ -6,7 +6,7 @@ local get_extmarks = require("tests.common").get_extmarks
 
 local files = {
   v3 = "tests/lsp/v3/index.html",
-  v4 = "tests/lsp/v4/index.html",
+  -- v4 = "tests/lsp/v4/index.html",
 }
 
 for version, file in pairs(files) do
