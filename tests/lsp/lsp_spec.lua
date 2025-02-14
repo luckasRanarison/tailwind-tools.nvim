@@ -12,6 +12,7 @@ local files = {
 for _, file in pairs(files) do
   -- FIXME: tailwind-language-server can't handle two projects at the same time
   vim.cmd.LspRestart()
+  vim.wait(5000, function() end)
 
   describe(("project (%s):"):format(file.version), function()
     it("Should initialize project", function()
