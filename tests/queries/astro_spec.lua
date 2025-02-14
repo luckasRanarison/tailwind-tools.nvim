@@ -1,4 +1,6 @@
-require("tests.queries.runner").test({
+local runner = require("tests.queries.runner")
+
+runner.test({
   name = "astro",
   provider = "treesitter",
   file = "tests/queries/astro/index.astro",

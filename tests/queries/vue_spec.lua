@@ -1,4 +1,6 @@
-require("tests.queries.runner").test({
+local runner = require("tests.queries.runner")
+
+runner.test({
   name = "vue",
   provider = "treesitter",
   file = "tests/queries/vue/test.vue",
