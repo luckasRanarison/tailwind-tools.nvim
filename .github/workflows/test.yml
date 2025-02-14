@@ -38,7 +38,10 @@ jobs:
         run: |
           echo "Installing global packages..."
           npm install -g neovim @tailwindcss/language-server
-          npm list -g --json | jq -r '.dependencies | to_entries[] | "- \(.key) \(.value.version)"'
+          npm list -g --json | jq -r '.dependencies 
+          | to_entries[]
+          | select(.key | IN("@tailwindcss/language-server", "neovim"))
+          | "- \(.key): \(.value.version)"'
 
           echo "Installing test projects dependencies..."
           cd tests/lsp/v3 && npm install
