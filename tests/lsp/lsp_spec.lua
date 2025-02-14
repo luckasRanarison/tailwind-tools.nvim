@@ -5,17 +5,17 @@ local config = require("tailwind-tools.config")
 local get_extmarks = require("tests.common").get_extmarks
 
 local files = {
-  v3 = "tests/lsp/v3/index.html",
-  -- v4 = "tests/lsp/v4/index.html",
+  { version = "v3", path = "tests/lsp/v3/index.html" },
+  { version = "v4", path = "tests/lsp/v4/index.html" },
 }
 
-for version, file in pairs(files) do
+for _, file in pairs(files) do
   -- FIXME: tailwind-language-server can't handle two projects at the same time
   vim.cmd.LspRestart()
 
-  describe(("project (%s):"):format(version), function()
+  describe(("project (%s):"):format(file.version), function()
     it("Should initialize project", function()
-      vim.cmd.edit(file)
+      vim.cmd.edit(file.path)
 
       ---@type vim.lsp.Client | nil
       local client
@@ -32,7 +32,7 @@ for version, file in pairs(files) do
       local response
 
       vim.wait(10000, function()
-        response = client.request_sync("@/tailwindCSS/getProject", params, 5000, bufnr)
+        response = client.request_sync("@/tailwindCSS/getProject", params, 2000, bufnr)
         return response and response.result
       end)
 
@@ -41,7 +41,7 @@ for version, file in pairs(files) do
     end)
   end)
 
-  describe(("color (%s):"):format(version), function()
+  describe(("color (%s):"):format(file.version), function()
     local ns = vim.g.tailwind_tools.color_ns
 
     it("Should show inline colors", function()
@@ -115,7 +115,7 @@ for version, file in pairs(files) do
     end)
   end)
 
-  describe(("sort (%s):"):format(version), function()
+  describe(("sort (%s):"):format(file.version), function()
     it("Should sort selection", function()
       vim.cmd.TailwindNextClass()
       vim.cmd.normal('vi"\28\14')
