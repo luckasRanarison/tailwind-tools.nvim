@@ -3,7 +3,7 @@ local M = {}
 local assert = require("luassert")
 local classes = require("tailwind-tools.classes")
 
----@class TestSpec
+---@class QueryTestSpec
 ---@field name string
 ---@field provider "treesitter" | "luapattern"
 ---@field file string
@@ -11,7 +11,7 @@ local classes = require("tailwind-tools.classes")
 ---@field ranges number[][]
 ---@field filters? TailwindTools.ClassFilter
 
----@param spec TestSpec
+---@param spec QueryTestSpec
 M.test = function(spec)
   describe(string.format("query %s (%s):", spec.name, spec.provider), function()
     assert.same(1, vim.fn.filereadable(spec.file), spec.file .. " is not readable")
