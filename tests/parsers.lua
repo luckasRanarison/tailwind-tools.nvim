@@ -7,6 +7,7 @@ local parsers = {
   "twig",
   "svelte",
   "vue",
+  "clojure",
   "htmldjango",
   "heex",
   "elixir",
@@ -16,4 +17,4 @@ local parsers = {
 }
 
 vim.cmd.TSInstallSync(parsers)
-vim.cmd.q()
+vim.cmd.quit()
