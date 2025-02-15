@@ -26,11 +26,10 @@ M.test = function(spec)
       function() assert.same(#ranges, #spec.ranges, "Mismatched class count") end
     )
 
-    it("Should get ranges", function()
-      for i, range in pairs(ranges) do
-        assert.same(range, spec.ranges[i], "Mismatched range (index = " .. i .. ")")
-      end
-    end)
+    it(
+      "Should get ranges",
+      function() assert.same(ranges, spec.ranges, "Mismatched class ranges") end
+    )
   end)
 end
 

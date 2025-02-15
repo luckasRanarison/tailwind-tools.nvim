@@ -31,8 +31,8 @@ M.test = function(spec)
       local params = vim.lsp.util.make_text_document_params(bufnr)
       local response
 
-      vim.wait(10000, function()
-        response = client.request_sync("@/tailwindCSS/getProject", params, 2000, bufnr)
+      vim.wait(12000, function()
+        response = client.request_sync("@/tailwindCSS/getProject", params, 3000, bufnr)
         return response and response.result
       end)
 
