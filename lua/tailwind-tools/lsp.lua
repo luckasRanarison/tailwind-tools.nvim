@@ -141,6 +141,8 @@ M.setup = function(opts, lspconfig)
         "tailwind.config.{js,cjs,mjs,ts}",
         "assets/tailwind.config.{js,cjs,mjs,ts}",
         "theme/static_src/tailwind.config.{js,cjs,mjs,ts}",
+        "app/assets/stylesheets/application.tailwind.css",
+        "app/assets/tailwind/application.css",
       }, "tailwindcss", fname)
 
       return lspconfig.util.root_pattern(root_files)(fname)
