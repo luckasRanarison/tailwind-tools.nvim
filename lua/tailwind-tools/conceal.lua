@@ -52,7 +52,7 @@ M.enable = function()
   end
 
   -- Restore color hints
-  if state.color.enabled then lsp.color_request(0) end
+  if state.color.enabled then lsp.color_request(nil, 0) end
 
   state.conceal.enabled = true
 end
@@ -70,7 +70,7 @@ M.disable = function()
     end
   end
 
-  if state.color.enabled then lsp.color_request(0) end
+  if state.color.enabled then lsp.color_request(nil, 0) end
 
   state.conceal.active_buffers = {}
   state.conceal.enabled = false
