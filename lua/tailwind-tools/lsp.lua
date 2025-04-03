@@ -123,7 +123,7 @@ end
 M.setup = function(server_config, lspconfig)
   local conf = { settings = {} }
   conf.on_attach = M.make_on_attach(server_config.on_attach)
-  conf.root_dir = server_config.root_dir or M.root_dir(lspconfig)
+  conf.root_dir = server_config.root_dir or M.make_root_dir(lspconfig)
 
   conf.settings.tailwindCSS = vim.tbl_get(server_config, "settings", "tailwindCSS") or {}
   conf.settings.tailwindCSS =
@@ -144,7 +144,7 @@ end
 
 ---@type fun(lspconfig: any)
 ---@return function(fname: string): string?
-M.root_dir = function(lspconfig)
+M.make_root_dir = function(lspconfig)
   return function(fname)
     local root_files = lspconfig.util.insert_package_json({
       "tailwind.config.{js,cjs,mjs,ts}",
