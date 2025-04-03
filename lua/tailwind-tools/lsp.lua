@@ -121,20 +121,25 @@ end
 ---@param server_config TailwindTools.ServerOption
 ---@param lspconfig { tailwindcss: lspconfig.Config }
 M.setup = function(server_config, lspconfig)
-  local config = {settings = {}}
-  config.on_attach = M.make_on_attach(server_config.on_attach)
-  config.root_dir = server_config.root_dir or M.root_dir(lspconfig)
+  local conf = { settings = {} }
+  conf.on_attach = M.make_on_attach(server_config.on_attach)
+  conf.root_dir = server_config.root_dir or M.root_dir(lspconfig)
 
-  config.settings.tailwindCSS = vim.tbl_get(server_config, "settings", "tailwindCSS") or {}
-  config.settings.tailwindCSS = vim.tbl_deep_extend('keep', config.settings.tailwindCSS, server_config.settings)
-  config.settings.tailwindCSS.includeLanguages = vim.tbl_extend('keep', server_config.settings.includeLanguages or {}, filetypes.get_server_map())
+  conf.settings.tailwindCSS = vim.tbl_get(server_config, "settings", "tailwindCSS") or {}
+  conf.settings.tailwindCSS =
+    vim.tbl_deep_extend("keep", conf.settings.tailwindCSS, server_config.settings)
+  conf.settings.tailwindCSS.includeLanguages = vim.tbl_extend(
+    "keep",
+    server_config.settings.includeLanguages or {},
+    filetypes.get_server_map()
+  )
 
-  config.capabilities = vim.lsp.protocol.make_client_capabilities()
-  config.capabilities.textDocument.colorProvider = {
+  conf.capabilities = vim.lsp.protocol.make_client_capabilities()
+  conf.capabilities.textDocument.colorProvider = {
     dynamicRegistration = true,
   }
 
-  lspconfig.tailwindcss.setup(config)
+  lspconfig.tailwindcss.setup(conf)
 end
 
 ---@type fun(lspconfig: any)
