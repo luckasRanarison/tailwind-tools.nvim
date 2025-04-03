@@ -28,11 +28,12 @@ local filetypes = {
     rust = { "class[=:]%s*[\"']([^\"']+)[\"']" },
   },
   server = {
+    elixir = "phoenix-heex",
     eelixir = "html-eex",
     eruby = "erb",
     templ = "html",
     rust = "html",
-    heex = "html",
+    heex = "phoenix-heex",
   },
 }
 
