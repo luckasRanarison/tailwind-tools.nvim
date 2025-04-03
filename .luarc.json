@@ -1,7 +1,9 @@
 {
+  "diagnostics.globals": ["vim"],
+  "diagnostics.unusedLocalExclude": ["_*"],
   "runtime.version": "LuaJIT",
   "workspace.library": [
-    "/usr/local/share/nvim/runtime/lua",
+    "$VIMRUNTIME",
     "~/.local/share/nvim/lazy/nvim-cmp",
     "~/.local/share/nvim/lazy/telescope.nvim",
     "~/.local/share/nvim/lazy/nvim-lspconfig",

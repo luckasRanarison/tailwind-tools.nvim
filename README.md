@@ -83,7 +83,6 @@ Here is the default configuration:
   server = {
     override = true, -- setup the server from the plugin if true
     settings = {}, -- shortcut for `settings.tailwindCSS`
-    on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
   },
   document_color = {
     enabled = true, -- can be toggled by commands
@@ -116,6 +115,50 @@ Here is the default configuration:
       -- javascript = { "clsx%(([^)]+)%)" },
     },
   },
+}
+```
+
+If you have other LSP settings that you typically set, for example you need to
+supply the LSP server a `root_dir` function, or you have keymaps to set when
+the LSP attaches with `on_attach`, you can provide these through
+tailwind-tools config:
+
+```lua
+{
+  server = {
+    root_dir = function(fname)
+      -- For example:
+      -- Try defaults first, but if not found, then try my custom function
+      local lspconfig = require('lspconfig')
+      local root_file = require('tailwind-tools.lsp').make_root_dir(lspconfig)(fname)
+      if root_file then return root_file end
+
+      local path = vim.fn.fnamemodify(fname, ':h')
+      local mix_lock_dir = vim.fs.dirname(vim.fs.find('mix.lock', { path = path, upward = true })[1])
+      if mix_lock_dir then
+        local path_sep = iswin and '\\' or '/'
+        for line in io.lines(mix_lock_dir .. path_sep .. 'mix.lock') do
+          if line:find('"tailwind"') then
+            root_file = 'mix.exs'
+            break
+          end
+        end
+      end
+
+      return root_file
+    end,
+
+    -- TailwindTools will additionally run its own function during on_attach
+    on_attach = require('me.lsp').on_attach,
+
+    -- TailwindTools will merge this with default filetype to server mappings
+    settings = {
+      includeLanguages = {
+        elixir = "phoenix-heex",
+        heex = "phoenix-heex",
+      }
+    }
+  }
 }
 ```
 
