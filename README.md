@@ -82,8 +82,17 @@ Here is the default configuration:
 {
   server = {
     override = true, -- setup the server from the plugin if true
-    settings = {}, -- shortcut for `settings.tailwindCSS`
-    on_attach = function(client, bufnr) end, -- callback triggered when the server attaches to a buffer
+    settings = { -- shortcut for `settings.tailwindCSS`
+      -- experimental = {
+      --   classRegex = { "tw\\('([^']*)'\\)" }
+      -- },
+      -- includeLanguages = {
+      --   elixir = "phoenix-heex",
+      --   heex = "phoenix-heex",
+      -- },
+    },
+    on_attach = function(client, bufnr) end, -- callback executed when the language server gets attached to a buffer
+    root_dir = function(fname) end, -- overrides the default function for resolving the root directory
   },
   document_color = {
     enabled = true, -- can be toggled by commands
@@ -111,7 +120,6 @@ Here is the default configuration:
   extension = {
     queries = {}, -- a list of filetypes having custom `class` queries
     patterns = { -- a map of filetypes to Lua pattern lists
-      -- example:
       -- rust = { "class=[\"']([^\"']+)[\"']" },
       -- javascript = { "clsx%(([^)]+)%)" },
     },
