@@ -1,7 +1,10 @@
 -- Used as an in-memory cache that keeps track
 -- of whatever paths where detected while using
 -- Neovim.
-local M = { cache = {} }
+local M = {
+  is_monorepo = nil,
+  cache = {},
+}
 
 -- Sort by length so more specific cache
 -- directories hit faster.

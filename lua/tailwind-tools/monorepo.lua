@@ -1,3 +1,4 @@
+local utils = require("tailwind-tools.utils")
 local cache = require("tailwind-tools.cache")
 local M = {}
 
@@ -16,6 +17,61 @@ local valid_packages = {
 }
 
 M.root_dir = function(file_name)
+  if cache.is_monorepo == nil then
+    local repo_root = utils.get_repo_root()
+
+    -- If nil is returned it means no root
+    -- of the repo was detected, so there is
+    -- no way to really know if we are dealing
+    -- with a monorepo or not. This will make
+    -- the plugin fallback to default detection.
+    if not repo_root then
+      cache.is_monorepo = false
+      return nil
+    end
+
+    local repo_package_json = repo_root .. "/package.json"
+
+    if vim.fn.filereadable(repo_package_json) ~= 1 then
+      -- Same as above. If we can't access the root
+      -- repo package.json file, then we don't know
+      -- if this is a monorepo or not. So return nil
+      -- and fallback to default detection.
+      cache.is_monorepo = false
+      return nil
+    else
+      local file = io.open(repo_package_json, "r")
+
+      if file then
+        local content = file:read("*a")
+        file:close()
+
+        -- Check if there is a "workspaces" property
+        -- configured in the repo's root package.json
+        -- file. This is how monorepo configurations are
+        -- created, so if "workspaces" exists, then we
+        -- are dealing with a monorepo. Therefore, if a
+        -- "workspaces" property is NOT detected, we should
+        -- stop here, return nil and fallback to default
+        -- detection.
+        if not content:find("workspaces") then
+          cache.is_monorepo = false
+          return nil
+        else
+          cache.is_monorepo = true
+        end
+      else
+        cache.is_monorepo = false
+        return nil
+      end
+    end
+  end
+
+  -- If the repo is not a monorepo then we can
+  -- stop here and fallback to default detection.
+  if cache.is_monorepo == false then return nil end
+
+  -- Check cache first.
   local hit = cache.check(file_name)
 
   -- Early return, zero I/O, fast cache hit
