@@ -68,7 +68,7 @@ local function debounced_color_request(client, bufnr)
   )
 end
 
----@param ranges number[][]
+---@param ranges { [integer]: number, delimiter?: { raw: string, pattern: string } }[]
 ---@param bufnr number
 ---@param sync boolean
 local function sort_classes(ranges, bufnr, sync)
@@ -81,12 +81,9 @@ local function sort_classes(ranges, bufnr, sync)
 
   for _, range in pairs(ranges) do
     local start_row, start_col, end_row, end_col = unpack(range)
-    local text = table.concat(vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {}), "\n")
-
-    if range.delimiter then
-      text = string.gsub(text, range.delimiter.pattern, " ")
-    end
-
+    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+    text = table.concat(text, "\n")
+    if range.delimiter then text = string.gsub(text, range.delimiter.pattern, " ") end
     class_text[#class_text + 1] = text
   end
 
