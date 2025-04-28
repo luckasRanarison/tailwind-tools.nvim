@@ -40,7 +40,7 @@ M.find_class_ranges = function(bufnr, pattern_definition)
   local delimiter = nil
   if type(pattern_definition) == "table" then
     pattern = pattern_definition.pattern
-    delimiter = pattern_definition.delimiter
+    delimiter = string.gsub(pattern_definition.delimiter, "%W", "%%%1")
   else
     pattern = pattern_definition
   end
