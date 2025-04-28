@@ -28,8 +28,6 @@ local filetypes = {
     clojure = {
       -- :class "cls-1 cls-2"
       ':class%s+"([^"]+)"',
-      -- ^:tw \"cls-1 cls-2\"
-      '%^:tw%s+"([^"]+)"',
       -- [:div#id.cls-1.cls-2] [:#id.cls-1.cls-2] [:.cls-1.cls-2]
       { pattern = "%[:[%w%-]*#?[%w%-]*%.([%.%w%-]+)", delimiter = "." },
     },
