@@ -84,7 +84,7 @@ local function sort_classes(ranges, bufnr, sync)
     local text = table.concat(vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {}), "\n")
 
     if range.delimiter then
-      text = string.gsub(text, range.delimiter, " ")
+      text = string.gsub(text, range.delimiter.pattern, " ")
     end
 
     class_text[#class_text + 1] = text
@@ -101,7 +101,7 @@ local function sort_classes(ranges, bufnr, sync)
 
     for i, edit in pairs(result.classLists) do
       if ranges[i].delimiter then
-        edit = table.concat(vim.split(edit, "%s+"), ranges[i].delimiter)
+        edit = table.concat(vim.split(edit, "%s+"), ranges[i].delimiter.raw)
       end
 
       local lines = vim.split(edit, "\n")
