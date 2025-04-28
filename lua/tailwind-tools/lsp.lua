@@ -81,9 +81,13 @@ local function sort_classes(ranges, bufnr, sync)
 
   for _, range in pairs(ranges) do
     local start_row, start_col, end_row, end_col = unpack(range)
-    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
+    local text = table.concat(vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {}), "\n")
 
-    class_text[#class_text + 1] = table.concat(text, "\n")
+    if range.delimiter then
+      text = string.gsub(text, range.delimiter, " ")
+    end
+
+    class_text[#class_text + 1] = text
   end
 
   local params = vim.tbl_extend("error", vim.lsp.util.make_text_document_params(bufnr), {
@@ -96,6 +100,10 @@ local function sort_classes(ranges, bufnr, sync)
     if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     for i, edit in pairs(result.classLists) do
+      if ranges[i].delimiter then
+        edit = table.concat(vim.split(edit, "%s+"), ranges[i].delimiter)
+      end
+
       local lines = vim.split(edit, "\n")
       local s_row, s_col, e_row, e_col = unpack(ranges[i])
 
