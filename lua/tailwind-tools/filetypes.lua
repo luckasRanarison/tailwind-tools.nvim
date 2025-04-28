@@ -31,7 +31,7 @@ local filetypes = {
       -- ^:tw \"cls-1 cls-2\"
       '%^:tw%s+"([^"]+)"',
       -- [:div#id.cls-1.cls-2] [:#id.cls-1.cls-2] [:.cls-1.cls-2]
-      { pattern = "%[:[%w%-]*(?:#[%w%-]+)?((?:%.[%w%-]+)+)", delimiter = "." },
+      { pattern = "%[:[%w%-]*#?[%w%-]*%.([%.%w%-]+)", delimiter = "." },
     },
   },
   server = {
