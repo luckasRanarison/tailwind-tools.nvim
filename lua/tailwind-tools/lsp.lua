@@ -139,21 +139,25 @@ M.setup = function(server_config, lspconfig)
     dynamicRegistration = true,
   }
 
-  lspconfig.tailwindcss.setup(conf)
+  vim.lsp.config("tailwindcss", conf)
+  vim.lsp.enable("tailwindcss")
 end
 
 ---@type fun(lspconfig: any)
----@return function(fname: string): string?
+---@return function(bufnr: integer, cb: fun(root_dir?: string))
 M.make_root_dir = function(lspconfig)
-  return function(fname)
-    local root_files = lspconfig.util.insert_package_json({
+  return function(bufnr, on_dir)
+    -- https://github.com/neovim/nvim-lspconfig/blob/master/lsp/tailwindcss.lua#L107
+    local root_files = {
       "tailwind.config.{js,cjs,mjs,ts}",
       "assets/tailwind.config.{js,cjs,mjs,ts}",
       "theme/static_src/tailwind.config.{js,cjs,mjs,ts}",
       "app/assets/stylesheets/application.tailwind.css",
       "app/assets/tailwind/application.css",
-    }, "tailwindcss", fname)
-    return lspconfig.util.root_pattern(root_files)(fname)
+    }
+    local fname = vim.api.nvim_buf_get_name(bufnr)
+    root_files = lspconfig.util.insert_package_json(root_files, "tailwindcss", fname)
+    on_dir(lspconfig.util.root_pattern(unpack(root_files))(fname))
   end
 end
 

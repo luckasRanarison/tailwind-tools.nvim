@@ -92,7 +92,7 @@ Here is the default configuration:
       -- },
     },
     on_attach = function(client, bufnr) end, -- callback executed when the language server gets attached to a buffer
-    root_dir = function(fname) end, -- overrides the default function for resolving the root directory
+    root_dir = function(bufnr, cb) end, -- overrides the default function for resolving the root directory
   },
   document_color = {
     enabled = true, -- can be toggled by commands
