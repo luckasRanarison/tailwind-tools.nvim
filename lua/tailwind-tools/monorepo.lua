@@ -30,39 +30,49 @@ M.root_dir = function(file_name)
       return nil
     end
 
-    local repo_package_json = repo_root .. "/package.json"
-
-    if vim.fn.filereadable(repo_package_json) ~= 1 then
-      -- Same as above. If we can't access the root
-      -- repo package.json file, then we don't know
-      -- if this is a monorepo or not. So return nil
-      -- and fallback to default detection.
-      cache.is_monorepo = false
-      return nil
+    -- Some monorepos use pnpm-workspace.yaml without
+    -- any reference to "workspaces" in the `package.json`,
+    -- so let's check for that before reading the `package.json`
+    local repo_pnpm_workspace = repo_root .. "/pnpm-workspace.yaml"
+    if vim.fn.filereadable(repo_pnpm_workspace) == 1 then
+      cache.is_monorepo = true
     else
-      local file = io.open(repo_package_json, "r")
+      -- Not a pnpm monorepo, so let's check for the
+      -- git-root `package.json` file for "workspaces"
+      local repo_package_json = repo_root .. "/package.json"
 
-      if file then
-        local content = file:read("*a")
-        file:close()
-
-        -- Check if there is a "workspaces" property
-        -- configured in the repo's root package.json
-        -- file. This is how monorepo configurations are
-        -- created, so if "workspaces" exists, then we
-        -- are dealing with a monorepo. Therefore, if a
-        -- "workspaces" property is NOT detected, we should
-        -- stop here, return nil and fallback to default
-        -- detection.
-        if not content:find("workspaces") then
-          cache.is_monorepo = false
-          return nil
-        else
-          cache.is_monorepo = true
-        end
-      else
+      if vim.fn.filereadable(repo_package_json) ~= 1 then
+        -- Same as above. If we can't access the root
+        -- repo package.json file, then we don't know
+        -- if this is a monorepo or not. So return nil
+        -- and fallback to default detection.
         cache.is_monorepo = false
         return nil
+      else
+        local file = io.open(repo_package_json, "r")
+
+        if file then
+          local content = file:read("*a")
+          file:close()
+
+          -- Check if there is a "workspaces" property
+          -- configured in the repo's root package.json
+          -- file. This is how monorepo configurations are
+          -- created, so if "workspaces" exists, then we
+          -- are dealing with a monorepo. Therefore, if a
+          -- "workspaces" property is NOT detected, we should
+          -- stop here, return nil and fallback to default
+          -- detection.
+          if not content:find("workspaces") then
+            cache.is_monorepo = false
+            return nil
+          else
+            cache.is_monorepo = true
+          end
+        else
+          cache.is_monorepo = false
+          return nil
+        end
       end
     end
   end
