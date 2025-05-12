@@ -5,7 +5,6 @@ local utils = require("tailwind-tools.utils")
 local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local classes = require("tailwind-tools.classes")
-local filetypes = require("tailwind-tools.filetypes")
 
 local color_events = {
   "BufEnter",
