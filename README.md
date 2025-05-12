@@ -8,6 +8,7 @@ An unofficial [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) integr
 ![preview](https://github.com/luckasRanarison/tailwind-tools.nvim/assets/101930730/cb1c0508-8375-474f-9078-2842fb62e0b7)
 
 ## Contents
+
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -80,20 +81,6 @@ Here is the default configuration:
 ```lua
 ---@type TailwindTools.Option
 {
-  server = {
-    override = true, -- setup the server from the plugin if true
-    settings = { -- shortcut for `settings.tailwindCSS`
-      -- experimental = {
-      --   classRegex = { "tw\\('([^']*)'\\)" }
-      -- },
-      -- includeLanguages = {
-      --   elixir = "phoenix-heex",
-      --   heex = "phoenix-heex",
-      -- },
-    },
-    on_attach = function(client, bufnr) end, -- callback executed when the language server gets attached to a buffer
-    root_dir = function(bufnr, cb) end, -- overrides the default function for resolving the root directory
-  },
   document_color = {
     enabled = true, -- can be toggled by commands
     kind = "inline", -- "inline" | "foreground" | "background"
