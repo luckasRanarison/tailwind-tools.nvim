@@ -8,7 +8,7 @@ local classes = require("tailwind-tools.classes")
 ---@field provider "treesitter" | "luapattern"
 ---@field file string
 ---@field filetype? string
----@field ranges number[][]
+---@field ranges { [integer]: number, delimiter?: { raw: string, pattern: string } }[]
 ---@field filters? TailwindTools.ClassFilter
 
 ---@param spec QueryTestSpec

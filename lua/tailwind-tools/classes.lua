@@ -9,7 +9,7 @@ local tresitter = require("tailwind-tools.treesitter")
 
 ---@param bufnr number
 ---@param filters? TailwindTools.ClassFilter
----@return number[][]
+---@return { [integer]: number, delimiter?: { raw: string, pattern: string } }[]
 M.get_ranges = function(bufnr, filters)
   local results = {}
   local ft = vim.bo[bufnr].ft

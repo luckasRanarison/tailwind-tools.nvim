@@ -32,9 +32,26 @@ local function byte_range_to_pos(b_start, b_end, bufnr)
 end
 
 ---@param bufnr number
----@param pattern string
-M.find_class_ranges = function(bufnr, pattern)
+---@param pattern_definition string | { pattern: string, delimiter: string }
+M.find_class_ranges = function(bufnr, pattern_definition)
   local results = {}
+
+  local pattern
+  local delimiter = nil
+  if type(pattern_definition) == "table" then
+    pattern = pattern_definition.pattern
+    if pattern_definition.delimiter then
+      delimiter = {
+        raw = pattern_definition.delimiter,
+        pattern = string.gsub(pattern_definition.delimiter, "%W", "%%%1"),
+      }
+    end
+  else
+    pattern = pattern_definition
+  end
+
+  if not pattern then return results end
+
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
   local substr = table.concat(lines, "\n")
   local offset = 0
@@ -52,7 +69,7 @@ M.find_class_ranges = function(bufnr, pattern)
     local class_end = class_start + #class
     local s_row, s_col, e_row, e_col = byte_range_to_pos(class_start, class_end, bufnr)
 
-    results[#results + 1] = { s_row, s_col, e_row, e_col }
+    results[#results + 1] = { s_row, s_col, e_row, e_col, delimiter = delimiter }
     substr = substr:sub(match_len)
     offset = offset + match_len - 1
   end
