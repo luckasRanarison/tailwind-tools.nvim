@@ -51,7 +51,7 @@ local function set_extmark(bufnr, color)
 end
 
 ---@param bufnr number
-local function debounced_color_request(bufnr)
+local function debounced_color_request(client, bufnr)
   local timer = state.color.request_timer
 
   if timer then
@@ -63,12 +63,12 @@ local function debounced_color_request(bufnr)
   end
 
   state.color.request_timer = vim.defer_fn(
-    function() M.color_request(bufnr) end,
+    function() M.color_request(client, bufnr) end,
     config.options.document_color.debounce
   )
 end
 
----@param ranges number[][]
+---@param ranges { [integer]: number, delimiter?: { raw: string, pattern: string } }[]
 ---@param bufnr number
 ---@param sync boolean
 local function sort_classes(ranges, bufnr, sync)
@@ -82,8 +82,9 @@ local function sort_classes(ranges, bufnr, sync)
   for _, range in pairs(ranges) do
     local start_row, start_col, end_row, end_col = unpack(range)
     local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_col, end_row, end_col, {})
-
-    class_text[#class_text + 1] = table.concat(text, "\n")
+    text = table.concat(text, "\n")
+    if range.delimiter then text = string.gsub(text, range.delimiter.pattern, " ") end
+    class_text[#class_text + 1] = text
   end
 
   local params = vim.tbl_extend("error", vim.lsp.util.make_text_document_params(bufnr), {
@@ -96,6 +97,10 @@ local function sort_classes(ranges, bufnr, sync)
     if not result or not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     for i, edit in pairs(result.classLists) do
+      if ranges[i].delimiter then
+        edit = table.concat(vim.split(edit, "%s+"), ranges[i].delimiter.raw)
+      end
+
       local lines = vim.split(edit, "\n")
       local s_row, s_col, e_row, e_col = unpack(ranges[i])
 
@@ -116,68 +121,93 @@ local function sort_classes(ranges, bufnr, sync)
     client.request("@/tailwindCSS/sortSelection", params, handler, bufnr)
   end
 end
+---@module 'lspconfig.configs'
 
----@param opts TailwindTools.ServerOption
-M.setup = function(opts, lspconfig)
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+---@param server_config TailwindTools.ServerOption
+---@param lspconfig { tailwindcss: lspconfig.Config }
+M.setup = function(server_config, lspconfig)
+  local conf = { settings = {} }
+  conf.on_attach = M.make_on_attach(server_config.on_attach)
+  conf.root_dir = server_config.root_dir or M.make_root_dir(lspconfig)
 
-  capabilities.textDocument.colorProvider = {
+  conf.settings.tailwindCSS = vim.tbl_get(server_config, "settings", "tailwindCSS") or {}
+  conf.settings.tailwindCSS =
+    vim.tbl_deep_extend("keep", conf.settings.tailwindCSS, server_config.settings)
+  conf.settings.tailwindCSS.includeLanguages = vim.tbl_extend(
+    "keep",
+    server_config.settings.includeLanguages or {},
+    filetypes.get_server_map()
+  )
+
+  conf.capabilities = vim.lsp.protocol.make_client_capabilities()
+  conf.capabilities.textDocument.colorProvider = {
     dynamicRegistration = true,
   }
 
-  lspconfig.tailwindcss.setup({
-    capabilities = capabilities,
-    on_attach = opts.on_attach,
-    filetypes = filetypes.get_all(),
-    init_options = {
-      userLanguages = filetypes.get_server_map(),
-    },
-    settings = {
-      tailwindCSS = opts.settings,
-      includeLanguages = filetypes.get_server_map(),
-    },
-    root_dir = function(fname)
-      local root_files = lspconfig.util.insert_package_json({
-        "tailwind.config.{js,cjs,mjs,ts}",
-        "assets/tailwind.config.{js,cjs,mjs,ts}",
-        "theme/static_src/tailwind.config.{js,cjs,mjs,ts}",
-        "app/assets/stylesheets/application.tailwind.css",
-        "app/assets/tailwind/application.css",
-      }, "tailwindcss", fname)
-
-      return lspconfig.util.root_pattern(root_files)(fname)
-    end,
-  })
+  lspconfig.tailwindcss.setup(conf)
 end
 
-M.on_attach = function(args)
-  local bufnr = args.buf
+---@type fun(lspconfig: any)
+---@return function(fname: string): string?
+M.make_root_dir = function(lspconfig)
+  return function(fname)
+    local root_files = lspconfig.util.insert_package_json({
+      "tailwind.config.{js,cjs,mjs,ts}",
+      "assets/tailwind.config.{js,cjs,mjs,ts}",
+      "theme/static_src/tailwind.config.{js,cjs,mjs,ts}",
+      "app/assets/stylesheets/application.tailwind.css",
+      "app/assets/tailwind/application.css",
+    }, "tailwindcss", fname)
+    return lspconfig.util.root_pattern(root_files)(fname)
+  end
+end
+
+---@type fun(user_on_attach: function | nil)
+---@return function(client: vim.lsp.Client, bufnr: integer)
+M.make_on_attach = function(user_on_attach)
+  if type(user_on_attach) == "function" then
+    return function(client, bufnr)
+      user_on_attach(client, bufnr)
+      M.on_attach(client, bufnr)
+    end
+  else
+    return M.on_attach
+  end
+end
+
+---@param args vim.api.keyset.create_autocmd.callback_args
+M.on_attach_cb = function(args)
   local client = get_tailwindcss()
-
   if not client then return end
+  M.on_attach(client, args.buf)
+end
 
+---@param client vim.lsp.Client
+---@param bufnr integer
+M.on_attach = function(client, bufnr)
   vim.api.nvim_create_autocmd(color_events, {
     group = vim.g.tailwind_tools.color_au,
     buffer = bufnr,
     callback = function(a)
       if not state.color.enabled then return end
       if a.event == "TextChangedI" then
-        debounced_color_request(bufnr)
+        debounced_color_request(client, bufnr)
       elseif vim.startswith(a.event, "Cursor") == state.conceal.enabled then
-        M.color_request(bufnr)
+        M.color_request(client, bufnr)
       end
     end,
   })
 
-  if state.color.enabled then M.color_request(bufnr) end
+  if state.color.enabled then M.color_request(client, bufnr) end
 end
 
+---@param client vim.lsp.Client | nil
 ---@param bufnr number
-M.color_request = function(bufnr)
-  local client = get_tailwindcss()
-  local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
-
+M.color_request = function(client, bufnr)
+  client = client or get_tailwindcss()
   if not client then return end
+
+  local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
 
   client.request("textDocument/documentColor", params, function(err, result, _, _)
     if err then return log.error(err.message) end
@@ -201,7 +231,7 @@ end
 M.enable_color = function()
   local client = get_tailwindcss()
   if client then
-    M.color_request(0)
+    M.color_request(client, 0)
     state.color.enabled = true
   end
 end

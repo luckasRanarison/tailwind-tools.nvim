@@ -16,7 +16,6 @@ local filetypes = {
     "templ",
     "svelte",
     "elixir",
-    "clojure",
     "eelixir",
     "htmldjango",
     "javascript",
@@ -26,19 +25,27 @@ local filetypes = {
   },
   luapattern = {
     rust = { "class[=:]%s*[\"']([^\"']+)[\"']" },
+    clojure = {
+      -- :class "cls-1 cls-2"
+      ':class%s+"([^"]+)"',
+      -- [:div#id.cls-1.cls-2] [:#id.cls-1.cls-2] [:.cls-1.cls-2]
+      { pattern = "%[:[%w%-]*#?[%w%-]*%.([%.%w%-]+)", delimiter = "." },
+    },
   },
   server = {
+    elixir = "phoenix-heex",
     eelixir = "html-eex",
     eruby = "erb",
     templ = "html",
     rust = "html",
-    heex = "html",
+    heex = "phoenix-heex",
+    clojure = "html",
   },
 }
 
 ---@param ft string
 M.get_patterns = function(ft)
-  return filetypes.luapattern[ft] or config.options.extension.patterns[ft] or {}
+  return config.options.extension.patterns[ft] or filetypes.luapattern[ft] or {}
 end
 
 ---@param ft string

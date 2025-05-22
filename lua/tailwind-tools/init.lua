@@ -30,7 +30,7 @@ local function register_autocmd()
 
   autocmd("LspAttach", {
     group = vim.g.tailwind_tools.color_au,
-    callback = lsp.on_attach,
+    callback = lsp.on_attach_cb,
   })
 
   autocmd("BufEnter", {
@@ -43,7 +43,7 @@ local function register_autocmd()
   autocmd("Colorscheme", {
     group = vim.g.tailwind_tools.color_au,
     callback = function()
-      lsp.color_request(0)
+      lsp.color_request(nil, 0)
       vim.api.nvim_set_hl(0, "TailwindConceal", config.options.conceal.highlight)
     end,
   })
