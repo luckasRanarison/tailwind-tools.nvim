@@ -2,6 +2,8 @@
 
 local M = {}
 
+local units = require("tailwind-tools.units")
+
 ---@alias TailwindTools.ColorHint "foreground" | "background" | "inline"
 ---@alias TailwindTools.CmpHighlightHint "foreground" | "background"
 ---@alias TailwindTools.SettingsOption.DiagnosticSeveritySetting "ignore" | "warning" | "error"
@@ -83,6 +85,12 @@ M.options = {
   extension = {
     queries = {},
     patterns = {},
+  },
+  keymaps = {
+    smart_increment = {
+      enabled = true,
+      units = units,
+    },
   },
 }
 

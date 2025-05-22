@@ -1,5 +1,11 @@
 local M = {}
 
+M.assert_cursor = function(expected_row, expected_col)
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  assert.same(expected_row, row, "Mismatched row")
+  assert.same(expected_col, col, "Mismatched col")
+end
+
 M.get_extmarks = function(bunfr, ns, details)
   local results = {}
   local extmarks = vim.api.nvim_buf_get_extmarks(bunfr, ns, 0, -1, { details = true })
