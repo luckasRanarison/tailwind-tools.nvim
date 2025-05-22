@@ -1,37 +1,36 @@
-local assert = require("luassert")
-
-local function assert_cursor(expected_row, expected_col)
-  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-  assert.same(expected_row, row, "Mismatched row")
-  assert.same(expected_col, col, "Mismatched col")
-end
+local utils = require("tests.common")
 
 describe("jump motion:", function()
   vim.cmd.edit("tests/motions/index.html")
 
   it("should go to the next class", function()
     vim.cmd.TailwindNextClass()
-    assert_cursor(11, 14)
+    utils.assert_cursor(11, 14)
+
     vim.cmd.TailwindNextClass()
-    assert_cursor(12, 14)
+    utils.assert_cursor(12, 14)
+
     vim.cmd.TailwindNextClass()
-    assert_cursor(13, 16)
+    utils.assert_cursor(13, 16)
+
     vim.cmd.TailwindNextClass()
-    assert_cursor(13, 16)
+    utils.assert_cursor(13, 16)
   end)
 
   it("should go to the prev class", function()
     vim.cmd.TailwindPrevClass()
-    assert_cursor(12, 14)
+    utils.assert_cursor(12, 14)
+
     vim.cmd.TailwindPrevClass()
-    assert_cursor(11, 14)
+    utils.assert_cursor(11, 14)
+
     vim.cmd.TailwindPrevClass()
-    assert_cursor(11, 14)
+    utils.assert_cursor(11, 14)
   end)
 
   it("should go to the last class", function()
     vim.cmd.normal("3")
     vim.cmd.TailwindNextClass()
-    assert_cursor(13, 16)
+    utils.assert_cursor(13, 16)
   end)
 end)

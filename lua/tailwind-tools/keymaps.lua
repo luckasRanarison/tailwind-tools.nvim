@@ -113,7 +113,7 @@ local function set_smart_mappings(range)
 
   for _, entry in pairs(untis) do
     for _, term in pairs(entry.values) do
-      if entry.prefix then term = entry.prefix .. "-[%w%-]*" .. term end
+      if entry.prefix then term = entry.prefix .. "%-[%w%-]*" .. term end
 
       local start = text[1]:find(term)
 
@@ -125,8 +125,15 @@ local function set_smart_mappings(range)
 
   if handler then
     local lookup_table = make_lookup_table(handler.entry.values)
-    vim.keymap.set("n", "<c-a>", make_step_fn(lookup_table, 1, range), { remap = true })
-    vim.keymap.set("n", "<c-x>", make_step_fn(lookup_table, -1, range), { remap = true })
+    local increment = make_step_fn(lookup_table, 1, range)
+    local decrement = make_step_fn(lookup_table, -1, range)
+
+    vim.keymap.set("n", "<c-a>", increment, { remap = true })
+    vim.keymap.set("n", "<c-x>", decrement, { remap = true })
+
+    vim.api.nvim_create_user_command("TailwindIncrement", increment, {})
+    vim.api.nvim_create_user_command("TailwindDecrement", decrement, {})
+
     if not state.smart_increment.active then state.smart_increment.active = true end
   end
 end
@@ -134,6 +141,10 @@ end
 local function unset_smart_mappings()
   vim.keymap.del("n", "<c-a>")
   vim.keymap.del("n", "<c-x>")
+
+  vim.api.nvim_del_user_command("TailwindIncrement")
+  vim.api.nvim_del_user_command("TailwindDecrement")
+
   state.smart_increment.active = false
 end
 
