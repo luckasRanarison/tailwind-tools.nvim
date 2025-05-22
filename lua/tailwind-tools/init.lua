@@ -79,7 +79,7 @@ M.setup = function(options)
 
   if has_telescope then telescope.load_extension("tailwind") end
   if has_lspconfig and server_opts.override then lsp.setup(server_opts, lspconfig) end
-  if config.options.keymaps.smart_increment.enable then keymaps.set_smart_increment() end
+  if config.options.keymaps.smart_increment.enabled then keymaps.set_smart_increment() end
 
   register_usercmd()
   register_autocmd()

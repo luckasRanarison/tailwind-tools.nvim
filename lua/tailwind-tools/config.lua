@@ -88,7 +88,7 @@ M.options = {
   },
   keymaps = {
     smart_increment = {
-      enable = true,
+      enabled = true,
       units = units,
     },
   },
