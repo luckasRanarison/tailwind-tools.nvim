@@ -8,4 +8,7 @@ return {
     enabled = false,
     active_buffers = {},
   },
+  smart_increment = {
+    active = false,
+  },
 }
