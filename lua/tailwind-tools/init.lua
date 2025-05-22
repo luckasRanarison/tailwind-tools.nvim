@@ -6,6 +6,7 @@ local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local conceal = require("tailwind-tools.conceal")
 local motions = require("tailwind-tools.motions")
+local keymaps = require("tailwind-tools.keymaps")
 
 local function register_usercmd()
   local usercmd = vim.api.nvim_create_user_command
@@ -78,6 +79,7 @@ M.setup = function(options)
 
   if has_telescope then telescope.load_extension("tailwind") end
   if has_lspconfig and server_opts.override then lsp.setup(server_opts, lspconfig) end
+  if config.options.keymaps.smart_increment.enabled then keymaps.set_smart_increment() end
 
   register_usercmd()
   register_autocmd()

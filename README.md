@@ -27,6 +27,7 @@ It currently provides the following features:
 - Class color hints
 - Class concealing
 - Class motions
+- Smart increment (increment/decrement tailwindcss units using `<C-a>` and `<C-x>`)
 - Class sorting (without [prettier-plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss))
 - Completion utilities (using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp))
 - Class previewer (using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim))
@@ -107,6 +108,18 @@ Here is the default configuration:
     highlight = { -- extmark highlight options, see :h 'highlight'
       fg = "#38BDF8",
     },
+  },
+  keymaps = {
+    smart_increment = { -- increment tailwindcss units using <C-a> and <C-x>
+      enabled = true,
+      units = {  -- see lua/tailwind/units.lua to see all the defaults
+        {
+          prefix = "border",
+          values = { "2", "4", "6", "8" },
+        },
+        -- ...
+      }
+    }
   },
   cmp = {
     highlight = "foreground", -- color preview style, "foreground" | "background"
