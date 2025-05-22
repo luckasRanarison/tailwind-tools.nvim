@@ -113,9 +113,9 @@ local function set_smart_mappings(range)
 
   for _, entry in pairs(untis) do
     for _, term in pairs(entry.values) do
-      if entry.prefix then term = string.format("%s-%s", entry.prefix, term) end
+      if entry.prefix then term = entry.prefix .. "-[%w%-]*" .. term end
 
-      local start = text[1]:find(term, 1, true)
+      local start = text[1]:find(term)
 
       if start and (not handler or start < handler.start) then
         handler = { start = start, entry = entry }

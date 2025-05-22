@@ -68,6 +68,54 @@ local M = {
     },
   },
   {
+    prefix = "rotate",
+    values = {
+      "1",
+      "2",
+      "4",
+      "6",
+      "12",
+      "45",
+      "90",
+      "180",
+    },
+  },
+  {
+    prefix = "hue-rotate",
+    values = {
+      "15",
+      "30",
+      "60",
+      "90",
+      "180",
+    },
+  },
+  {
+    prefix = "rounded",
+    values = {
+      "none",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl",
+      "3xl",
+      "full",
+    },
+  },
+  {
+    prefix = "blur",
+    values = {
+      "none",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl",
+      "3xl",
+    },
+  },
+  {
     values = {
       "50",
       "100",
