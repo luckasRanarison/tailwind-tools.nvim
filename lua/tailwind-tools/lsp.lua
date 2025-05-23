@@ -6,6 +6,7 @@ local state = require("tailwind-tools.state")
 local config = require("tailwind-tools.config")
 local classes = require("tailwind-tools.classes")
 local filetypes = require("tailwind-tools.filetypes")
+local monorepo = require("tailwind-tools.monorepo")
 
 local color_events = {
   "BufEnter",
@@ -151,6 +152,9 @@ end
 ---@return function(fname: string): string?
 M.make_root_dir = function(lspconfig)
   return function(fname)
+    local root_dir = monorepo.root_dir(fname)
+    if root_dir ~= nil then return root_dir end
+
     local root_files = lspconfig.util.insert_package_json({
       "tailwind.config.{js,cjs,mjs,ts}",
       "assets/tailwind.config.{js,cjs,mjs,ts}",

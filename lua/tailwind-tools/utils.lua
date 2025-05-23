@@ -47,4 +47,12 @@ M.get_visual_range = function()
   return s_row, s_col, e_row, e_col
 end
 
+M.get_repo_root = function()
+  for dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
+    if vim.fn.isdirectory(dir .. "/.git") == 1 then return dir end
+  end
+
+  return nil
+end
+
 return M
