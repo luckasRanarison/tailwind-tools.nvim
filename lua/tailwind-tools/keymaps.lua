@@ -5,36 +5,32 @@ local config = require("tailwind-tools.config")
 local classes = require("tailwind-tools.classes")
 
 ---@class LookupTable
+---@field prefix string
 ---@field normal string[]
 ---@field sorted string[]
 ---@field reverse table<string, integer>
 
-local untis = config.options.keymaps.smart_increment.units
+local units = config.options.keymaps.smart_increment.units
 
----@param tbl string[]
+---@param tbl {prefix: string?, values: string[]}
 ---@return LookupTable
 local function make_lookup_table(tbl)
   local reverse = {}
 
-  for key, value in pairs(tbl) do
+  for key, value in pairs(tbl.values) do
     reverse[value] = key
   end
 
-  local sorted = vim.deepcopy(tbl)
+  local sorted = vim.deepcopy(tbl.values)
 
   table.sort(sorted, function(a, b) return #a > #b end)
 
-  return { normal = tbl, reverse = reverse, sorted = sorted }
-end
-
----@param range number[]
-local function is_cursor_in_range(range)
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  local row, col = cursor[1] - 1, cursor[2]
-  local s_row, s_col, e_row, e_col = unpack(range)
-
-  return (row > s_row or (row == s_row and col >= s_col))
-    and (row < e_row or (row == e_row and col <= e_col))
+  return {
+    prefix = tbl.prefix,
+    normal = tbl.values,
+    reverse = reverse,
+    sorted = sorted,
+  }
 end
 
 local function get_cursor_word()
@@ -56,36 +52,84 @@ local function get_cursor_word()
   return w_start, w_end
 end
 
----@param lookup_table LookupTable
----@param step number
----@param range number[]
-local function make_step_fn(lookup_table, step, range)
-  return function()
-    local _, _, range_end_row, range_end_col = unpack(range)
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local cursor_row, cursor_col = cursor[1] - 1, cursor[2]
-    local class_end_col = cursor_row == range_end_row and range_end_col or -1
-    local word_col = get_cursor_word() or cursor_col
+---@param cursor number[]
+local function find_range_at_cursor(cursor)
+  local ranges = classes.get_ranges(0)
+  local cursor_row = unpack(cursor)
 
-    local text = vim.api.nvim_buf_get_text(0, cursor_row, word_col, cursor_row, class_end_col, {})
+  for _, range in pairs(ranges) do
+    local range_row = unpack(range)
+    if range_row == cursor_row then return range end
+  end
+end
 
-    local match
+---@param subline string
+---@param lookup_tables LookupTable[]
+local function find_best_handler(subline, lookup_tables)
+  local handler
+
+  for _, lookup_table in pairs(lookup_tables) do
+    local start
 
     for _, term in pairs(lookup_table.sorted) do
-      local col = text[1]:find(term)
-      if col and (not match or col < match.col) then match = { col = col - 1, term = term } end
+      if lookup_table.prefix then
+        start = subline:find(lookup_table.prefix)
+      else
+        start = subline:find(term)
+      end
+
+      if start and (not handler or start < handler.start) then
+        handler = { start = start, lookup_table = lookup_table }
+        if not lookup_table.prefix then handler.term = { col = start - 1, term = term } end
+      end
+
+      if lookup_table.prefix then break end
+    end
+  end
+
+  return handler
+end
+
+---@param params { lookup_tables: LookupTable[] , step: number,  fallback: function }
+local function make_step_fn(params)
+  return function()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local cursor_row, cursor_col = cursor[1] - 1, cursor[2]
+    local word_col = get_cursor_word() or cursor_col
+    local line = vim.api.nvim_buf_get_lines(0, cursor_row, cursor_row + 1, true)[1]
+
+    local range = find_range_at_cursor({ cursor_row, cursor_col })
+
+    if not range then return params.fallback() end
+
+    local _, _, range_end_row, range_end_col = unpack(range)
+    local class_end_col = cursor_row == range_end_row and range_end_col or -1
+    local subline = line:sub(word_col + 1, class_end_col)
+
+    local handler = find_best_handler(subline, params.lookup_tables)
+
+    if not handler then return params.fallback() end
+
+    local lookup_table = handler.lookup_table
+    local match = handler.term
+
+    if not match then
+      for _, term in pairs(lookup_table.sorted) do
+        local col = subline:find(term)
+        if col and (not match or col < match.col) then match = { col = col - 1, term = term } end
+      end
     end
 
-    if not match then return end
+    if not match then return params.fallback() end
 
     local index = lookup_table.reverse[match.term]
 
-    if step == 1 and index == #lookup_table.normal then return end
-    if step == -1 and index == 1 then return end
+    if params.step == 1 and index == #lookup_table.normal then return end
+    if params.step == -1 and index == 1 then return end
 
     local start_col = cursor_col + (word_col - cursor_col) + match.col
     local end_col = cursor_col + (word_col - cursor_col) + match.col + #match.term
-    local next_value = lookup_table.normal[index + step]
+    local next_value = lookup_table.normal[index + params.step]
 
     -- move the cursor to the beginning of the match
     if cursor_col < start_col then vim.api.nvim_win_set_cursor(0, { cursor_row + 1, start_col }) end
@@ -95,50 +139,43 @@ local function make_step_fn(lookup_table, step, range)
     local new_end_col = start_col + #next_value - 1
 
     -- move cursor back when length gets smaller
-    if step == -1 and cursor_col > new_end_col then
+    if params.step == -1 and cursor_col > new_end_col then
       vim.api.nvim_win_set_cursor(0, { cursor_row + 1, new_end_col })
     end
   end
 end
 
----@param range number[]
-local function set_smart_mappings(range)
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  local row, col = cursor[1] - 1, cursor[2]
-  local w_col = get_cursor_word()
+M.set_smart_increment = function()
+  if state.smart_increment.active then return end
 
-  local text = vim.api.nvim_buf_get_text(0, row, w_col or col, row, -1, {})
+  local lookup_tables = {}
 
-  local handler
-
-  for _, entry in pairs(untis) do
-    for _, term in pairs(entry.values) do
-      if entry.prefix then term = entry.prefix .. "%-[%w%-]*" .. term end
-
-      local start = text[1]:find(term)
-
-      if start and (not handler or start < handler.start) then
-        handler = { start = start, entry = entry }
-      end
-    end
+  for _, value in pairs(units) do
+    lookup_tables[#lookup_tables + 1] = make_lookup_table(value)
   end
 
-  if handler then
-    local lookup_table = make_lookup_table(handler.entry.values)
-    local increment = make_step_fn(lookup_table, 1, range)
-    local decrement = make_step_fn(lookup_table, -1, range)
+  local increment = make_step_fn({
+    lookup_tables = lookup_tables,
+    step = 1,
+    fallback = function() vim.cmd.exe([["normal! \<c-a>"]]) end,
+  })
 
-    vim.keymap.set("n", "<c-a>", increment, { remap = true })
-    vim.keymap.set("n", "<c-x>", decrement, { remap = true })
+  local decrement = make_step_fn({
+    lookup_tables = lookup_tables,
+    step = -1,
+    fallback = function() vim.cmd.exe([["normal! \<c-x>"]]) end,
+  })
 
-    vim.api.nvim_create_user_command("TailwindIncrement", increment, {})
-    vim.api.nvim_create_user_command("TailwindDecrement", decrement, {})
+  vim.keymap.set("n", "<c-a>", increment, { remap = true })
+  vim.keymap.set("n", "<c-x>", decrement, { remap = true })
 
-    if not state.smart_increment.active then state.smart_increment.active = true end
-  end
+  vim.api.nvim_create_user_command("TailwindIncrement", increment, {})
+  vim.api.nvim_create_user_command("TailwindDecrement", decrement, {})
+
+  state.smart_increment.active = true
 end
 
-local function unset_smart_mappings()
+M.unset_smart_increment = function()
   vim.keymap.del("n", "<c-a>")
   vim.keymap.del("n", "<c-x>")
 
@@ -146,23 +183,6 @@ local function unset_smart_mappings()
   vim.api.nvim_del_user_command("TailwindDecrement")
 
   state.smart_increment.active = false
-end
-
-M.set_smart_increment = function()
-  vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-    callback = function()
-      local ranges = classes.get_ranges(0)
-
-      for _, range in pairs(ranges) do
-        if is_cursor_in_range(range) then
-          set_smart_mappings(range) -- make sure to override prev mapping
-          return
-        end
-      end
-
-      if state.smart_increment.active then unset_smart_mappings() end
-    end,
-  })
 end
 
 return M
