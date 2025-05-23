@@ -92,15 +92,15 @@ end
 
 ---@param params { lookup_tables: LookupTable[] , step: number,  fallback: function }
 local function make_step_fn(params)
-  return function()
+  local handler_fn = function()
     local cursor = vim.api.nvim_win_get_cursor(0)
     local cursor_row, cursor_col = cursor[1] - 1, cursor[2]
     local word_col = get_cursor_word() or cursor_col
-    local line = vim.api.nvim_buf_get_lines(0, cursor_row, cursor_row + 1, true)[1]
+    local line = vim.api.nvim_get_current_line()
 
     local range = find_range_at_cursor({ cursor_row, cursor_col })
 
-    if not range then return params.fallback() end
+    if not range then return false end
 
     local _, _, range_end_row, range_end_col = unpack(range)
     local class_end_col = cursor_row == range_end_row and range_end_col or -1
@@ -108,7 +108,7 @@ local function make_step_fn(params)
 
     local handler = find_best_handler(subline, params.lookup_tables)
 
-    if not handler then return params.fallback() end
+    if not handler then return false end
 
     local lookup_table = handler.lookup_table
     local match = handler.term
@@ -116,19 +116,24 @@ local function make_step_fn(params)
     if not match then
       for _, term in pairs(lookup_table.sorted) do
         local col = subline:find(term)
-        if col and (not match or col < match.col) then match = { col = col - 1, term = term } end
+
+        if col then
+          match = { col = col - 1, term = term }
+          break
+        end
       end
     end
 
-    if not match then return params.fallback() end
+    if not match then return false end
 
     local index = lookup_table.reverse[match.term]
 
     if params.step == 1 and index == #lookup_table.normal then return end
     if params.step == -1 and index == 1 then return end
 
-    local start_col = cursor_col + (word_col - cursor_col) + match.col
-    local end_col = cursor_col + (word_col - cursor_col) + match.col + #match.term
+    local offset = word_col - cursor_col
+    local start_col = cursor_col + offset + match.col
+    local end_col = start_col + #match.term
     local next_value = lookup_table.normal[index + params.step]
 
     -- move the cursor to the beginning of the match
@@ -141,6 +146,14 @@ local function make_step_fn(params)
     -- move cursor back when length gets smaller
     if params.step == -1 and cursor_col > new_end_col then
       vim.api.nvim_win_set_cursor(0, { cursor_row + 1, new_end_col })
+    end
+
+    return true
+  end
+
+  return function()
+    for _ = 1, vim.v.count1 do
+      if not handler_fn() then params.fallback() end
     end
   end
 end
