@@ -3,15 +3,8 @@ local utils = require("tests.common")
 
 -- NOTE: keymaps don't work in headless mode, so we use user commands instead for simulation
 
-local function increment()
-  vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })
-  vim.cmd.TailwindIncrement()
-end
-
-local function decrement()
-  vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })
-  vim.cmd.TailwindDecrement()
-end
+local function increment() vim.cmd.TailwindIncrement() end
+local function decrement() vim.cmd.TailwindDecrement() end
 
 local function assert_line(pattern)
   local cursosr = vim.api.nvim_win_get_cursor(0)
@@ -112,7 +105,7 @@ describe("smart increment:", function()
 
   it("should handle border units", function()
     vim.cmd.TailwindNextClass()
-    vim.cmd.normal("3W")
+    vim.cmd.normal("WWW")
     -- text-2xl font-bold mb-4 border-2 border-md
     -- ^                              ^ Target
 

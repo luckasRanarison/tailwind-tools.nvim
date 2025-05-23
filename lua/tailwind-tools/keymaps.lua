@@ -79,7 +79,7 @@ local function find_best_handler(subline, lookup_tables)
       end
 
       if start and (not handler or start < handler.start) then
-        handler = { start = start, lookup_table = lookup_table }
+        handler = { start = start - 1, lookup_table = lookup_table }
         if not lookup_table.prefix then handler.term = { col = start - 1, term = term } end
       end
 
@@ -115,10 +115,10 @@ local function make_step_fn(params)
 
     if not match then
       for _, term in pairs(lookup_table.sorted) do
-        local col = subline:find(term)
+        local col = subline:sub(handler.start):find(term)
 
         if col then
-          match = { col = col - 1, term = term }
+          match = { col = handler.start + col - 1, term = term }
           break
         end
       end
@@ -128,8 +128,8 @@ local function make_step_fn(params)
 
     local index = lookup_table.reverse[match.term]
 
-    if params.step == 1 and index == #lookup_table.normal then return end
-    if params.step == -1 and index == 1 then return end
+    if params.step == 1 and index == #lookup_table.normal then return true end
+    if params.step == -1 and index == 1 then return true end
 
     local offset = word_col - cursor_col
     local start_col = cursor_col + offset + match.col
