@@ -143,6 +143,11 @@ M.setup = function(server_config, lspconfig)
   conf.capabilities.textDocument.colorProvider = {
     dynamicRegistration = true,
   }
+  conf.filetypes = vim.tbl_extend(
+    "keep",
+    server_config.filetypes or {},
+    lspconfig.tailwindcss.document_config.default_config.filetypes -- Yes, this is where the default config is
+  )
 
   lspconfig.tailwindcss.setup(conf)
 end
